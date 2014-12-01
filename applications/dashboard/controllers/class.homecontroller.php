@@ -25,6 +25,7 @@ class HomeController extends Gdn_Controller {
       $this->AddJsFile('jquery.gardenhandleajaxform.js');
       $this->AddJsFile('global.js');
       $this->AddCssFile('admin.css');
+      $this->AddCssFile('styles.css');
       $this->MasterView = 'empty';
       parent::Initialize();
    }
@@ -139,7 +140,7 @@ class HomeController extends Gdn_Controller {
     */
    public function Permission() {
       Gdn_Theme::Section('Error');
-      
+
       if ($this->DeliveryMethod() == DELIVERY_METHOD_XHTML) {
          safeHeader("HTTP/1.0 401", TRUE, 401);
          $this->Render();

@@ -1,0 +1,18 @@
+.Tabs {
+  ul {
+    &:extend(.nav all);
+    &:extend(.nav-tabs all);
+  }
+
+  .Active > a {
+    &,
+    &:hover,
+    &:focus {
+      &:extend(.nav-tabs > li.active > a);
+    }
+
+    .Count {
+      &:extend(.nav-tabs > .active > a > .badge);
+    }
+  }
+}

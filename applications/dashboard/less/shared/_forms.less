@@ -1,0 +1,23 @@
+// PROBLEMS: Need checkboxes to have outer div class
+//           Text input needs to have label separate from input, not wrapped
+
+form {
+
+  > div > ul {
+    &:extend(.input-group all);
+
+    > li {
+      &:extend(.form-group all);
+    }
+  }
+
+  label {
+    &:extend(.control-label all);
+  }
+
+  input[type="text"],
+  textarea,
+  select {
+    &:extend(.form-control all);
+  }
+}

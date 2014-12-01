@@ -381,6 +381,7 @@ class UtilityController extends DashboardController {
 
 		$this->AddSideMenu('dashboard/settings/configure');
       $this->AddCssFile('admin.css');
+      $this->AddCssFile('styles.css');
       $this->SetData('Title', T('Database Structure Upgrades'));
       $this->Render();
    }
