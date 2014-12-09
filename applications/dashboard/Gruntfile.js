@@ -7,6 +7,8 @@ module.exports = function (grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
+  grunt.loadNpmTasks('grunt-bower-concat');
+
   // Load Bower dependencies
   var dependencies = require('wiredep')();
 
@@ -21,7 +23,7 @@ module.exports = function (grunt) {
       }
     , js: {
         files: ['js/src/**/*.js']
-      , tasks: ['jshint', 'concat']
+      , tasks: ['jshint', 'concat', 'bower_concat']
       }
     , gruntfile: {
         files: ['Gruntfile.js']
@@ -81,13 +83,25 @@ module.exports = function (grunt) {
     , all: ['design/custom.css']
     },
 
-    concat: {
-      dist: {
-        src: (dependencies.js || []).concat([
-          'js/src/main.js'
-        ])
-      , dest: 'js/custom.js'
+    bower_concat: {
+      all: {
+        dest: 'js/bower_components.js',
+        exclude: [
+          'jquery'
+        ],
+        bowerOptions: {
+          relative: false
+        }
       }
+    },
+
+    concat: {
+       dist: {
+         src: (['js/bower_components.js']).concat([
+           'js/src/main.js'
+         ])
+       , dest: 'js/customdashboard.js'
+       }
     },
 
     imagemin: {
@@ -113,6 +127,7 @@ module.exports = function (grunt) {
     'wiredep'
   , 'less'
   , 'autoprefixer'
+  , 'bower_concat'
   , 'concat'
   , 'jshint'
   , 'csslint'
