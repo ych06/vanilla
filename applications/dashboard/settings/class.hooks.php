@@ -122,6 +122,8 @@ class DashboardHooks implements Gdn_IPlugin {
    }
 
    public function Base_GetAppSettingsMenuItems_Handler($Sender) {
+      /* @var SideMenuModule $Menu */
+
       $Menu = &$Sender->EventArguments['SideMenu'];
       $Menu->AddItem('Dashboard', T('Dashboard'), FALSE, array('class' => 'Dashboard'));
       $Menu->AddLink('Dashboard', T('Dashboard'), '/dashboard/settings', 'Garden.Moderation.Manage');
@@ -177,8 +179,74 @@ class DashboardHooks implements Gdn_IPlugin {
       $Menu->AddLink('Site Settings', T('Routes'), 'dashboard/routes', 'Garden.Settings.Manage');
       $Menu->AddLink('Site Settings', T('Statistics'), 'dashboard/statistics', 'Garden.Settings.Manage');
 
-		$Menu->AddItem('Import', T('Import'), FALSE, array('class' => 'Import'));
-		$Menu->AddLink('Import', FALSE, 'dashboard/import', 'Garden.Settings.Manage');
+
+      if (Gdn::Session()->CheckPermission('Garden.Settings.Manage')) {
+         $Menu->AddItem('Import', T('Import'), 'Garden.Settings.Manage', array('class' => 'Import'));
+         $Menu->AddLink('Import', FALSE, 'dashboard/import', 'Garden.Settings.Manage', array('class' => 'nav-import'));
+      }
+//      $Menu = &$Sender->EventArguments['SideMenu'];
+//      $Menu = new NavModule($Sender);
+//
+//      $Menu->addGroup('dashboard', array('text'=>T('Dashboard'), 'class' => 'Dashboard'));
+//      $Menu->addLink('dashboard.settings', array('text'=>T('Dashboard'), 'url'=>'/dashboard/settings', 'permission'=>'Garden.Moderation.Manage'));
+//      $Menu->addLink('dashboard.getting-started', array('text'=>T('Getting Started'), 'url'=>'/dashboard/settings/gettingstarted', 'permission'=>'Garden.Settings.Manage'));
+//	  $Menu->addLink('dashboard.help-and-tutorials', array('text'=>T('Help &amp; Tutorials'), 'url'=>'/dashboard/settings/tutorials', 'permission'=>'Garden.Settings.Manage'));
+//
+//       echo "WHAT?";
+//      echo $Menu->toString();
+//      $this->AddModule( 'Panel');
+
+//      $Menu->AddItem('Appearance', T('Appearance'), FALSE, array('class' => 'Appearance'));
+//		$Menu->AddLink('Appearance', T('Banner'), '/dashboard/settings/banner', 'Garden.Settings.Manage');
+//      $Menu->AddLink('Appearance', T('Homepage'), '/dashboard/settings/homepage', 'Garden.Settings.Manage');
+//
+//      $Menu->AddLink('Appearance', T('Themes'), '/dashboard/settings/themes', 'Garden.Settings.Manage');
+//      if ($ThemeOptionsName = C('Garden.ThemeOptions.Name'))
+//         $Menu->AddLink('Appearance', T('Theme Options'), '/dashboard/settings/themeoptions', 'Garden.Settings.Manage');
+//
+//      $Menu->AddLink('Appearance', T('Mobile Themes'), '/dashboard/settings/mobilethemes', 'Garden.Settings.Manage');
+//      if ($MobileThemeOptionsName = C('Garden.MobileThemeOptions.Name'))
+//         $Menu->AddLink('Appearance', T('Mobile Theme Options'), '/dashboard/settings/mobilethemeoptions', 'Garden.Settings.Manage');
+//
+//
+//		$Menu->AddLink('Appearance', T('Messages'), '/dashboard/message', 'Garden.Settings.Manage');
+//
+//      $Menu->AddItem('Users', T('Users'), FALSE, array('class' => 'Users'));
+//      $Menu->AddLink('Users', T('Users'), '/dashboard/user', array('Garden.Users.Add', 'Garden.Users.Edit', 'Garden.Users.Delete'));
+//		$Menu->AddLink('Users', T('Roles & Permissions'), 'dashboard/role', 'Garden.Settings.Manage');
+//
+//      $Menu->AddLink('Users', T('Registration'), 'dashboard/settings/registration', 'Garden.Settings.Manage');
+//		$Menu->AddLink('Users', T('Authentication'), 'dashboard/authentication', 'Garden.Settings.Manage');
+//
+//      if (C('Garden.Registration.Method') == 'Approval')
+//         $Menu->AddLink('Users', T('Applicants').' <span class="Popin" rel="/dashboard/user/applicantcount"></span>', 'dashboard/user/applicants', 'Garden.Users.Approve');
+//
+//      $Menu->AddItem('Moderation', T('Moderation'), FALSE, array('class' => 'Moderation'));
+//
+//      if (Gdn::Session()->CheckPermission(array('Garden.Moderation.Manage', 'Moderation.Spam.Manage'), FALSE))
+//         $Menu->AddLink('Moderation', T('Spam Queue'), 'dashboard/log/spam');
+//      if (Gdn::Session()->CheckPermission(array('Garden.Moderation.Manage', 'Moderation.ModerationQueue.Manage'), FALSE))
+//         $Menu->AddLink('Moderation', T('Moderation Queue').' <span class="Popin" rel="/dashboard/log/count/moderate"></span>', 'dashboard/log/moderation');
+//      $Menu->AddLink('Moderation', T('Change Log'), 'dashboard/log/edits', 'Garden.Moderation.Manage');
+//      $Menu->AddLink('Moderation', T('Banning'), 'dashboard/settings/bans', 'Garden.Moderation.Manage');
+//
+//		$Menu->AddItem('Forum', T('Forum Settings'), FALSE, array('class' => 'Forum'));
+//      $Menu->AddLink('Forum', T('Social'), 'dashboard/social', 'Garden.Settings.Manage');
+//
+//		$Menu->AddItem('Reputation', T('Reputation'), FALSE, array('class' => 'Reputation'));
+//
+//		$Menu->AddItem('Add-ons', T('Addons'), FALSE, array('class' => 'Addons'));
+//      $Menu->AddLink('Add-ons', T('Plugins'), 'dashboard/settings/plugins', 'Garden.Settings.Manage');
+//      $Menu->AddLink('Add-ons', T('Applications'), 'dashboard/settings/applications', 'Garden.Settings.Manage');
+//      $Menu->AddLink('Add-ons', T('Locales'), 'dashboard/settings/locales', 'Garden.Settings.Manage');
+//
+//      $Menu->AddItem('Site Settings', T('Settings'), FALSE, array('class' => 'SiteSettings'));
+//      $Menu->AddLink('Site Settings', T('Outgoing Email'), 'dashboard/settings/email', 'Garden.Settings.Manage');
+//      $Menu->AddLink('Site Settings', T('Routes'), 'dashboard/routes', 'Garden.Settings.Manage');
+//      $Menu->AddLink('Site Settings', T('Statistics'), 'dashboard/statistics', 'Garden.Settings.Manage');
+//
+//		$Menu->AddItem('Import', T('Import'), FALSE, array('class' => 'Import'));
+//		$Menu->AddLink('Import', FALSE, 'dashboard/import', 'Garden.Settings.Manage');
    }
 
    /**

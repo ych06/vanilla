@@ -38,8 +38,11 @@ class NavModule extends Gdn_Module {
 
    /// Methods ///
 
-   public function __construct($Sender = '') {
+   public function __construct($Sender = '', $options) {
       $this->_ApplicationFolder = 'dashboard';
+
+      $this->id = val('id', $options);
+      $this->cssClass = val('class', $options);
 
       parent::__construct($Sender);
    }
@@ -140,10 +143,36 @@ class NavModule extends Gdn_Module {
       return attribute($attributes);
    }
 
-   protected function getCssClass($key, $item) {
-      $result = val('class', $item, '')." nav-$key";
-      return trim($result);
-   }
+    public function isActive($item) {
+        $HighlightRoute = Gdn_Url::Request();
+        $HighlightUrl = Url($HighlightRoute);
+
+        // Highlight the group.
+        return (val('url', $item) && val('url', $item) == $HighlightUrl);
+    }
+
+    /**
+     * Adds CSS class[es] to an item, based on 'class' property of an item
+     * and also the 'key' property of an item. Prepends prefix to class names.
+     *
+     * @param string $prefix Prefix to add to class name.
+     * @param array $item Item to add CSS class to.
+     * @return string
+     */
+    // TODO: Move to more central location
+    public function buildCssClass($prefix, $item) {
+        $result = '';
+        if ($prefix) {
+            $prefix .= '-';
+        }
+        if (val('key', $item)) {
+            $result .= $prefix.implode('-', val('key', $item));
+        }
+        if (val('class', $item)) {
+            $result .= $prefix.val('class', $item);
+        }
+        return trim($result);
+    }
 
    protected function itemVisible($key, $item) {
       $visible = val('visible', $item, true);
@@ -160,7 +189,7 @@ class NavModule extends Gdn_Module {
     * Render the menu as a nav.
     */
    public function render() {
-      echo '<nav '.$this->getAttibutes().">\n";
+      echo '<nav role="navigation">'."\n";
       $this->renderItems($this->items);
       echo "</nav>\n";
    }
@@ -175,13 +204,13 @@ class NavModule extends Gdn_Module {
 
          switch ($item['type']) {
             case 'link':
-               $this->renderLink($key, $item);
+               $this->renderLink($item);
                break;
             case 'group':
-               $this->renderGroup($key, $item, $level);
+               $this->renderGroup($item, $level);
                break;
             case 'divider':
-               $this->renderDivider($key, $item);
+               $this->renderDivider($item);
                break;
             default:
                echo "\n<!-- Item $key has an unknown type {$item['type']}. -->\n";
@@ -189,53 +218,71 @@ class NavModule extends Gdn_Module {
       }
    }
 
-   protected function renderLink($key, $link) {
-      $href = $link['url'];
-      $text = $link['text'];
+   protected function renderLink($link) {
+      $href = val('url', $link);
+      $text = val('text', $link);
       $icon = val('icon', $link);
       $badge = val('badge', $link);
-      $class = 'nav-link '.$this->getCssClass($key, $link);
-      unset($link['url'], $link['text'], $link['class'], $link['icon'], $link['badge']);
+      $class = 'nav-link '.$this->buildCssClass('nav-link', $link);
+      $disabled = val('disabled', $link);
+      $listItemClass = '';
 
-      if ($icon)
+      if ($disabled) {
+         $listItemClass .= ' disabled';
+      }
+      if ($this->isActive($link)) {
+         $listItemClass .= ' active';
+      }
+      if ($icon) {
          $text = $icon.' <span class="text">'.$text.'</span>';
-
+      }
       if ($badge) {
          if (is_numeric($badge)) {
-            $badge = Wrap(number_format($badge), 'span', array('class' => 'Count'));
+            $badge = Wrap(number_format($badge), 'span', array('class' => 'count'));
          }
-         $text = '<span class="Aside">'.$badge.'</span> '.$text;
+         $text = '<span class="badge">'.$badge.'</span> '.$text;
       }
 
-      echo Anchor($text, $href, $class, $link, true)."\n";
+      if ($listItemClass) {
+         $listItemClass = ' class="'.trim($listItemClass).'"';
+      }
+
+      unset($link['url'], $link['text'], $link['class'], $link['icon'], $link['badge'], $link['disabled'], $link['key'], $link['sort'], $link['permission']);
+
+      //var_dump($link);
+      echo '<li role="presentation" '.$listItemClass.'>';
+      echo Anchor($text, $href, $class, $link, true);
+      echo "</li>\n";
    }
 
-   protected function renderGroup($key, $group, $level = 0) {
-      $text = $group['text'];
-      $group['class'] = 'nav-group '.($text ? '' : 'nav-group-noheading ').$this->getCssClass($key, $group);
-
-      $items = $group['items'];
-      unset($group['text'], $group['items']);
-
-      // Don't render an empty group.
-      if (empty($items))
-         return;
-
-      echo '<div '.attribute($group).">\n";
+   protected function renderGroup($group, $level = 0) {
+      $text = val('text', $group);
+      $group['class'] = 'nav-group '.($text ? '' : 'nav-group-noheading ').$this->buildCssClass('nav-group', $group);
 
       // Write the heading.
       if ($text) {
          echo "<h3>$text</h3>\n";
       }
+      echo '<ul '.$this->getAttibutes().">\n";
+
+
+      $items = val('items', $group);
+      unset($group['text'], $group['items']);
+
+      // Don't render an empty group.
+      if (empty($items)) {
+         echo '</ul>';
+         return;
+      }
 
       // Write the group items.
       $this->renderItems($items, $level + 1);
 
-      echo "</div>\n";
+      echo "</ul>\n";
    }
 
-   protected function renderDivider($key, $divider) {
-      echo "<div class=\"nav-divider\"></div>\n";
+   protected function renderDivider($divider) {
+      echo "<li class=\"divider\"></li>\n";
    }
 
    /**

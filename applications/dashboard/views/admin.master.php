@@ -15,12 +15,12 @@
 			      $Session = Gdn::Session();
 					if ($Session->IsValid()) {
 						$this->FireEvent('BeforeUserOptionsMenu');
-						
+
 						$Name = $Session->User->Name;
 						$CountNotifications = $Session->User->CountNotifications;
 						if (is_numeric($CountNotifications) && $CountNotifications > 0)
 							$Name .= Wrap($CountNotifications);
-							
+
 						echo Anchor($Name, UserUrl($Session->User), 'Profile');
 						echo Anchor(T('Sign Out'), SignOutUrl(), 'Leave');
 					}
@@ -28,12 +28,33 @@
          </div>
       </div>
       <div id="Body">
-         <div id="Panel">
-            <?php
-            $this->RenderAsset('Panel');
-            ?>
-         </div>
-         <div id="Content"><?php $this->RenderAsset('Content'); ?></div>
+          <div id="Panel">
+          <?php
+          $dropdown = new DropDownMenuModule($this, 'my-dropdown', array('trigger-text'=>'Trigger Name', 'trigger-type'=>'button', 'trigger-css-class'=>'btn-default', 'trigger-icon'=>'caret', 'list-css-class'=>'right'));
+          $dropdown->addLink(array('text'=>'Link 1', 'url'=>'#')); // Automatically creates key: item1
+          $dropdown->addDivider(''); // Automatically creates key: item2
+          $dropdown->addHeader('Header 1'); // Automatically creates key: item3
+          $dropdown->addLink(array('text'=>'Link 2', 'url'=>'#', 'key'=>'link2')); // Creates item with key: link2
+          $dropdown->addLinks(array(
+              array('text'=>'Link 3', 'url'=>'#'), // Automatically creates key: item4
+              array('text'=>'Link 4', 'url'=>'#')
+          ));
+          $dropdown->addGroup(array('key'=>'group1')); // Creates group with no header
+          $dropdown->addGroup(array('text'=>'Group 2', 'key'=>'group2')); // Creates group with header: 'Group 2'
+          $dropdown->addLink(array('text'=>'Link 5', 'url'=>'#', 'sort'=>array('before', 'link2'))); // Inserts before Link 2
+          $dropdown->addLinks(array(
+              array('text'=>'Link 6', 'url'=>'#'),
+              array('text'=>'Link 7', 'url'=>'#')
+          ));
+          $dropdown->addLink(array('text'=>'Link 8', 'url'=>'#', 'disabled'=>true, 'key'=>'group2.link8')); // Adds to Group 2
+          $dropdown->addLink(array('text'=>'Link 9', 'url'=>'#', 'disabled'=>true, 'key'=>'group1.link9')); // Adds to Group 1
+          $dropdown->addLink(array('text'=>'Link 10', 'url'=>'#', 'key'=>'group1.link10')); // Adds to Group 1
+          echo $dropdown->toString();
+
+          $this->RenderAsset('Panel');
+          ?>
+          </div>
+          <div id="Content"><?php $this->RenderAsset('Content'); ?></div>
       </div>
       <div id="Foot">
 			<?php
