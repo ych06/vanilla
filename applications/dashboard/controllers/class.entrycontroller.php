@@ -572,6 +572,7 @@ class EntryController extends Gdn_Controller {
          if ($this->Form->GetFormValue('Name') && $EmailValid && (!is_array($ExistingUsers) || count($ExistingUsers) == 0)) {
             // There is no existing user with the suggested name so we can just create the user.
             $User = $this->Form->FormValues();
+            $User = $this->UserModel->FilterForm($User);
             $User['Password'] = RandomString(50); // some password is required
             $User['HashMethod'] = 'Random';
             $User['Source'] = $this->Form->GetFormValue('Provider');
@@ -669,6 +670,7 @@ class EntryController extends Gdn_Controller {
          } elseif ($this->Form->ErrorCount() == 0) {
             // The user doesn't exist so we need to add another user.
             $User = $this->Form->FormValues();
+            $User = $this->UserModel->FilterForm($User);
             $User['Name'] = $User['ConnectName'];
             $User['Password'] = RandomString(50); // some password is required
             $User['HashMethod'] = 'Random';
@@ -1231,6 +1233,7 @@ class EntryController extends Gdn_Controller {
          
          try {
             $Values = $this->Form->FormValues();
+            $Values = $this->UserModel->FilterForm($Values);
             unset($Values['Roles']);
             $AuthUserID = $this->UserModel->Register($Values);
             if (!$AuthUserID) {
@@ -1290,6 +1293,7 @@ class EntryController extends Gdn_Controller {
          
          try {
             $Values = $this->Form->FormValues();
+            $Values = $this->UserModel->FilterForm($Values);
             unset($Values['Roles']);
             $AuthUserID = $this->UserModel->Register($Values);
             if ($AuthUserID == UserModel::REDIRECT_APPROVE) {
@@ -1361,6 +1365,7 @@ class EntryController extends Gdn_Controller {
          
          try {
             $Values = $this->Form->FormValues();
+            $Values = $this->UserModel->FilterForm($Values);
             unset($Values['Roles']);
             $AuthUserID = $this->UserModel->Register($Values);
             if ($AuthUserID == UserModel::REDIRECT_APPROVE) {
@@ -1436,6 +1441,7 @@ class EntryController extends Gdn_Controller {
          
          try {
             $Values = $this->Form->FormValues();
+            $Values = $this->UserModel->FilterForm($Values);
             unset($Values['Roles']);
             $AuthUserID = $this->UserModel->Register($Values);
 
