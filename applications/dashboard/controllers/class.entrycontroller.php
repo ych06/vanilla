@@ -527,7 +527,7 @@ EOT;
          // Check to automatically link the user.
          if ($AutoConnect && count($ExistingUsers) > 0) {
             foreach ($ExistingUsers as $Row) {
-               if ($this->Form->GetFormValue('Email') == $Row['Email']) {
+               if (strcasecmp($this->Form->GetFormValue('Email'), $Row['Email']) === 0) {
                   $UserID = $Row['UserID'];
                   $this->Form->SetFormValue('UserID', $UserID);
                   $Data = $this->Form->FormValues();
@@ -605,6 +605,7 @@ EOT;
          if ($this->Form->GetFormValue('Name') && $EmailValid && (!is_array($ExistingUsers) || count($ExistingUsers) == 0)) {
             // There is no existing user with the suggested name so we can just create the user.
             $User = $this->Form->FormValues();
+            $User = $this->UserModel->FilterForm($User, TRUE);
             $User['Password'] = RandomString(50); // some password is required
             $User['HashMethod'] = 'Random';
             $User['Source'] = $this->Form->GetFormValue('Provider');
@@ -702,6 +703,7 @@ EOT;
          } elseif ($this->Form->ErrorCount() == 0) {
             // The user doesn't exist so we need to add another user.
             $User = $this->Form->FormValues();
+            $User = $this->UserModel->FilterForm($User, TRUE);
             $User['Name'] = $User['ConnectName'];
             $User['Password'] = RandomString(50); // some password is required
             $User['HashMethod'] = 'Random';
@@ -755,7 +757,7 @@ EOT;
 
       if ($this->_RealDeliveryType != DELIVERY_TYPE_ALL && $this->DeliveryType() != DELIVERY_TYPE_ALL) {
          $this->DeliveryMethod(DELIVERY_METHOD_JSON);
-         $this->SetHeader('Content-Type', 'application/json');
+         $this->SetHeader('Content-Type', 'application/json; charset='.C('Garden.Charset', 'utf-8'));
       } elseif ($CheckPopup) {
          $this->AddDefinition('CheckPopup', $CheckPopup);
       } else {
@@ -1278,6 +1280,7 @@ EOT;
 
          try {
             $Values = $this->Form->FormValues();
+            $Values = $this->UserModel->FilterForm($Values, TRUE);
             unset($Values['Roles']);
             $AuthUserID = $this->UserModel->Register($Values);
             if (!$AuthUserID) {
@@ -1339,6 +1342,7 @@ EOT;
 
          try {
             $Values = $this->Form->FormValues();
+            $Values = $this->UserModel->FilterForm($Values, TRUE);
             unset($Values['Roles']);
             $AuthUserID = $this->UserModel->Register($Values);
             if ($AuthUserID == UserModel::REDIRECT_APPROVE) {
@@ -1410,6 +1414,7 @@ EOT;
 
          try {
             $Values = $this->Form->FormValues();
+            $Values = $this->UserModel->FilterForm($Values, TRUE);
             unset($Values['Roles']);
             $AuthUserID = $this->UserModel->Register($Values);
             if ($AuthUserID == UserModel::REDIRECT_APPROVE) {
@@ -1517,6 +1522,7 @@ EOT;
 
          try {
             $Values = $this->Form->FormValues();
+            $Values = $this->UserModel->FilterForm($Values, TRUE);
             unset($Values['Roles']);
             $AuthUserID = $this->UserModel->Register($Values, array('Method' => 'Invitation'));
 
