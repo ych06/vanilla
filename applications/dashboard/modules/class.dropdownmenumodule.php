@@ -3,17 +3,17 @@
 /**
  * A module for a dropdown.
  *
- * @author Becky Van Bussel <todd@vanillaforums.com>
- * @copyright 2003 Vanilla Forums, Inc
+ * @author Becky Van Bussel <becky@vanillaforums.com>
+ * @copyright 2015 Vanilla Forums, Inc
  * @license http://www.opensource.org/licenses/gpl-2.0.php GPL
  * @since 2.3
  */
 
 /**
- * A module for a dropdown.
+ * A flawlessly configurable module for a dropdown menu.
  *
  * The dropdown menu is built with Twitter Bootstrap classes and more specific
- * classes to allow for better targetting. It relies on the Twitter Bootstrap js file.
+ * classes to allow for better targeting. It relies on the Twitter Bootstrap js file.
  *
  * The module includes a dropdown trigger and menu items. Menu items can be
  *
@@ -33,25 +33,26 @@
  *
  * Here is an example menu creation:
  *
- *  $dropdown = new DropDownMenuModule($this, 'my-dropdown', 'Trigger Name', 'button', 'btn-default', 'caret', 'right');
- *  $dropdown->addLink(array('text'=>'Link 1', 'url'=>'#'), 'string'); // Automatically creates key: item1
+ *  $dropdown = new DropDownMenuModule($this, 'my-dropdown', 'Trigger Name', '', 'dropdown-menu-right');
+ *  $dropdown->setTrigger('A New Name', 'button', 'btn-default', 'caret');
+ *  $dropdown->addLink(array('text' => 'Link 1', 'url' => '#')); // Automatically creates key: item1
  *  $dropdown->addDivider(''); // Automatically creates key: item2
  *  $dropdown->addHeader('Header 1'); // Automatically creates key: item3
- *  $dropdown->addLink(array('text'=>'Link 2', 'url'=>'#', 'key'=>'link2')); // Creates item with key: link2
+ *  $dropdown->addLink(array('text' => 'Link 2', 'url' => '#', 'key' => 'link2', 'class' => 'bg-danger')); // Creates item with key: link2
  *  $dropdown->addLinks(array(
- *                          array('text'=>'Link 3', 'url'=>'#'), // Automatically creates key: item4
- *                          array('text'=>'Link 4', 'url'=>'#')
- *                      ));
- *  $dropdown->addGroup(array('key'=>'group1')); // Creates group with no header
- *  $dropdown->addGroup(array('text'=>'Group 2', 'key'=>'group2')); // Creates group with header: 'Group 2'
- *  $dropdown->addLink(array('text'=>'Link 5', 'url'=>'#', 'sort'=>array('before', 'link2'))); // Inserts before Link 2
+ *     array('text' => 'Link 3', 'url' => '#'), // Automatically creates key: item4
+ *     array('text' => 'Link 4', 'url' => '#')
+ *  ));
+ *  $dropdown->addGroup(array('key' => 'group1')); // Creates group with no header
+ *  $dropdown->addGroup(array('text' => 'Group 2', 'key' => 'group2')); // Creates group with header: 'Group 2'
+ *  $dropdown->addLink(array('text' => 'Link 5', 'url' => '#', 'sort'=>array('before', 'link2'), 'badge' => 4)); // Inserts before Link 2
  *  $dropdown->addLinks(array(
- *                          array('text'=>'Link 6', 'url'=>'#'),
- *                          array('text'=>'Link 7', 'url'=>'#')
- *                      ));
- *  $dropdown->addLink(array('text'=>'Link 8', 'url'=>'#', 'disabled'=>true, 'key'=>'group2.link8')); // Adds to Group 2
- *  $dropdown->addLink(array('text'=>'Link 9', 'url'=>'#', 'disabled'=>true, 'key'=>'group1.link9')); // Adds to Group 1
- *  $dropdown->addLink(array('text'=>'Link 10', 'url'=>'#', 'key'=>'group1.link10')); // Adds to Group 1
+ *     array('text' => 'Link 6', 'url' => '#'),
+ *     array('text' => 'Link 7', 'url' => '#')
+ *  ));
+ *  $dropdown->addLink(array('text' => 'Link 8', 'url' => '#', 'disabled'=>true, 'key' => 'group2.link8', 'icon' => 'icon-flame')); // Adds to Group 2
+ *  $dropdown->addLink(array('text' => 'Link 9', 'url' => '#', 'disabled'=>true, 'key' => 'group1.link9')); // Adds to Group 1
+ *  $dropdown->addLink(array('text' => 'Link 10', 'url' => '#', 'key' => 'group1.link10')); // Adds to Group 1
  *  echo $dropdown->toString();
  *
  * Which results in a menu:
@@ -72,18 +73,17 @@
  *  Link 6
  *  Link 7
  *
- *
+ * The view is currently a mustache template, which requires the Mustache rendering plugin to be enabled.
+ * 
  */
 class DropDownMenuModule extends Gdn_Module {
 
     /**
-     *
      * @var string The css class of the menulist, if any.
      */
     public $listCssClass = '';
 
     /**
-     *
      * @var string The id of the trigger.
      */
     public $id = null;
@@ -91,7 +91,7 @@ class DropDownMenuModule extends Gdn_Module {
     /**
      * @var array An array of items in the menu.
      */
-    protected $items = array();
+    public $items = array();
 
     /**
      * @var int Number to generate key strings from.
@@ -99,46 +99,57 @@ class DropDownMenuModule extends Gdn_Module {
     protected $keyNumber = 1;
 
     /**
+     * @var boolean Use item prefix when applying new css classes.
+     */
+    protected $useCssPrefix = false;
+
+    /**
+     * @var array Collection of trigger attributes.
+     */
+    public $trigger = array('type' => 'button',
+                            'button' => true,
+                            'class' => 'btn-default',
+                            'icon' => 'caret');
+
+    /**
+     * @var string Dropdown top-level div CSS class.
+     */
+    public $class;
+
+    /**
      * @var array Allowed trigger types.
      */
     protected $triggerTypes = array('button', 'anchor');
 
-    /**
-     * @var string Text to appear on trigger button or anchor
-     */
-    protected $triggerText = '';
-
-    /**
-     * @var string Trigger CSS class.
-     */
-    protected $triggerCssClass = '';
-
-    /**
-     * @var string Trigger type: either button or anchor.
-     */
-    protected $triggerType = '';
-
-    /**
-     * @var string Icon to appear on trigger.
-     */
-    protected $triggerIcon = '';
-
     /// Methods ///
 
-    public function __construct($Sender, $id, $triggerText = '', $triggerType = 'button', $triggerCssClass = 'btn-default', $triggerIcon = 'caret', $listCssClass = '') {
+    public function __construct($Sender, $id, $triggerText = '', $class = '', $listCssClass = '', $useCssPrefix = false) {
         parent::__construct($Sender);
-
         $this->_ApplicationFolder = 'dashboard';
-
         $this->id = $id;
-
-        // Trigger styles
-        $this->triggerType = in_array($triggerType, $this->triggerTypes) ? $triggerType : 'button';
-        $this->triggerText = $triggerText;
-        $this->triggerIcon = $triggerIcon;
-        $this->triggerCssClass = $triggerCssClass;
-
+        $this->trigger['text'] = $triggerText;
+        $this->class = $class;
         $this->listCssClass = $listCssClass; // Bootstrap supports 'right' to align the dropdown box to the right of its container
+        $this->useCssPrefix = $useCssPrefix;
+    }
+
+    /**
+     * Configure the trigger.
+     *
+     * @param string $text Text on the button or anchor.
+     * @param string $type Trigger type - currently supports 'anchor' or 'button'.
+     * @param string $class CSS class on button or anchor tag.
+     * @param string $icon Icon span CSS class.
+     */
+    public function setTrigger($text, $type = 'button', $class = 'btn-default', $icon = 'caret') {
+        $this->trigger['text'] = $text;
+        $this->trigger['type'] = in_array($type, $this->triggerTypes) ? $type : 'button';
+        $this->trigger['icon'] = $icon;
+        $this->trigger['class'] = $class;
+
+        //for mustache logic
+        $this->trigger['button'] = $this->trigger['type'] === 'button';
+        $this->trigger['anchor'] = $this->trigger['type'] === 'anchor';
     }
 
     /**
@@ -147,23 +158,27 @@ class DropDownMenuModule extends Gdn_Module {
      * @param string $key The key of the divider.
      * @param array $options Options for the divider.
      */
-    public function addDivider($options = array()) {
-        $this->addItem('divider', $options);
+    public function addDivider($divider = array()) {
+        $divider['class'] = 'divider '.$this->buildCssClass('divider', $divider);
+        $this->addItem('divider', $divider);
     }
 
     /**
      * Add a group to the items array.
      *
      * @param array $group The group with the following key(s):
-     * - **text**: The text of the group heading. Html is allowed.
-     * - **icon**: The html of the icon to appear by header.
-     * - **badge**: The header badge such as a count or alert. Html is allowed.
+     * - **text**: The text of the group heading.
+     * - **icon**: The icon class to appear by header.
+     * - **badge**: The header badge such as a count or alert.
      * - **sort**: Specify a custom sort order for the item.
      *    This can be either a number or an array in the form ('before|after', 'key').
      * - **key**: Group key.
      * - **class**: Header CSS class.
      */
     public function addGroup($group) {
+        if (val('text', $group)) {
+            $group['class'] = $this->buildCssClass('dropdown-header', $group);
+        }
         $this->addItem('group', $group);
     }
 
@@ -173,9 +188,8 @@ class DropDownMenuModule extends Gdn_Module {
      * @param $name
      */
     public function addHeader($name) {
-         $this->addGroup(array('text'=>$name));
+        $this->addGroup(array('text' => $name));
     }
-
 
     /**
      * Add a link to the menu.
@@ -183,9 +197,9 @@ class DropDownMenuModule extends Gdn_Module {
      * @param string|array $key The key of the link. You can nest links in a group by using dot syntax to specify its key.
      * @param array $link The link with the following keys:
      * - **url**: The url of the link.
-     * - **text**: The text of the link. Html is allowed.
-     * - **icon**: The html of the icon.
-     * - **badge**: The link contain a badge. such as a count or alert. Html is allowed.
+     * - **text**: The text of the link.
+     * - **icon**: The icon class to appear by link.
+     * - **badge**: The link contain a badge. such as a count or alert.
      * - **sort**: Specify a custom sort order for the item.
      *    This can be either a number or an array in the form ('before|after', 'key').
      * - **disabled**: Set to true to add disabled style to link.
@@ -193,6 +207,10 @@ class DropDownMenuModule extends Gdn_Module {
      * - **class**: CSS class.
      */
     public function addLink($link) {
+        $link['class'] = $this->buildCssClass('dropdown-menu-link', $link);
+        if (val('disabled', $link)) {
+            $link['listItemCssClass'] = 'disabled';
+        }
         $this->addItem('link', $link);
     }
 
@@ -228,6 +246,9 @@ class DropDownMenuModule extends Gdn_Module {
         }
 
         $item = (array)$item;
+
+        //set type boolean for mustache logic
+        $item[$type] = true;
 
         // Make sure the link has its type.
         $item['type'] = $type;
@@ -265,12 +286,6 @@ class DropDownMenuModule extends Gdn_Module {
         }
     }
 
-    protected function getMenuAttributes() {
-        $attributes = array('class' => 'dropdown-menu '.$this->listCssClass, 'role' => 'menu', 'aria-labelledby' => $this->id);
-
-        return attribute($attributes);
-    }
-
     /**
      * Adds CSS class[es] to an item, based on 'class' property of an item
      * and also the 'key' property of an item. Prepends prefix to class names.
@@ -284,167 +299,59 @@ class DropDownMenuModule extends Gdn_Module {
         if ($prefix) {
             $prefix .= '-';
         }
+        if (!$this->useCssPrefix) {
+            $prefix = '';
+        }
         if (val('key', $item)) {
-            $result .= $prefix.implode('-', val('key', $item));
+            if (is_array(val('key', $item))) {
+                $result .= $prefix.implode('-', val('key', $item));
+            }
+            else {
+                $result .= $prefix.str_replace('.', '-', val('key', $item));
+            }
         }
         if (val('class', $item)) {
-            $result .= $prefix.val('class', $item);
+            $result .= ' '.$prefix.val('class', $item);
         }
         return trim($result);
     }
 
-    // Note to self: learn why we may need this
-    protected function itemVisible($item) {
-        $visible = val('visible', $item, true);
-        $prop = 'show'.val('key', $item);
-
-        if (property_exists($this, $prop)) {
-            return $this->$prop;
-        } else {
-            return $visible;
-        }
+    /**
+     * Renders dropdown menu view
+     *
+     * @return string
+     */
+    public function toString() {
+        NavModule::sortItems($this->items);
+        $this->items = $this->flattenArray($this->items);
+        echo json_encode($this);
+        $m = new Mustache_Engine();
+        return $m->render($this->FetchView('dropdownmenu'), $this);
     }
 
     /**
-     * Render the trigger and dropdown menu.
+     * Creates flattened array of dropdown menu items.
+     *
+     * @param array $items
+     * @return array
      */
-    public function render() {
-        echo '<div class="dropdown">'."\n";
-        $this->renderTrigger();
-        echo '<ul '.$this->getMenuAttributes().">\n";
-        $this->renderItems($this->items);
-        echo "</ul>\n";
-        echo "</div>";
-    }
-
-    // TODO: Use icon function to render icon.
-    protected function renderTrigger() {
-        if ($this->triggerType === 'button') {
-            echo '<button id="'.$this->id.'" class="btn dropdown-toggle '.$this->triggerCssClass.'" type="button" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">';
-            echo "$this->triggerText\n";
-            if ($this->triggerIcon) {
-                echo '<span class="'.$this->triggerIcon.'"></span>';
+    public function flattenArray($items) {
+        $newitems = array();
+        foreach($items as $item) {
+            $subitems = false;
+            if (val('items', $item)) {
+                $subitems = $item['items'];
+                unset($item['items']);
             }
-            echo '</button>';
-        }
-        else if ($this->triggerType === 'anchor') {
-            echo '<a id="'.$this->id.'" class="'.$this->triggerCssClass.'" data-target="#" href="/" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">';
-            echo "$this->triggerText\n";
-            if ($this->triggerIcon) {
-                echo '<span class="'.$this->triggerIcon.'"></span>';
+            if ((val('type', $item) != 'group') || val('text', $item)) {
+                unset($item['_sort'], $item['key']);
+                $newitems[] = $item;
             }
-            echo '</a>';
-        }
-    }
-
-    protected function renderItems($items, $level = 0) {
-        // TODO: Move these helper functions to a new class.
-        NavModule::sortItems($items);
-
-        foreach ($items as $key => $item) {
-            $visible = $this->itemVisible($key, $item);
-            if (!$visible)
-                continue;
-
-            switch ($item['type']) {
-                case 'link':
-                    $this->renderLink($item);
-                    break;
-                case 'group':
-                    $this->renderGroup($item, $level);
-                    break;
-                case 'divider':
-                    $this->renderDivider($item);
-                    break;
-                default:
-                    echo "\n<!-- Item $key has an unknown type {$item['type']}. -->\n";
+            if ($subitems) {
+                $newitems = array_merge($newitems, $this->flattenArray($subitems));
             }
         }
-    }
+        return $newitems;
 
-    // TODO: Use icon function to render icon.
-    protected function renderLink($link) {
-        $href = val('url', $link);
-        $text = val('text', $link);
-        $icon = val('icon', $link);
-        $badge = val('badge', $link);
-        $class = 'dropdown-menu-link '.$this->buildCssClass('dropdown-menu-link', $link);
-        $listItemClass = '';
-        $disabled = val('disabled', $link);
-        if ($disabled) {
-            $listItemClass = 'disabled';
-        }
-
-        if ($icon)
-            $text = $icon.' <span class="text">'.$text.'</span>';
-
-        if ($badge) {
-            if (is_numeric($badge)) {
-                $badge = Wrap(number_format($badge), 'span', array('class' => 'count'));
-            }
-            $text = '<span class="badge">'.$badge.'</span> '.$text;
-        }
-
-        unset($link['url'], $link['text'], $link['class'], $link['icon'], $link['badge'], $link['disabled'], $link['key'], $link['sort']);
-
-        $link['role'] = 'menuitem';
-        $link['tabindex'] = '-1';
-
-        if ($listItemClass) {
-             $listItemClass = ' class="'.$listItemClass.'"';
-        }
-
-        echo "<li role=\"presentation\" $listItemClass>";
-        echo Anchor($text, $href, $class, $link, true)."\n";
-        echo "</li>";
-    }
-
-    // TODO: Use icon function to render icon.
-    protected function renderGroup($group, $level = 0) {
-        $text = val('text', $group);
-        $items = val('items', $group);
-        $icon = val('icon', $group);
-        $badge = val('badge', $group);
-
-        // Don't render an empty group.
-        if (!$text && empty($items))
-            return;
-
-        $class = 'dropdown-header '.$this->buildCssClass('dropdown-header', $group);
-
-        if ($icon)
-            $text = $icon.' <span class="text">'.$text.'</span>';
-
-        if ($badge) {
-            if (is_numeric($badge)) {
-                $badge = Wrap(number_format($badge), 'span', array('class' => 'count'));
-            }
-            $text = '<span class="badge">'.$badge.'</span> '.$text;
-        }
-
-        // Write the heading.
-        if ($text) {
-            echo '<li class="'.$class.'">'.$text.'</li>'."\n";
-        }
-
-        unset($group['text'], $group['class'], $group['icon'], $group['badge'], $group['items'], $group['sort']);
-
-        if (!empty($items)) {
-            // Write the group items.
-            $this->renderItems($items, $level + 1);
-        }
-
-    }
-
-    protected function renderDivider($divider) {
-        echo '<li role="presentation" class="divider '.$this->buildCssClass('divider', $divider).'"></li>'."\n";
-    }
-
-    public function toString() {
-        ob_start();
-        $this->render();
-        $result = ob_get_clean();
-
-        return $result;
     }
 }

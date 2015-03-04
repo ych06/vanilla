@@ -1,0 +1,52 @@
+<script></script>
+<div class="dropdown {{class}}">
+  {{#trigger}}
+    {{#button}}
+      <button id="{{id}}" class="btn dropdown-toggle {{class}}" type="button" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+         {{text}}
+         {{#icon}}
+            <span class="icon {{icon}}"></span>
+         {{/icon}}
+      </button>
+    {{/button}}
+    {{#anchor}}
+      <a id="{{id}}" class="{{class}}" data-target="#" href="/" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+         {{text}}
+         {{#icon}}
+            <span class="icon {{icon}}"></span>
+         {{/icon}}
+      </a>
+    {{/anchor}}
+  {{/trigger}}
+   <ul class="dropdown-menu {{listCssClass}}" role="menu" aria-labelledby="{{id}}">
+      {{#items}}
+         {{#group}}
+            <li role="presentation" class="dropdown-header {{class}}">
+              {{#icon}}
+                  <span class="icon {{icon}}"></span>
+              {{/icon}}
+              {{text}}
+              {{#badge}}
+                  <span class="badge">{{badge}}</span>
+              {{/badge}}
+            </li>
+         {{/group}}
+         {{#link}}
+             <li role="presentation" class="{{listItemCssClass}}">
+               <a role="menuitem" class="dropdown-menu-link {{class}}" tabindex="-1" href="{{url}}">
+                 {{#icon}}
+                     <span class="icon {{icon}}"></span>
+                 {{/icon}}
+                 {{text}}
+                 {{#badge}}
+                     <span class="badge">{{badge}}</span>
+                 {{/badge}}
+               </a>
+             </li>
+         {{/link}}
+         {{#divider}}
+             <li role="presentation" class="divider {{class}}"></li>
+         {{/divider}}
+      {{/items}}
+   </ul>
+</div>
