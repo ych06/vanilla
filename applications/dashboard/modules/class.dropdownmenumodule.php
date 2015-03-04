@@ -74,7 +74,7 @@
  *  Link 7
  *
  * The view is currently a mustache template, which requires the Mustache rendering plugin to be enabled.
- * 
+ *
  */
 class DropDownMenuModule extends Gdn_Module {
 
@@ -324,7 +324,6 @@ class DropDownMenuModule extends Gdn_Module {
     public function toString() {
         NavModule::sortItems($this->items);
         $this->items = $this->flattenArray($this->items);
-        echo json_encode($this);
         $m = new Mustache_Engine();
         return $m->render($this->FetchView('dropdownmenu'), $this);
     }
