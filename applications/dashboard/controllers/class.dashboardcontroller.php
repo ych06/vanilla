@@ -36,7 +36,8 @@ class DashboardController extends Gdn_Controller {
       $this->AddJsFile('jquery.form.js');
       $this->AddJsFile('jquery.popup.js');
       $this->AddJsFile('jquery.gardenhandleajaxform.js');
-      $this->AddJsFile('customdashboard.js');
+//      $this->AddJsFile('customdashboard.js');
+      $this->AddJsFile('dropdown.js');
       $this->AddJsFile('magnific-popup.min.js');
       $this->AddJsFile('jquery.autosize.min.js');
       $this->AddJsFile('global.js');
@@ -49,8 +50,12 @@ class DashboardController extends Gdn_Controller {
             $this->AddCssFile('http://fonts.googleapis.com/css?family=Rokkitt');
         }
          $this->AddCssFile('admin.css');
-         $this->AddCssFile('styles.css');
          $this->AddCssFile('magnific-popup.css');
+         $this->AddCssFile('type.css');
+         $this->AddCssFile('badges.css');
+         $this->AddCssFile('buttons.css');
+         $this->AddCssFile('dropdowns.css');
+
       }
 
       $this->MasterView = 'admin';
@@ -66,12 +71,14 @@ class DashboardController extends Gdn_Controller {
     * @param string $CurrentUrl Used to highlight correct route in menu.
     */
    public function AddSideMenu($CurrentUrl = FALSE) {
-		if(!$CurrentUrl)
-			$CurrentUrl = strtolower($this->SelfUrl);
+      if(!$CurrentUrl)
+         $CurrentUrl = strtolower($this->SelfUrl);
 
       // Only add to the assets if this is not a view-only request
       if ($this->_DeliveryType == DELIVERY_TYPE_ALL) {
          // Configure SideMenu module
+
+
          $Menu = new NavModule($this, array('class'=>'nav nav-pills nav-stacked'));
 
          $Menu->addGroup('dashboard', array('text'=>T('Dashboard'), 'class' => 'Dashboard'));
@@ -81,6 +88,8 @@ class DashboardController extends Gdn_Controller {
 
          $Menu->AddGroup('appearance', array('text'=>T('Appearance'), 'class' => 'Appearance'));
 		 $Menu->AddLink('appearance.banner', array('text'=>T('Banner'), 'url'=>'/dashboard/settings/banner', 'permission'=>'Garden.Settings.Manage'));
+
+         $Menu->AddLink('appearance.banner', array('text'=>T('Banner'), 'url'=>'/dashboard/settings/banner', 'permission'=>'Garden.Settings.Manage'));
          $Menu->AddLink('appearance.homepage', array('text'=>T('Homepage'), 'url'=>'/dashboard/settings/homepage', 'permission'=>'Garden.Settings.Manage'));
          $Menu->AddLink('appearance.themes', array('text'=>T('Themes'), 'url'=>'/dashboard/settings/themes', 'permission'=>'Garden.Settings.Manage'));
          if ($ThemeOptionsName = C('Garden.ThemeOptions.Name'))
@@ -96,6 +105,11 @@ class DashboardController extends Gdn_Controller {
 
          $Menu->AddLink('users.registration', array('text'=>T('Registration'), 'url'=>'/dashboard/settings/registration', 'permission'=>'Garden.Settings.Manage'));
 		 $Menu->AddLink('users.authentication', array('text'=>T('Authentication'), 'url'=>'/dashboard/authentication', 'permission'=>'Garden.Settings.Manage'));
+
+         $Menu->AddLink('users.roles-and-permissions', array('text'=>T('Roles & Permissions'), 'url'=>'/dashboard/role', 'permission'=>'Garden.Settings.Manage'));
+
+         $Menu->AddLink('users.registration', array('text'=>T('Registration'), 'url'=>'/dashboard/settings/registration', 'permission'=>'Garden.Settings.Manage'));
+         $Menu->AddLink('users.authentication', array('text'=>T('Authentication'), 'url'=>'/dashboard/authentication', 'permission'=>'Garden.Settings.Manage'));
 
          if (C('Garden.Registration.Method') == 'Approval')
             $Menu->AddLink('users.applicants', array('text'=>T('Applicants').' <span class="Popin" rel="/dashboard/user/applicantcount"></span>', 'url'=>'/dashboard/user/applicants', 'permission'=>'Garden.Users.Approve'));
@@ -127,17 +141,12 @@ class DashboardController extends Gdn_Controller {
 		 $Menu->AddGroup('import', array('text'=>T('Import'), 'class' => 'Import'));
 		 $Menu->AddLink('import.settings', array('text'=>T('Import'), 'url'=>'/dashboard/import', 'permission'=>'Garden.Settings.Manage'));
 
-//         $SideMenu->EventName = 'GetAppSettingsMenuItems';
-//         $SideMenu->HtmlId = '';
-//         $SideMenu->HighlightRoute($CurrentUrl);
-//			$SideMenu->Sort = C('Garden.DashboardMenu.Sort');
+         $Menu->AddGroup('import', array('text'=>T('Import'), 'class' => 'Import'));
+         $Menu->AddLink('import.settings', array('text'=>T('Import'), 'url'=>'/dashboard/import', 'permission'=>'Garden.Settings.Manage'));
 
-         // Hook for adding to menu
-//         $this->EventArguments['SideMenu'] = &$SideMenu;
-//         $this->FireEvent('GetAppSettingsMenuItems');
 
-         // Add the module
          $this->AddModule($Menu, 'Panel');
+
       }
    }
 }
