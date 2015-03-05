@@ -123,8 +123,8 @@ class DropDownMenuModule extends Gdn_Module {
 
     /// Methods ///
 
-    public function __construct($Sender, $id, $triggerText = '', $class = '', $listCssClass = '', $useCssPrefix = false) {
-        parent::__construct($Sender);
+    public function __construct($sender, $id, $triggerText = '', $class = '', $listCssClass = '', $useCssPrefix = false) {
+        parent::__construct($sender);
         $this->_ApplicationFolder = 'dashboard';
         $this->id = $id;
         $this->trigger['text'] = $triggerText;
