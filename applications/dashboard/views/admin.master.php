@@ -30,28 +30,6 @@
       <div id="Body">
           <div id="Panel">
           <?php
-          $dropdown = new DropDownMenuModule($this, 'my-dropdown', 'Trigger Name', '', 'dropdown-menu-right');
-          $dropdown->setTrigger('A New Name', 'button', 'btn-default', 'caret');
-          $dropdown->addLink(array('text' => 'Link 1', 'url' => '#')); // Automatically creates key: item1
-          $dropdown->addDivider(''); // Automatically creates key: item2
-          $dropdown->addHeader('Header 1'); // Automatically creates key: item3
-          $dropdown->addLink(array('text' => 'Link 2', 'url' => '#', 'key' => 'link2', 'class' => 'bg-danger')); // Creates item with key: link2
-          $dropdown->addLinks(array(
-             array('text' => 'Link 3', 'url' => '#'), // Automatically creates key: item4
-             array('text' => 'Link 4', 'url' => '#')
-                  ));
-          $dropdown->addGroup(array('key' => 'group1')); // Creates group with no header
-          $dropdown->addGroup(array('text' => 'Group 2', 'key' => 'group2')); // Creates group with header: 'Group 2'
-          $dropdown->addLink(array('text' => 'Link 5', 'url' => '#', 'sort'=>array('before', 'link2'), 'badge' => 4)); // Inserts before Link 2
-          $dropdown->addLinks(array(
-             array('text' => 'Link 6', 'url' => '#'),
-             array('text' => 'Link 7', 'url' => '#')
-                  ));
-          $dropdown->addLink(array('text' => 'Link 8', 'url' => '#', 'disabled'=>true, 'key' => 'group2.link8', 'icon' => 'icon-flame')); // Adds to Group 2
-          $dropdown->addLink(array('text' => 'Link 9', 'url' => '#', 'disabled'=>true, 'key' => 'group1.link9')); // Adds to Group 1
-          $dropdown->addLink(array('text' => 'Link 10', 'url' => '#', 'key' => 'group1.link10')); // Adds to Group 1
-          echo $dropdown->toString();
-
           $this->RenderAsset('Panel');
           ?>
           </div>

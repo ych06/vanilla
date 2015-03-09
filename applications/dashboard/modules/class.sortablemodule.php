@@ -1,7 +1,7 @@
 <?php if (!defined('APPLICATION')) exit();
 
 /**
- * A module for a dropdown.
+ * A module for a sortable list.
  *
  * @author Becky Van Bussel <becky@vanillaforums.com>
  * @copyright 2015 Vanilla Forums, Inc
@@ -9,79 +9,7 @@
  * @since 2.3
  */
 
-/**
- * A flawlessly configurable module for a dropdown menu.
- *
- * The dropdown menu is built with Twitter Bootstrap classes and more specific
- * classes to allow for better targeting. It relies on the Twitter Bootstrap js file.
- *
- * The module includes a dropdown trigger and menu items. Menu items can be
- *
- * **link**    - An link item.
- * **group**   - A group item to create a logical grouping of menu items
- *               for sorting purposes, and/or to create a heading.
- * **divider** - A dividing line.
- *
- * Each item must have a unique key. If not supplied, the class will generate
- * one in the format: 'item*', where * is an auto incrementing number.
- * Keys can be used for sorting purposes and for adding links to a group.
- * For example, you could add a property to an item of 'sort'=>array('before'=>'key1')
- * and it would place the item before another item with the key of 'key1'.
- * If you have a group with the key of 'key2', you can add to this group by
- * adding a new item with the property of 'key'=>'key2.newItemKey'
- *
- *
- * Here is an example menu creation:
- *
- *  $dropdown = new DropDownMenuModule($this, 'my-dropdown', 'Trigger Name', '', 'dropdown-menu-right');
- *  $dropdown->setTrigger('A New Name', 'button', 'btn-default', 'caret');
- *  $dropdown->addLink(array('text' => 'Link 1', 'url' => '#')); // Automatically creates key: item1
- *  $dropdown->addDivider(''); // Automatically creates key: item2
- *  $dropdown->addHeader('Header 1'); // Automatically creates key: item3
- *  $dropdown->addLink(array('text' => 'Link 2', 'url' => '#', 'key' => 'link2', 'class' => 'bg-danger')); // Creates item with key: link2
- *  $dropdown->addLinks(array(
- *     array('text' => 'Link 3', 'url' => '#'), // Automatically creates key: item4
- *     array('text' => 'Link 4', 'url' => '#')
- *  ));
- *  $dropdown->addGroup(array('key' => 'group1')); // Creates group with no header
- *  $dropdown->addGroup(array('text' => 'Group 2', 'key' => 'group2')); // Creates group with header: 'Group 2'
- *  $dropdown->addLink(array('text' => 'Link 5', 'url' => '#', 'sort'=>array('before', 'link2'), 'badge' => 4)); // Inserts before Link 2
- *  $dropdown->addLinks(array(
- *     array('text' => 'Link 6', 'url' => '#'),
- *     array('text' => 'Link 7', 'url' => '#')
- *  ));
- *  $dropdown->addLink(array('text' => 'Link 8', 'url' => '#', 'disabled'=>true, 'key' => 'group2.link8', 'icon' => 'icon-flame')); // Adds to Group 2
- *  $dropdown->addLink(array('text' => 'Link 9', 'url' => '#', 'disabled'=>true, 'key' => 'group1.link9')); // Adds to Group 1
- *  $dropdown->addLink(array('text' => 'Link 10', 'url' => '#', 'key' => 'group1.link10')); // Adds to Group 1
- *  echo $dropdown->toString();
- *
- * Which results in a menu:
- *
- *  Trigger Name
- *
- *  Link 1
- *  ------------
- *  Header 1
- *  Link 5
- *  Link 2
- *  Link 3
- *  Link 4
- *  Link 9
- *  Link 10
- *  Group 2
- *  Link 8
- *  Link 6
- *  Link 7
- *
- * The view is currently a mustache template, which requires the Mustache rendering plugin to be enabled.
- *
- */
-class DropDownMenuModule extends Gdn_Module {
-
-    /**
-     * @var string The css class of the menulist, if any.
-     */
-    public $listCssClass = '';
+abstract class SortableModule extends Gdn_Module {
 
     /**
      * @var string The id of the trigger.
@@ -101,55 +29,44 @@ class DropDownMenuModule extends Gdn_Module {
     /**
      * @var boolean Use item prefix when applying new css classes.
      */
-    protected $useCssPrefix = false;
+    public $useCssPrefix;
 
     /**
-     * @var array Collection of trigger attributes.
-     */
-    public $trigger = array('type' => 'button',
-                            'button' => true,
-                            'class' => 'btn-default',
-                            'icon' => 'caret');
-
-    /**
-     * @var string Dropdown top-level div CSS class.
+     * @var string Top-level div CSS class.
      */
     public $class;
 
     /**
-     * @var array Allowed trigger types.
+     * @var string Prefix for header CSS classes.
      */
-    protected $triggerTypes = array('button', 'anchor');
+    public $headerCssClassPrefix;
+
+    /**
+     * @var string Prefix for link item CSS classes.
+     */
+    public $linkCssClassPrefix;
+
+    /**
+     * @var string Prefix for divider CSS classes.
+     */
+    public $dividerCssClassPrefix;
+
+    private $view;
+
+    private $flatten;
+
+    private $isRendered = false;
 
     /// Methods ///
 
-    public function __construct($sender, $id, $triggerText = '', $class = '', $listCssClass = '', $useCssPrefix = false) {
+    public function __construct($sender, $view, $flatten, $useCssPrefix = false) {
         parent::__construct($sender);
+
         $this->_ApplicationFolder = 'dashboard';
-        $this->id = $id;
-        $this->trigger['text'] = $triggerText;
-        $this->class = $class;
-        $this->listCssClass = $listCssClass; // Bootstrap supports 'right' to align the dropdown box to the right of its container
+
+        $this->view = $view;
+        $this->flatten = $flatten;
         $this->useCssPrefix = $useCssPrefix;
-    }
-
-    /**
-     * Configure the trigger.
-     *
-     * @param string $text Text on the button or anchor.
-     * @param string $type Trigger type - currently supports 'anchor' or 'button'.
-     * @param string $class CSS class on button or anchor tag.
-     * @param string $icon Icon span CSS class.
-     */
-    public function setTrigger($text, $type = 'button', $class = 'btn-default', $icon = 'caret') {
-        $this->trigger['text'] = $text;
-        $this->trigger['type'] = in_array($type, $this->triggerTypes) ? $type : 'button';
-        $this->trigger['icon'] = $icon;
-        $this->trigger['class'] = $class;
-
-        //for mustache logic
-        $this->trigger['button'] = $this->trigger['type'] === 'button';
-        $this->trigger['anchor'] = $this->trigger['type'] === 'anchor';
     }
 
     /**
@@ -159,8 +76,9 @@ class DropDownMenuModule extends Gdn_Module {
      * @param array $options Options for the divider.
      */
     public function addDivider($divider = array()) {
-        $divider['class'] = 'divider '.$this->buildCssClass('divider', $divider);
+        $divider['class'] = 'divider '.$this->buildCssClass($this->dividerCssClassPrefix, $divider);
         $this->addItem('divider', $divider);
+        return $this;
     }
 
     /**
@@ -177,18 +95,20 @@ class DropDownMenuModule extends Gdn_Module {
      */
     public function addGroup($group) {
         if (val('text', $group)) {
-            $group['class'] = $this->buildCssClass('dropdown-header', $group);
+            $group['class'] = $this->buildCssClass($this->headerCssClassPrefix, $group);
         }
         $this->addItem('group', $group);
+        return $this;
     }
 
-    /**
-     * Add a simple header to a dropdown.
-     *
-     * @param $name
-     */
-    public function addHeader($name) {
-        $this->addGroup(array('text' => $name));
+    public function canViewItem($item) {
+        // Check item
+        if (array_key_exists('check', $item)) {
+            if (!val('check', $item)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -207,11 +127,20 @@ class DropDownMenuModule extends Gdn_Module {
      * - **class**: CSS class.
      */
     public function addLink($link) {
-        $link['class'] = $this->buildCssClass('dropdown-menu-link', $link);
-        if (val('disabled', $link)) {
-            $link['listItemCssClass'] = 'disabled';
+        if (!$this->canViewItem($link)) {
+            return $this;
         }
+        $link['class'] = $this->buildCssClass($this->linkCssClassPrefix, $link);
+        $listItemCssClasses = array();
+        if (val('disabled', $link)) {
+            $listItemCssClasses[] = 'disabled';
+        }
+        if ($this->isActive($link)) {
+            $listItemCssClasses[] = 'active';
+        }
+        $link['listItemCssClass'] = implode(' ', $listItemCssClasses);
         $this->addItem('link', $link);
+        return $this;
     }
 
 
@@ -224,6 +153,7 @@ class DropDownMenuModule extends Gdn_Module {
         foreach($links as $link) {
             $this->addLink($link);
         }
+        return $this;
     }
 
     /**
@@ -247,15 +177,21 @@ class DropDownMenuModule extends Gdn_Module {
 
         $item = (array)$item;
 
-        //set type boolean for mustache logic
-        $item[$type] = true;
-
         // Make sure the link has its type.
         $item['type'] = $type;
+
+        // Set type boolean for mustache logic.
+        $item[$type] = true;
+
+        // Explicitly set group as false to aid recursion in mustache.
+        if ($type != 'group') {
+            $item['group'] = false;
+        }
 
         // Walk into the items list to set the item.
         $items =& $this->items;
         foreach (val('key', $item) as $i => $key_part) {
+
             if ($i === count(val('key', $item)) - 1) {
                 // Add the item here.
                 if (array_key_exists($key_part, $items)) {
@@ -280,7 +216,6 @@ class DropDownMenuModule extends Gdn_Module {
                     // Lazy create the items array.
                     $items[$key_part]['items'] = array();
                 }
-
                 $items =& $items[$key_part]['items'];
             }
         }
@@ -313,37 +248,147 @@ class DropDownMenuModule extends Gdn_Module {
         if (val('class', $item)) {
             $result .= ' '.$prefix.val('class', $item);
         }
+
         return trim($result);
     }
 
+    public function isActive($item) {
+        $HighlightRoute = Gdn_Url::Request();
+        $HighlightUrl = Url($HighlightRoute);
+
+        // Highlight the group.
+        return (val('url', $item) && val('url', $item) == $HighlightUrl);
+    }
+
     /**
-     * Renders dropdown menu view
+     * Sort the items in a given dataset (array).
+     *
+     * @param array $items
+     */
+    public static function sortItems(&$items) {
+        uasort($items, function($a, $b) use ($items) {
+            $sort_a = NavModule::sortItemsOrder($a, $items);
+            $sort_b = NavModule::sortItemsOrder($b, $items);
+
+            if ($sort_a > $sort_b)
+                return 1;
+            elseif ($sort_a < $sort_b)
+                return -1;
+            else
+                return 0;
+        });
+    }
+
+    /**
+     * Get the sort order of an item in the items array.
+     * This function looks at the following keys:
+     * - **sort (numeric)**: A specific numeric sort was provided.
+     * - **sort array('before|after', 'key')**: You can specify that the item is before or after another item.
+     * - **_sort**: The order the item was added is used.
+     *
+     * @param array $item The item to get the sort order from.
+     * @param array $items The entire list of items.
+     * @param int $depth The current recursive depth used to prevent inifinite recursion.
+     * @return number
+     */
+    public static function sortItemsOrder($item, $items, $depth = 0) {
+        $default_sort = val('_sort', $item, 100);
+
+        // Check to see if a custom sort has been specified.
+        if (isset($item['sort'])) {
+            if (is_numeric($item['sort'])) {
+                // This is a numeric sort
+                return $item['sort'] * 10000 + $default_sort;
+            } elseif (is_array($item['sort']) && $depth < 10) {
+                // This sort is before or after another depth.
+                list($op, $key) = $item['sort'];
+
+                if (array_key_exists($key, $items)) {
+                    switch ($op) {
+                        case 'after':
+                            return NavModule::sortItemsOrder($items[$key], $items, $depth + 1) + 1000;
+                        case 'before':
+                        default:
+                            return NavModule::sortItemsOrder($items[$key], $items, $depth + 1) - 1000;
+                    }
+                }
+            }
+        }
+        return $default_sort * 10000 + $default_sort;
+    }
+
+    public function _render() {
+        if ($this->isRendered) {
+            return;
+        }
+        $this->isRendered = true;
+        $this->sortItems($this->items);
+        if ($this->flatten) {
+            $this->items = $this->flattenArray($this->items);
+        }
+        else {
+            $this->items = $this->numericItemKeys($this->items);
+        }
+    }
+
+    public function numericItemKeys($items) {
+        foreach ($items as $key => &$item) {
+            unset($item['_sort'], $item['key']);
+
+            // remove empty groups
+            if (val('type', $item) == 'group' && !val('items', $item)) {
+                unset($items[$key]);
+            }
+
+            if (val('items', $item)) {
+                $item['items'] = $this->numericItemKeys($item['items']);
+                //for mustache logic
+                $item['children'] = true;
+            }
+            else {
+                $item['children'] = false;
+            }
+        }
+        return array_values($items);
+    }
+
+    /**
+     * Renders menu view
      *
      * @return string
      */
     public function toString() {
-        NavModule::sortItems($this->items);
-        $this->items = $this->flattenArray($this->items);
-        $m = new Mustache_Engine();
-        return $m->render($this->FetchView('dropdownmenu'), $this);
+        $this->_render();
+        $m = new Mustache_Engine(array(
+            'loader' => new Mustache_Loader_FilesystemLoader(PATH_APPLICATIONS.'/dashboard/views/modules'),
+        ));
+        return $m->render($this->view, $this);
     }
 
     /**
-     * Creates flattened array of dropdown menu items.
+     * Creates flattened array of menu items.
      *
      * @param array $items
      * @return array
      */
     public function flattenArray($items) {
         $newitems = array();
-        foreach($items as $item) {
+        foreach($items as $key => $item) {
+            unset($item['_sort'], $item['key']);
             $subitems = false;
-            if (val('items', $item)) {
-                $subitems = $item['items'];
-                unset($item['items']);
+
+            // Group item
+            if (val('type', $item) == 'group') {
+                // ensure groups have items
+                if (val('items', $item)) {
+                    $subitems = $item['items'];
+                    unset($item['items']);
+                    if (val('text', $item)) {
+                        $newitems[] = $item;
+                    }
+                }
             }
-            if ((val('type', $item) != 'group') || val('text', $item)) {
-                unset($item['_sort'], $item['key']);
+            if ((val('type', $item) != 'group')) {
                 $newitems[] = $item;
             }
             if ($subitems) {
@@ -351,6 +396,5 @@ class DropDownMenuModule extends Gdn_Module {
             }
         }
         return $newitems;
-
     }
 }

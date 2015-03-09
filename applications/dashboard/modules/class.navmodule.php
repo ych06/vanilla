@@ -1,364 +1,63 @@
 <?php if (!defined('APPLICATION')) exit();
 
 /**
- * A module for a list of links.
+ * A module for a nav.
  *
- * @author Todd Burry <todd@vanillaforums.com>
- * @copyright 2003 Vanilla Forums, Inc
+ * @author Becky Van Bussel <becky@vanillaforums.com>
+ * @copyright 2015 Vanilla Forums, Inc
  * @license http://www.opensource.org/licenses/gpl-2.0.php GPL
- * @package Garden
  * @since 2.3
  */
 
 /**
- * A module for a list of links. This is a generic module that can be used or subclassed.
- *
- * The module contains an array of items. Each item can be one of the following types: link, group, or divider.
- * When adding an item you provide an array of with the following keys.
+ * A module for a list of links.
  */
-class NavModule extends Gdn_Module {
-   /// Properties ///
+class NavModule extends SortableModule {
 
-   /**
-    *
-    * @var string The css class of the menu, if any.
-    */
-   public $cssClass = null;
+    /// Methods ///
 
-   /**
-    *
-    * @var string The id of the menu, if any.
-    */
-   public $id = null;
+    public function __construct($sender, $id, $class = '', $useCssPrefix = false, $stacked = false, $pills = false, $tabs = false, $justified = false) {
+        parent::__construct($sender, 'nav', false, $useCssPrefix);
 
-   /**
-    * @var array An array of items in the menu.
-    */
-   protected $items = array();
+        // Set parent attributes
+        $this->id = $id;
 
-   /// Methods ///
+        if ($useCssPrefix) {
+            $this->headerCssClassPrefix = 'nav-header';
+            $this->linkCssClassPrefix = 'nav-link';
+            $this->dividerCssClassPrefix = 'divider';
+        }
 
-   public function __construct($Sender = '', $options) {
-      $this->_ApplicationFolder = 'dashboard';
+        $classes = array();
+        $classes[] = trim($class);
+        if ($stacked) {
+            $classes[] = 'nav-stacked';
+        }
+        if ($pills) {
+            $classes[] = 'nav-pills';
+        }
+        if ($tabs) {
+            $classes[] = 'nav-tabs';
+        }
+        if ($justified) {
+            $classes[] = 'nav-justified';
+        }
 
-      $this->id = val('id', $options);
-      $this->cssClass = val('class', $options);
-
-      parent::__construct($Sender);
-   }
-
-   /**
-    * Add a divider to the items array.
-    *
-    * @param string $key The key of the divider.
-    * @param array $options Options for the divider.
-    */
-   public function addDivider($key, $options = array()) {
-      $this->addItem('divider', $key, $options);
-   }
-
-   /**
-    * Add a group to the items array.
-    *
-    * @param string $key The group key. Dot syntax is allowed to nest groups within eachother.
-    * @param array $group The group with the following key(s):
-    * - **text**: The text of the group. Html is allowed.
-    * - **sort**: Specify a custom sort order for the item.
-    *   This can be either a number or an array in the form ('before|after', 'key').
-    */
-   public function addGroup($key, $group) {
-      $this->addItem('group', $key, $group);
-   }
-
-   /**
-    * Add an item to the items array.
-    *
-    * @param string $type The type of item (link, group, or divider).
-    * @param string $key The item key. Dot syntax is allowed to nest items into groups.
-    * @param array $item The item to add.
-    */
-   protected function addItem($type, $key, $item) {
-      if (!is_array($key))
-         $key = explode('.', $key);
-      else
-         $key = array_values($key);
-
-      $item = (array)$item;
-
-      // Make sure the link has its type.
-      $item['type'] = $type;
-
-      // Walk into the items list to set the item.
-      $items =& $this->items;
-      foreach ($key as $i => $key_part) {
-         if ($i === count($key) - 1) {
-            // Add the item here.
-            if (array_key_exists($key_part, $items)) {
-               // The item is already here so merge this one on top of it.
-               if ($items[$key_part]['type'] !== $type)
-                  throw new \Exception("$key of type $type does not match exsisting type {$items[$key_part]['type']}.", 500);
-
-               $items[$key_part] = array_merge($items[$key_part], $item);
-            } else {
-               // The item is new so just add it here.
-               touchValue('_sort', $item, count($items));
-               $items[$key_part] = $item;
-            }
-         } else {
-            // This is a group.
-            if (!array_key_exists($key_part, $items)) {
-               // The group doesn't exist so lazy-create it.
-               $items[$key_part] = array('type' => 'group', 'text' => '', 'items' => array(), '_sort' => count($items));
-            } elseif ($items[$key_part]['type'] !== 'group') {
-               throw new \Exception("$key_part is not a group", 500);
-            } elseif (!array_key_exists('items', $items[$key_part])) {
-               // Lazy create the items array.
-               $items[$key_part]['items'] = array();
-            }
-
-            $items =& $items[$key_part]['items'];
-         }
-      }
-   }
-
-   /**
-    * Add a link to the menu.
-    *
-    * @param string|array $key The key of the link. You can nest links in a group by using dot syntax to specify its key.
-    * @param array $link The link with the following keys:
-    * - **url**: The url of the link.
-    * - **text**: The text of the link. Html is allowed.
-    * - **icon**: The html of the icon.
-    * - **badge**: The link contain a badge. such as a count or alert. Html is allowed.
-    * - **sort**: Specify a custom sort order for the item.
-    *   This can be either a number or an array in the form ('before|after', 'key').
-    */
-   public function addLink($key, $link) {
-      $this->addItem('link', $key, $link);
-   }
-
-   protected function getAttibutes() {
-      $attributes = array('id' => $this->id, 'class' => $this->cssClass, 'role' => 'navigation');
-
-      return attribute($attributes);
-   }
-
-    public function isActive($item) {
-        $HighlightRoute = Gdn_Url::Request();
-        $HighlightUrl = Url($HighlightRoute);
-
-        // Highlight the group.
-        return (val('url', $item) && val('url', $item) == $HighlightUrl);
+        $this->class = implode(' ', $classes);
     }
 
-    /**
-     * Adds CSS class[es] to an item, based on 'class' property of an item
-     * and also the 'key' property of an item. Prepends prefix to class names.
-     *
-     * @param string $prefix Prefix to add to class name.
-     * @param array $item Item to add CSS class to.
-     * @return string
-     */
-    // TODO: Move to more central location
-    public function buildCssClass($prefix, $item) {
-        $result = '';
-        if ($prefix) {
-            $prefix .= '-';
+    public function addDropdown($dropdown, $key = '', $sort = '') {
+        $dropdownItem = array();
+        if ($key) {
+            $dropdownItem['key'] = $key;
         }
-        if (val('key', $item)) {
-            $result .= $prefix.implode('-', val('key', $item));
+        if ($sort) {
+            $dropdownItem['sort'] = $sort;
         }
-        if (val('class', $item)) {
-            $result .= $prefix.val('class', $item);
-        }
-        return trim($result);
+        $dropdown->tag = 'li';
+        $dropdown->_render();
+        $dropdownItem['dropdownmenu'] = $dropdown;
+        $this->addItem('dropdown', $dropdownItem);
+        return $this;
     }
-
-   protected function itemVisible($key, $item) {
-      $visible = val('visible', $item, true);
-      $prop = 'show'.$key;
-
-      if (property_exists($this, $prop)) {
-         return $this->$prop;
-      } else {
-         return $visible;
-      }
-   }
-
-   /**
-    * Render the menu as a nav.
-    */
-   public function render() {
-      echo '<nav role="navigation">'."\n";
-      $this->renderItems($this->items);
-      echo "</nav>\n";
-   }
-
-   protected function renderItems($items, $level = 0) {
-      NavModule::sortItems($items);
-
-      foreach ($items as $key => $item) {
-         $visible = $this->itemVisible($key, $item);
-         if (!$visible)
-            continue;
-
-         switch ($item['type']) {
-            case 'link':
-               $this->renderLink($item);
-               break;
-            case 'group':
-               $this->renderGroup($item, $level);
-               break;
-            case 'divider':
-               $this->renderDivider($item);
-               break;
-            default:
-               echo "\n<!-- Item $key has an unknown type {$item['type']}. -->\n";
-         }
-      }
-   }
-
-   protected function renderLink($link) {
-      $href = val('url', $link);
-      $text = val('text', $link);
-      $icon = val('icon', $link);
-      $badge = val('badge', $link);
-      $class = 'nav-link '.$this->buildCssClass('nav-link', $link);
-      $disabled = val('disabled', $link);
-      $listItemClass = '';
-
-      if ($disabled) {
-         $listItemClass .= ' disabled';
-      }
-      if ($this->isActive($link)) {
-         $listItemClass .= ' active';
-      }
-      if ($icon) {
-         $text = $icon.' <span class="text">'.$text.'</span>';
-      }
-      if ($badge) {
-         if (is_numeric($badge)) {
-            $badge = Wrap(number_format($badge), 'span', array('class' => 'count'));
-         }
-         $text = '<span class="badge">'.$badge.'</span> '.$text;
-      }
-
-      if ($listItemClass) {
-         $listItemClass = ' class="'.trim($listItemClass).'"';
-      }
-
-      unset($link['url'], $link['text'], $link['class'], $link['icon'], $link['badge'], $link['disabled'], $link['key'], $link['sort'], $link['permission']);
-
-      //var_dump($link);
-      echo '<li role="presentation" '.$listItemClass.'>';
-      echo Anchor($text, $href, $class, $link, true);
-      echo "</li>\n";
-   }
-
-   protected function renderGroup($group, $level = 0) {
-      $text = val('text', $group);
-      $group['class'] = 'nav-group '.($text ? '' : 'nav-group-noheading ').$this->buildCssClass('nav-group', $group);
-
-      // Write the heading.
-      if ($text) {
-         echo "<h3>$text</h3>\n";
-      }
-      echo '<ul '.$this->getAttibutes().">\n";
-
-
-      $items = val('items', $group);
-      unset($group['text'], $group['items']);
-
-      // Don't render an empty group.
-      if (empty($items)) {
-         echo '</ul>';
-         return;
-      }
-
-      // Write the group items.
-      $this->renderItems($items, $level + 1);
-
-      echo "</ul>\n";
-   }
-
-   protected function renderDivider($divider) {
-      echo "<li class=\"divider\"></li>\n";
-   }
-
-   /**
-    * Sort the items in a given dataset (array).
-    *
-    * @param array $items
-    */
-   public static function sortItems(&$items) {
-      uasort($items, function($a, $b) use ($items) {
-         $sort_a = NavModule::sortItemsOrder($a, $items);
-         $sort_b = NavModule::sortItemsOrder($b, $items);
-
-         if ($sort_a > $sort_b)
-            return 1;
-         elseif ($sort_a < $sort_b)
-            return -1;
-         else
-            return 0;
-      });
-   }
-
-   /**
-    * Get the sort order of an item in the items array.
-    * This function looks at the following keys:
-    * - **sort (numeric)**: A specific numeric sort was provided.
-    * - **sort array('before|after', 'key')**: You can specify that the item is before or after another item.
-    * - **_sort**: The order the item was added is used.
-    *
-    * @param array $item The item to get the sort order from.
-    * @param array $items The entire list of items.
-    * @param int $depth The current recursive depth used to prevent inifinite recursion.
-    * @return number
-    */
-   public static function sortItemsOrder($item, $items, $depth = 0) {
-      $default_sort = val('_sort', $item, 100);
-
-      // Check to see if a custom sort has been specified.
-      if (isset($item['sort'])) {
-         if (is_numeric($item['sort'])) {
-            // This is a numeric sort
-            return $item['sort'] * 10000 + $default_sort;
-         } elseif (is_array($item['sort']) && $depth < 10) {
-            // This sort is before or after another depth.
-            list($op, $key) = $item['sort'];
-
-            if (array_key_exists($key, $items)) {
-               switch ($op) {
-                  case 'after':
-                     return NavModule::sortItemsOrder($items[$key], $items, $depth + 1) + 1000;
-                  case 'before':
-                  default:
-                     return NavModule::sortItemsOrder($items[$key], $items, $depth + 1) - 1000;
-               }
-            }
-         }
-      }
-
-      return $default_sort * 10000 + $default_sort;
-   }
-
-
-   public function toString() {
-      ob_start();
-      $this->render();
-      $result = ob_get_clean();
-
-      return $result;
-   }
 }
-
-if (!function_exists('icon')):
-
-function icon($name) {
-   return <<<EOT
-<span class="icon icon-$name"></span>
-EOT;
-}
-
-endif;

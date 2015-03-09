@@ -1,0 +1,42 @@
+<ul class="nav {{class}}">
+  {{#items}}
+      {{#group}}
+          <li role="presentation" class="header {{class}}">
+            {{#icon}}
+                <span class="icon {{icon}}"></span>
+            {{/icon}}
+            {{text}}
+            {{#badge}}
+                <span class="badge">{{badge}}</span>
+            {{/badge}}
+          </li>
+      {{/group}}
+      {{#link}}
+          <li role="presentation" {{#listItemCssClass}}class="{{listItemCssClass}}"{{/listItemCssClass}}>
+              <a class="{{class}}" href="{{url}}">
+                {{#icon}}
+                    <span class="icon {{icon}}"></span>
+                {{/icon}}
+                {{text}}
+                {{#badge}}
+                    <span class="badge">{{badge}}</span>
+                {{/badge}}
+              </a>
+          </li>
+      {{/link}}
+      {{#divider}}
+          <li role="presentation" class="divider {{class}}"></li>
+      {{/divider}}
+      {{#dropdown}}
+        {{#dropdownmenu}}
+          {{> dropdown}}
+        {{/dropdownmenu}}
+      {{/dropdown}}
+      {{#children}}
+          <li role="presentation" {{#listItemCssClass}}class="{{listItemCssClass}}"{{/listItemCssClass}}>
+            {{>nav}}
+          </li>
+      {{/children}}
+  {{/items}}
+</ul>
+
