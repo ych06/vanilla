@@ -459,6 +459,7 @@ class QueueModel extends Gdn_Model {
                $exisiting = $model->GetID($parts[1]);
                if ($exisiting) {
                   Trace('Item has already been added');
+                  Trace($exisiting, 'item');
                   return true;
                }
             }
