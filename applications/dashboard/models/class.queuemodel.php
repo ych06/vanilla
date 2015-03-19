@@ -140,6 +140,7 @@ class QueueModel extends Gdn_Model {
       if ($this->Validate($SaveData, $Insert) === TRUE) {
          $Fields = $this->Validation->ValidationFields();
          $this->EventArguments['Fields'] =& $Fields;
+         Trace($Fields, 'mod fields');
 
          if ($Insert === FALSE) {
             $Fields = RemoveKeyFromArray($Fields, $this->PrimaryKey); // Don't try to update the primary key
