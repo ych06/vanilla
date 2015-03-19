@@ -60,6 +60,8 @@ class QueueModel extends Gdn_Model {
     * {@inheritDoc}
     */
    public function Save($data, $Settings = FALSE) {
+      Trace($data, 'queue save');
+
       $this->DefineSchema();
       $SchemaFields = $this->Schema->Fields();
 
