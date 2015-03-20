@@ -9,62 +9,28 @@
  * @since 2.3
  */
 
-abstract class SortableModule extends Gdn_Module {
+abstract class SortableModule extends MustacheModule {
 
-    /**
-     * @var string The id of the trigger.
-     */
-    public $id = null;
-
-    /**
-     * @var array An array of items in the menu.
-     */
     public $items = array();
 
-    /**
-     * @var int Number to generate key strings from.
-     */
     protected $keyNumber = 1;
 
-    /**
-     * @var boolean Use item prefix when applying new css classes.
-     */
     public $useCssPrefix;
 
-    /**
-     * @var string Top-level div CSS class.
-     */
-    public $class;
-
-    /**
-     * @var string Prefix for header CSS classes.
-     */
     public $headerCssClassPrefix;
-
-    /**
-     * @var string Prefix for link item CSS classes.
-     */
     public $linkCssClassPrefix;
-
-    /**
-     * @var string Prefix for divider CSS classes.
-     */
     public $dividerCssClassPrefix;
 
-    private $view;
-
     private $flatten;
-
     private $isRendered = false;
 
     /// Methods ///
 
-    public function __construct($sender, $view, $flatten, $useCssPrefix = false) {
-        parent::__construct($sender);
+    public function __construct($view, $flatten, $useCssPrefix = false) {
+        parent::__construct($view);
 
         $this->_ApplicationFolder = 'dashboard';
 
-        $this->view = $view;
         $this->flatten = $flatten;
         $this->useCssPrefix = $useCssPrefix;
     }
@@ -75,11 +41,11 @@ abstract class SortableModule extends Gdn_Module {
      * @param string $key The key of the divider.
      * @param array $options Options for the divider.
      */
-    public function addDivider($divider = array()) {
-        $divider['class'] = 'divider '.$this->buildCssClass($this->dividerCssClassPrefix, $divider);
-        $this->addItem('divider', $divider);
-        return $this;
-    }
+//    public function addDivider($divider = array()) {
+//        $divider['dividerCssClass'] = 'divider '.$this->buildCssClass($this->dividerCssClassPrefix, $divider);
+//        $this->addItem('divider', $divider);
+//        return $this;
+//    }
 
     /**
      * Add a group to the items array.
@@ -93,22 +59,24 @@ abstract class SortableModule extends Gdn_Module {
      * - **key**: Group key.
      * - **class**: Header CSS class.
      */
-    public function addGroup($group) {
-        if (val('text', $group)) {
-            $group['class'] = $this->buildCssClass($this->headerCssClassPrefix, $group);
+    public function addGroupArray($group) {
+        return $this->addGroup(val('text', $group), val('icon', $group), val('badge', $group), val('sort', $group), val('key', $group), val('class', $group));
+    }
+
+    public function addGroup($text = '', $icon = '', $badge = '', $sort = false, $key = '', $cssClass = '') {
+        $group = array(
+            'headerText' => $text,
+            'headerIcon' => $icon,
+            'headerBadge' => $badge,
+            'sort' => $sort,
+            'key' => $key,
+            'headerCssClass' => $cssClass
+        );
+        if ($text) {
+            $group['headerCssClass'] = $cssClass.' '.$this->buildCssClass($this->headerCssClassPrefix, $group);
         }
         $this->addItem('group', $group);
         return $this;
-    }
-
-    public function canViewItem($item) {
-        // Check item
-        if (array_key_exists('check', $item)) {
-            if (!val('check', $item)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -126,19 +94,36 @@ abstract class SortableModule extends Gdn_Module {
      * - **key**: Item key.
      * - **class**: CSS class.
      */
-    public function addLink($link) {
-        if (!$this->canViewItem($link)) {
+    public function addLinkArray($link) {
+        $this->addLink(val('text', $link), val('url', $link), val('icon', $link), val('badge', $link), val('sort', $link), val('key', $link), val('disabled', $link), val('class', $link), val('check', $link, true));
+        return $this;
+    }
+
+    public function addLink($text, $url, $icon = '', $badge = '', $sort = false, $key = false, $disabled = false, $cssClass = '', $isAllowed = true) {
+        if (!$isAllowed) {
             return $this;
         }
-        $link['class'] = $this->buildCssClass($this->linkCssClassPrefix, $link);
+
+        $link = array(
+            'linkText' => $text,
+            'linkUrl' => $url,
+            'linkIcon' => $icon,
+            'linkBadge' => $badge,
+            'sort' => $sort,
+            'key' => $key,
+        );
+
+        $link['linkCssClass'] = $cssClass.' '.$this->buildCssClass($this->linkCssClassPrefix, $link);
+
         $listItemCssClasses = array();
-        if (val('disabled', $link)) {
+        if ($disabled) {
             $listItemCssClasses[] = 'disabled';
         }
         if ($this->isActive($link)) {
             $listItemCssClasses[] = 'active';
         }
         $link['listItemCssClass'] = implode(' ', $listItemCssClasses);
+
         $this->addItem('link', $link);
         return $this;
     }
@@ -151,7 +136,7 @@ abstract class SortableModule extends Gdn_Module {
      */
     public function addLinks($links) {
         foreach($links as $link) {
-            $this->addLink($link);
+            $this->addLinkArray($link);
         }
         return $this;
     }
@@ -181,11 +166,11 @@ abstract class SortableModule extends Gdn_Module {
         $item['type'] = $type;
 
         // Set type boolean for mustache logic.
-        $item[$type] = true;
+        $item['is'.ucfirst($type)] = true;
 
         // Explicitly set group as false to aid recursion in mustache.
         if ($type != 'group') {
-            $item['group'] = false;
+            $item['isGroup'] = false;
         }
 
         // Walk into the items list to set the item.
@@ -244,9 +229,6 @@ abstract class SortableModule extends Gdn_Module {
             else {
                 $result .= $prefix.str_replace('.', '-', val('key', $item));
             }
-        }
-        if (val('class', $item)) {
-            $result .= ' '.$prefix.val('class', $item);
         }
 
         return trim($result);
@@ -317,7 +299,7 @@ abstract class SortableModule extends Gdn_Module {
         return $default_sort * 10000 + $default_sort;
     }
 
-    public function _render() {
+    public function prepare() {
         if ($this->isRendered) {
             return;
         }
@@ -343,26 +325,13 @@ abstract class SortableModule extends Gdn_Module {
             if (val('items', $item)) {
                 $item['items'] = $this->numericItemKeys($item['items']);
                 //for mustache logic
-                $item['children'] = true;
+                $item['hasChildren'] = true;
             }
             else {
-                $item['children'] = false;
+                $item['hasChildren'] = false;
             }
         }
         return array_values($items);
-    }
-
-    /**
-     * Renders menu view
-     *
-     * @return string
-     */
-    public function toString() {
-        $this->_render();
-        $m = new Mustache_Engine(array(
-            'loader' => new Mustache_Loader_FilesystemLoader(PATH_APPLICATIONS.'/dashboard/views/modules'),
-        ));
-        return $m->render($this->view, $this);
     }
 
     /**
@@ -383,7 +352,7 @@ abstract class SortableModule extends Gdn_Module {
                 if (val('items', $item)) {
                     $subitems = $item['items'];
                     unset($item['items']);
-                    if (val('text', $item)) {
+                    if (val('headerText', $item)) {
                         $newitems[] = $item;
                     }
                 }

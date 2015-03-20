@@ -37,7 +37,6 @@
  *  $dropdown->setTrigger('A New Name', 'button', 'btn-default', 'caret');
  *  $dropdown->addLink(array('text' => 'Link 1', 'url' => '#')); // Automatically creates key: item1
  *  $dropdown->addDivider(''); // Automatically creates key: item2
- *  $dropdown->addHeader('Header 1'); // Automatically creates key: item3
  *  $dropdown->addLink(array('text' => 'Link 2', 'url' => '#', 'key' => 'link2', 'class' => 'bg-danger')); // Creates item with key: link2
  *  $dropdown->addLinks(array(
  *     array('text' => 'Link 3', 'url' => '#'), // Automatically creates key: item4
@@ -61,7 +60,6 @@
  *
  *  Link 1
  *  ------------
- *  Header 1
  *  Link 5
  *  Link 2
  *  Link 3
@@ -78,14 +76,19 @@
  */
 class DropdownModule extends SortableModule {
 
+    /**
+     * @var string The id of the trigger.
+     */
+    public $triggerId;
+
 
     /**
      * @var array Collection of trigger attributes.
      */
     public $trigger = array('type' => 'button',
-                            'button' => true,
-                            'class' => 'btn-default',
-                            'icon' => 'caret');
+                            'isButton' => true,
+                            'triggerCssClass' => 'btn-default',
+                            'triggerIcon' => 'caret');
 
     /**
      * @var array Allowed trigger types.
@@ -98,6 +101,8 @@ class DropdownModule extends SortableModule {
      */
     public $listCssClass = '';
 
+    public $dropdownCssClass;
+
     /**
      * @var string The top level html wrapper element
      */
@@ -105,15 +110,13 @@ class DropdownModule extends SortableModule {
 
     /// Methods ///
 
-    public function __construct($sender, $id, $triggerText = '', $class = '', $listCssClass = '', $useCssPrefix = false) {
-        parent::__construct($sender, 'dropdown', true, $useCssPrefix);
+    public function __construct($triggerId, $triggerText = '', $class = '', $listCssClass = '', $useCssPrefix = false) {
+        parent::__construct('dropdown', true, $useCssPrefix);
 
-        $this->trigger['text'] = $triggerText;
+        $this->trigger['triggerText'] = $triggerText;
         $this->listCssClass = trim($listCssClass);
-
-        // Set parent attributes
-        $this->id = $id;
-        $this->class = trim($class);
+        $this->triggerId = $triggerId;
+        $this->dropdownCssClass = $class;
 
         if ($useCssPrefix) {
             $this->headerCssClassPrefix = 'dropdown-header';
@@ -131,14 +134,14 @@ class DropdownModule extends SortableModule {
      * @param string $icon Icon span CSS class.
      */
     public function setTrigger($text, $type = 'button', $class = 'btn-default', $icon = 'caret') {
-        $this->trigger['text'] = $text;
+        $this->trigger['triggerText'] = $text;
         $this->trigger['type'] = in_array($type, $this->triggerTypes) ? $type : 'button';
-        $this->trigger['icon'] = $icon;
-        $this->trigger['class'] = trim($class);
+        $this->trigger['triggerIcon'] = $icon;
+        $this->trigger['triggerCssClass'] = trim($class);
 
         //for mustache logic
-        $this->trigger['button'] = $this->trigger['type'] === 'button';
-        $this->trigger['anchor'] = $this->trigger['type'] === 'anchor';
+        $this->trigger['isButton'] = $this->trigger['type'] === 'button';
+        $this->trigger['isAnchor'] = $this->trigger['type'] === 'anchor';
         return $this;
     }
 }

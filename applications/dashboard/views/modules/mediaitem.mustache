@@ -1,0 +1,67 @@
+<{{tag}} id="{{id}}" class="media media-item {{cssClass}}">
+{{#image}}
+    <div class="media-box {{boxCssClass}}">
+      {{#imageUrl}}
+      <a href="{{imageUrl}}">
+      {{/imageUrl}}
+        <img class="media-object {{imageCssClass}}" src="{{imageSource}}" alt="{{imageAlt}}">
+      {{#imageUrl}}
+      </a>
+      {{/imageUrl}}
+      {{#hasBoxItems}}
+        <div class="media-box-body {{boxItemsCssClass}}">
+
+        </div>
+      {{/hasBoxItems}}
+    </div>
+{{/image}}
+<div class="media-body {{bodyCssClass}}">
+  {{#options}}
+    {{> dropdown}}
+  {{/options}}
+  {{#heading}}
+    <h4 class="media-heading {{headingCssClass}}">
+      {{#headingUrl}}
+      <a href="{{headingUrl}}">
+      {{/headingUrl}}
+      {{heading}}
+      {{#headingUrl}}
+      </a>
+      {{/headingUrl}}
+    </h4>
+  {{/heading}}
+    <div class="media-text {{textCssClass}}">{{text}}</div>
+  {{#hasAttachments}}
+    {{#attachments}}
+
+    {{/attachments}}
+  {{/hasAttachments}}
+  {{#hasMeta}}
+      <ul class="media-meta {{metaCssClass}}">
+        {{#meta}}
+            <li role="presentation" class="media-meta-item {{metaItemCssClass}}">
+              {{#metaIsLink}}
+              <a href="{{metaUrl}}">
+              {{/metaIsLink}}
+              {{#metaIcon}}
+                  <span class="icon {{icon}}"></span>
+              {{/metaIcon}}
+              {{metaLabel}}
+              {{#metaHasLink}}
+                  <a href="{{metaUrl}}">{{metaLinkText}}</a>
+              {{/metaHasLink}}
+              {{#metaBadge}}
+                  <span class="badge">{{badge}}</span>
+              {{/metaBadge}}
+              {{#metaIsLink}}
+              </a>
+              {{/metaIsLink}}
+            </li>
+        {{/meta}}
+      </ul>
+  {{/hasMeta}}
+  {{#hasMediaList}}
+    {{>medialist}}
+  {{/hasMediaList}}
+</div>
+</{{tag}}>

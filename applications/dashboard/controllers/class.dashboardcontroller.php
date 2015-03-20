@@ -56,6 +56,7 @@ class DashboardController extends Gdn_Controller {
             $this->AddCssFile('buttons.css');
             $this->AddCssFile('dropdowns.css');
             $this->AddCssFile('navs.css');
+            $this->AddCssFile('media.css');
         }
 
         $this->MasterView = 'admin';
@@ -78,81 +79,85 @@ class DashboardController extends Gdn_Controller {
         if ($this->_DeliveryType == DELIVERY_TYPE_ALL) {
             // Configure SideMenu module
 
-            $dropdown = new DropdownModule($this, 'my-dropdown', 'Trigger Name', '', 'dropdown-menu-right');
+            $dropdown = new DropdownModule('my-dropdown', 'Trigger Name', '', 'dropdown-menu-right');
             $dropdown->setTrigger('A New Name', 'button', 'btn-default', 'caret')
-                ->addLink(array('text' => 'Link 1', 'url' => '#')) // Automatically creates key: item1
-                ->addDivider() // Automatically creates key: item2
-                ->addLink(array('text' => 'Link 2', 'url' => '#', 'key' => 'link2', 'class' => 'bg-danger')) // Creates item with key: link2
+                ->addLinkArray(array('text' => 'Link 1', 'url' => '#')) // Automatically creates key: item1
+//                ->addDivider() // Automatically creates key: item2
+                ->addLinkArray(array('text' => 'Link 2', 'url' => '#', 'key' => 'link2', 'class' => 'bg-danger')) // Creates item with key: link2
                 ->addLinks(array(
                     array('text' => 'Link 3', 'url' => '#'), // Automatically creates key: item4
                     array('text' => 'Link 4', 'url' => '#')
                 ))
-                ->addGroup(array('key' => 'group1')) // Creates group with no header
-                ->addGroup(array('text' => 'Group 3', 'key' => 'group3')) // Creates group with header: 'Group 2'
-                ->addGroup(array('text' => 'Group 2', 'key' => 'group2')) // Creates group with header: 'Group 2'
-                ->addLink(array('text' => 'Link 5', 'url' => '#', 'sort' => array('before', 'link2'), 'badge' => 4)) // Inserts before Link 2
+                ->addGroupArray(array('key' => 'group1')) // Creates group with no header
+                ->addGroupArray(array('text' => 'Group 3', 'key' => 'group3')) // Creates group with header: 'Group 3'
+                ->addGroupArray(array('text' => 'Group 2', 'key' => 'group2')) // Creates group with header: 'Group 2'
+                ->addLinkArray(array('text' => 'Link 5', 'url' => '#', 'sort' => array('before', 'link2'), 'badge' => 4)) // Inserts before Link 2
                 ->addLinks(array(
                     array('text' => 'Link 6', 'url' => '#'),
                     array('text' => 'Link 7', 'url' => '#')
                 ))
-                ->addLink(array('text' => 'Link 8', 'url' => '#', 'disabled' => true, 'key' => 'group2.link8', 'icon' => 'icon-flame')) // Adds to Group 2
-                ->addLink(array('text' => 'Link 9', 'url' => '#', 'disabled' => true, 'key' => 'group1.link9')) // Adds to Group 1
-                ->addLink(array('text' => 'Link 10', 'url' => '#', 'key' => 'group1.link10')); // Adds to Group 1
+                ->addLinkArray(array('text' => 'Link 8', 'url' => '#', 'disabled' => true, 'key' => 'group2.link8', 'icon' => 'icon-flame')) // Adds to Group 2
+                ->addLinkArray(array('text' => 'Link 9', 'url' => '#', 'disabled' => true, 'key' => 'group1.link9')) // Adds to Group 1
+                ->addLinkArray(array('text' => 'Link 10', 'url' => '#', 'key' => 'group1.link10')); // Adds to Group 1
 
-            $this->AddModule($dropdown, 'Panel');
+            $media = new MediaItemModule('media-id', 'text', 'Heading', '#', false, false, false, 'div', 'media-item-css-class');
+            $media->addImage('https://cd8ba0b44a15c10065fd-24461f391e20b7336331d5789078af53.ssl.cf1.rackcdn.com/fifa.vanillaforums.com/bannedavatar.png');
+            $media->addMetaItem('label', '#', 'link');
+            $this->AddModule($media, 'Panel');
 
-            $menu = new NavModule($this, 'nav');
+            $menu = new NavModule('nav');
 //
-            $menu->addGroup(array('text'=>T('Dashboard'), 'class' => 'Dashboard', 'key' => 'dashboard'))
-                ->addLink(array('text' => T('Dashboard'), 'url' => '/dashboard/settings', 'key' => 'dashboard.dashboard', 'check'=>Gdn::Session()->CheckPermission('Garden.Moderation.Manage')))
-                ->addLink(array('key' => 'dashboard.getting-started', 'text'=>T('Getting Started'), 'url'=>'/dashboard/settings/gettingstarted', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->addLink(array('key' => 'dashboard.help-and-tutorials', 'text'=>T('Help &amp; Tutorials'), 'url'=>'/dashboard/settings/tutorials', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+            $menu->addGroupArray(array('text'=>T('Dashboard'), 'class' => 'Dashboard', 'key' => 'dashboard'))
+                ->addDropdown($dropdown, 'dashboard.dropdown')
+                ->addLinkArray(array('text' => T('Dashboard'), 'url' => '/dashboard/settings', 'key' => 'dashboard.dashboard', 'check'=>Gdn::Session()->CheckPermission('Garden.Moderation.Manage')))
+                ->addLinkArray(array('key' => 'dashboard.getting-started', 'text'=>T('Getting Started'), 'url'=>'/dashboard/settings/gettingstarted', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'dashboard.help-and-tutorials', 'text'=>T('Help &amp; Tutorials'), 'url'=>'/dashboard/settings/tutorials', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
 
-                ->AddGroup(array('key' => 'appearance', 'text'=>T('Appearance'), 'class' => 'Appearance'))
-                ->AddLink(array('key' => 'appearance.banner', 'text'=>T('Banner'), 'url'=>'/dashboard/settings/banner', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'appearance.banner', 'text'=>T('Banner'), 'url'=>'/dashboard/settings/banner', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'appearance.homepage', 'text'=>T('Homepage'), 'url'=>'/dashboard/settings/homepage', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'appearance.themes', 'text'=>T('Themes'), 'url'=>'/dashboard/settings/themes', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'appearance.theme-options', 'text'=>T('Theme Options'), 'url'=>'/dashboard/settings/themeoptions', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage') && C('Garden.ThemeOptions.Name')))
-                ->AddLink(array('key' => 'appearance.mobile-themes', 'text'=>T('Mobile Themes'), 'url'=>'/dashboard/settings/mobilethemes', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'appearance.mobile-theme-options', 'text'=>T('Mobile Theme Options'), 'url'=>'/dashboard/settings/mobilethemeoptions', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage') && C('Garden.MobileThemeOptions.Name')))
-                ->AddLink(array('key' => 'appearance.messages', 'text'=>T('Messages'), 'url'=>'/dashboard/message', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addGroupArray(array('key' => 'appearance', 'text'=>T('Appearance'), 'class' => 'Appearance'))
+                ->addLinkArray(array('key' => 'appearance.banner', 'text'=>T('Banner'), 'url'=>'/dashboard/settings/banner', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'appearance.banner', 'text'=>T('Banner'), 'url'=>'/dashboard/settings/banner', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'appearance.homepage', 'text'=>T('Homepage'), 'url'=>'/dashboard/settings/homepage', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'appearance.themes', 'text'=>T('Themes'), 'url'=>'/dashboard/settings/themes', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'appearance.theme-options', 'text'=>T('Theme Options'), 'url'=>'/dashboard/settings/themeoptions', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage') && C('Garden.ThemeOptions.Name')))
+                ->addLinkArray(array('key' => 'appearance.mobile-themes', 'text'=>T('Mobile Themes'), 'url'=>'/dashboard/settings/mobilethemes', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'appearance.mobile-theme-options', 'text'=>T('Mobile Theme Options'), 'url'=>'/dashboard/settings/mobilethemeoptions', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage') && C('Garden.MobileThemeOptions.Name')))
+                ->addLinkArray(array('key' => 'appearance.messages', 'text'=>T('Messages'), 'url'=>'/dashboard/message', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
 
-                ->AddGroup(array('key' => 'users', 'text'=>T('Users'), 'class' => 'Users'))
-                ->AddLink(array('key' => 'users.settings', 'text'=>T('Users'), 'url'=>'/dashboard/user', 'check'=>Gdn::Session()->CheckPermission(array('Garden.Users.Add', 'Garden.Users.Edit', 'Garden.Users.Delete'))))
-                ->AddLink(array('key' => 'users.roles-and-permissions', 'text'=>T('Roles & Permissions'), 'url'=>'/dashboard/role', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'users.registration', 'text'=>T('Registration'), 'url'=>'/dashboard/settings/registration', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'users.authentication', 'text'=>T('Authentication'), 'url'=>'/dashboard/authentication', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'users.roles-and-permissions', 'text'=>T('Roles & Permissions'), 'url'=>'/dashboard/role', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'users.registration', 'text'=>T('Registration'), 'url'=>'/dashboard/settings/registration', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'users.authentication', 'text'=>T('Authentication'), 'url'=>'/dashboard/authentication', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'users.applicants', 'text'=>T('Applicants'), 'url'=>'/dashboard/user/applicants', 'check'=>Gdn::Session()->CheckPermission('Garden.Users.Approve') && (C('Garden.Registration.Method') == 'Approval')))
+                ->addGroupArray(array('key' => 'users', 'text'=>T('Users'), 'class' => 'Users'))
+                ->addLinkArray(array('key' => 'users.settings', 'text'=>T('Users'), 'url'=>'/dashboard/user', 'check'=>Gdn::Session()->CheckPermission(array('Garden.Users.Add', 'Garden.Users.Edit', 'Garden.Users.Delete'))))
+                ->addLinkArray(array('key' => 'users.roles-and-permissions', 'text'=>T('Roles & Permissions'), 'url'=>'/dashboard/role', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'users.registration', 'text'=>T('Registration'), 'url'=>'/dashboard/settings/registration', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'users.authentication', 'text'=>T('Authentication'), 'url'=>'/dashboard/authentication', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'users.roles-and-permissions', 'text'=>T('Roles & Permissions'), 'url'=>'/dashboard/role', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'users.registration', 'text'=>T('Registration'), 'url'=>'/dashboard/settings/registration', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'users.authentication', 'text'=>T('Authentication'), 'url'=>'/dashboard/authentication', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'users.applicants', 'text'=>T('Applicants'), 'url'=>'/dashboard/user/applicants', 'check'=>Gdn::Session()->CheckPermission('Garden.Users.Approve') && (C('Garden.Registration.Method') == 'Approval')))
 
-                ->AddGroup(array('key' => 'moderation', 'text'=>T('Moderation'), 'class' => 'Moderation'))
-                ->AddLink(array('key' => 'moderation.spam', 'text'=>T('Spam Queue'), 'url'=>'/dashboard/log/spam', 'check'=>Gdn::Session()->CheckPermission(array('Garden.Moderation.Manage', 'Moderation.Spam.Manage'))))
-                ->AddLink(array('key' => 'moderation.queue', 'text'=>T('Moderation Queue'), 'url'=>'/dashboard/log/moderation', 'check'=>Gdn::Session()->CheckPermission(array('Garden.Moderation.Manage', 'Moderation.ModerationQueue.Manage'))))
-                ->AddLink(array('key' => 'moderation.change-log', 'text'=>T('Change Log'), 'url'=>'/dashboard/log/edits', 'check'=>Gdn::Session()->CheckPermission('Garden.Moderation.Manage')))
-                ->AddLink(array('key' => 'moderation.banning', 'text'=>T('Banning'), 'url'=>'/dashboard/settings/bans', 'check'=>Gdn::Session()->CheckPermission('Garden.Moderation.Manage')))
+                ->addGroupArray(array('key' => 'moderation', 'text'=>T('Moderation'), 'class' => 'Moderation'))
+                ->addLinkArray(array('key' => 'moderation.spam', 'text'=>T('Spam Queue'), 'url'=>'/dashboard/log/spam', 'check'=>Gdn::Session()->CheckPermission(array('Garden.Moderation.Manage', 'Moderation.Spam.Manage'))))
+                ->addLinkArray(array('key' => 'moderation.queue', 'text'=>T('Moderation Queue'), 'url'=>'/dashboard/log/moderation', 'check'=>Gdn::Session()->CheckPermission(array('Garden.Moderation.Manage', 'Moderation.ModerationQueue.Manage'))))
+                ->addLinkArray(array('key' => 'moderation.change-log', 'text'=>T('Change Log'), 'url'=>'/dashboard/log/edits', 'check'=>Gdn::Session()->CheckPermission('Garden.Moderation.Manage')))
+                ->addLinkArray(array('key' => 'moderation.banning', 'text'=>T('Banning'), 'url'=>'/dashboard/settings/bans', 'check'=>Gdn::Session()->CheckPermission('Garden.Moderation.Manage')))
 
-                ->AddGroup(array('key' => 'forum', 'text'=>T('Forum Settings'), 'class' => 'Forum'))
-                ->AddLink(array('key' => 'forum.social', 'text'=>T('Social'), 'url'=>'/dashboard/social', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addGroupArray(array('key' => 'forum', 'text'=>T('Forum Settings'), 'class' => 'Forum'))
+                ->addLinkArray(array('key' => 'forum.social', 'text'=>T('Social'), 'url'=>'/dashboard/social', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
 
-                ->AddGroup(array('key' => 'reputation', 'text'=>T('Reputation'), 'class' => 'Reputation'))
+                ->addGroupArray(array('key' => 'reputation', 'text'=>T('Reputation'), 'class' => 'Reputation'))
 
-                ->AddGroup(array('key' => 'add-ons', 'text'=>T('Addons'), 'class' => 'Addons'))
-                ->AddLink(array('key' => 'add-ons.plugins', 'text'=>T('Plugins'), 'url'=>'/dashboard/settings/plugins', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'add-ons.applications', 'text'=>T('Applications'), 'url'=>'/dashboard/settings/applications', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'add-ons.locales', 'text'=>T('Locales'), 'url'=>'/dashboard/settings/locales', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addGroupArray(array('key' => 'add-ons', 'text'=>T('Addons'), 'class' => 'Addons'))
+                ->addLinkArray(array('key' => 'add-ons.plugins', 'text'=>T('Plugins'), 'url'=>'/dashboard/settings/plugins', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'add-ons.applications', 'text'=>T('Applications'), 'url'=>'/dashboard/settings/applications', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'add-ons.locales', 'text'=>T('Locales'), 'url'=>'/dashboard/settings/locales', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
 
-                ->AddGroup(array('key' => 'site-settings', 'text'=>T('Settings'), 'class' => 'SiteSettings'))
-                ->AddLink(array('key' => 'site-settings.outgoing-email', 'text'=>T('Outgoing Email'), 'url'=>'/dashboard/settings/email', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'site-settings.routes', 'text'=>T('Routes'), 'url'=>'/dashboard/routes', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddLink(array('key' => 'site-settings.statistics', 'text'=>T('Statistics'), 'url'=>'/dashboard/statistics', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addGroupArray(array('key' => 'site-settings', 'text'=>T('Settings'), 'class' => 'SiteSettings'))
+                ->addLinkArray(array('key' => 'site-settings.outgoing-email', 'text'=>T('Outgoing Email'), 'url'=>'/dashboard/settings/email', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'site-settings.routes', 'text'=>T('Routes'), 'url'=>'/dashboard/routes', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addLinkArray(array('key' => 'site-settings.statistics', 'text'=>T('Statistics'), 'url'=>'/dashboard/statistics', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
 
-                ->AddGroup(array('key' => 'import', 'text'=>T('Import'), 'class' => 'Import'))
-                ->AddLink(array('key' => 'import.settings', 'text'=>T('Import'), 'url'=>'/dashboard/import', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
-                ->AddGroup(array('key' => 'import', 'text'=>T('Import'), 'class' => 'Import'))
-                ->AddLink(array('key' => 'import.settings', 'text'=>T('Import'), 'url'=>'/dashboard/import', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')));
+                ->addGroupArray(array('key' => 'import', 'text'=>T('Import'), 'class' => 'Import'))
+                ->addLinkArray(array('key' => 'import.settings', 'text'=>T('Import'), 'url'=>'/dashboard/import', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')))
+                ->addGroupArray(array('key' => 'import', 'text'=>T('Import'), 'class' => 'Import'))
+                ->addLinkArray(array('key' => 'import.settings', 'text'=>T('Import'), 'url'=>'/dashboard/import', 'check'=>Gdn::Session()->CheckPermission('Garden.Settings.Manage')));
 
             $this->AddModule($menu, 'Panel');
 

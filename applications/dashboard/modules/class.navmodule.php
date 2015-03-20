@@ -16,8 +16,8 @@ class NavModule extends SortableModule {
 
     /// Methods ///
 
-    public function __construct($sender, $id, $class = '', $useCssPrefix = false, $stacked = false, $pills = false, $tabs = false, $justified = false) {
-        parent::__construct($sender, 'nav', false, $useCssPrefix);
+    public function __construct($id, $class = '', $useCssPrefix = false, $stacked = false, $pills = false, $tabs = false, $justified = false) {
+        parent::__construct('nav', false, $useCssPrefix);
 
         // Set parent attributes
         $this->id = $id;
@@ -55,7 +55,7 @@ class NavModule extends SortableModule {
             $dropdownItem['sort'] = $sort;
         }
         $dropdown->tag = 'li';
-        $dropdown->_render();
+        $dropdown->prepare();
         $dropdownItem['dropdownmenu'] = $dropdown;
         $this->addItem('dropdown', $dropdownItem);
         return $this;
