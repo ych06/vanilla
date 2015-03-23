@@ -129,6 +129,11 @@ abstract class SortableModule extends MustacheModule {
     }
 
 
+    public function hasItems() {
+        return (!empty($this->items));
+    }
+
+
     /**
      * Add a list of links to the menu.
      *

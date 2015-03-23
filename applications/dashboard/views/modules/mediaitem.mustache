@@ -9,9 +9,13 @@
       </a>
       {{/imageUrl}}
       {{#hasBoxItems}}
-        <div class="media-box-body {{boxItemsCssClass}}">
-
-        </div>
+        {{#boxItems}}
+            <div class="media-box-body {{boxItemsCssClass}}">
+              {{#buttons}}
+                  <a class="btn {{buttonCssClass}}" href={{buttonUrl}} role="button">{{buttonText}}</a>
+              {{/buttons}}
+            </div>
+        {{/boxItems}}
       {{/hasBoxItems}}
     </div>
 {{/image}}
@@ -20,15 +24,15 @@
     {{> dropdown}}
   {{/options}}
   {{#heading}}
-    <h4 class="media-heading {{headingCssClass}}">
-      {{#headingUrl}}
-      <a href="{{headingUrl}}">
-      {{/headingUrl}}
-      {{heading}}
-      {{#headingUrl}}
-      </a>
-      {{/headingUrl}}
-    </h4>
+      <h4 class="media-heading {{headingCssClass}}">
+        {{#headingUrl}}
+        <a href="{{headingUrl}}">
+        {{/headingUrl}}
+        {{heading}}
+        {{#headingUrl}}
+        </a>
+        {{/headingUrl}}
+      </h4>
   {{/heading}}
     <div class="media-text {{textCssClass}}">{{text}}</div>
   {{#hasAttachments}}

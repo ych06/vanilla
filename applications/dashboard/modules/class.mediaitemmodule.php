@@ -29,7 +29,7 @@ class MediaItemModule extends MustacheModule {
     public $meta = array();
     public $attachments = null;
     public $boxItems = null;
-    public $mediaList = null; //mediaList
+    public $mediaList = null; //mediaList (children)
 
     public $hasMeta = false;
     public $hasImage = false;
@@ -72,7 +72,8 @@ class MediaItemModule extends MustacheModule {
 
     function addImage($imageSource = '', $imageUrl = '', $imageCssClass = '', $imageAlt = '') {
         $this->hasImage = true;
-        $this->image = array('imageSource' => $imageSource,
+        $this->image = array(
+            'imageSource' => $imageSource,
             'imageUrl' => $imageUrl,
             'imageCssClass' => $imageCssClass,
             'imageAlt' => $imageAlt
@@ -81,10 +82,10 @@ class MediaItemModule extends MustacheModule {
     }
 
     public function addMetaItem($metaLabel = '', $metaUrl = '', $metaLinkText = '', $metaIcon = '', $metaBadge = '', $metaItemCssClass = '') {
-        $this->hasMeta = true;
         $metaHasLink = !empty($metalUrl) && ($metaLinkText && $metaLabel);
         $metaIsLink = !($metaHasLink) && !empty($metaUrl);
-        $this->meta[] = array('metaItemCssClass' => $metaItemCssClass,
+        $this->meta[] = array(
+            'metaItemCssClass' => $metaItemCssClass,
             'metaIsLink' => $metaHasLink,
             'metaHasLink' => $metaIsLink,
             'metaLabel' => $metaLabel, // UserLink()
@@ -93,5 +94,32 @@ class MediaItemModule extends MustacheModule {
             'metaIcon' => $metaIcon,
             'metaBadge' => $metaBadge
         );
+        $this->hasMeta = true;
+        return $this;
+
+    }
+
+    public function addBoxItemButton($text, $url, $icon = '', $badge = '', $class = 'btn-default', $isAllowed = true) {
+        if (!$isAllowed) {
+            return $this;
+        }
+        $button = array(
+            'buttonText' => $text,
+            'buttonUrl' => $url,
+            'buttonIcon' => $icon,
+            'buttonBadge' => $badge,
+            'buttonCssClass' => $class
+        );
+        $this->boxItems['buttons'][] = $button;
+        $this->hasBoxItems = true;
+        return $this;
+    }
+
+    public function addOptions($options) {
+        if (is_a($options, 'DropdownModule')) {
+            $this->options = $options;
+        }
+        $this->options->prepare();
+        return $this;
     }
 }
