@@ -14,74 +14,108 @@ class MediaItemModule extends MustacheModule {
     public $heading;
     public $headingUrl;
     public $options = false; //dropdown
-    public $date;
-    public $username;
 
     public $tag;
+
     public $cssClass;
     public $bodyCssClass;
-    public $boxCssClass; //media-left, media-right, media middle (for vertical alignment)
+    public $boxCssClass = 'media-left'; //media-left, media-right, media-middle (for vertical alignment)
     public $textCssClass;
+    public $buttonsCssClass;
     public $headingCssClass;
     public $metaCssClass;
+    public $imageCssClass;
 
-    public $image = array();
+    public $imageSource;
+    public $imageUrl;
+    public $imageAlt;
+
     public $meta = array();
     public $attachments = null;
-    public $boxItems = null;
+    public $buttons = null;
     public $mediaList = null; //mediaList (children)
 
-    public $hasMeta = false;
     public $hasImage = false;
+    public $hasMeta = false;
     public $hasAttachments = false; //i.e., file uploads
-    public $hasBoxItems = false; //i.e., flair
+    public $hasButtons = false; //i.e., flair
     public $hasMediaList = false;
 
-    private $trucateTextLength;
-    private $trucateTextLink;
-    private $trucateTextUrl;
+    public $view = 'mediaitem';
 
-    private $view = 'mediaitem';
-
-    function __construct($id, $text = '', $heading = '', $headingUrl = '', $options = false, $date = false, $username = false, $tag = 'li', $cssClass = '', $bodyCssClass = '', $boxCssClass = 'media-left', $textCssClass = '', $headingCssClass = '', $metaCssClass = '') {
+    function __construct($heading = '', $headingUrl = '', $text = '', $type = '', $id = 'media-item', $tag = 'li') {
         parent::__construct($this->view);
         $this->_ApplicationFolder = 'dashboard';
 
-        $this->id = $id;
         $this->text = $text;
         $this->heading = $heading;
         $this->headingUrl = $headingUrl;
-        $this->options = $options;
-        $this->date = $date;
-        $this->username = $username;
-
+        $this->type = $type;
+        $this->id = $id;
         $this->tag = $tag;
-        $this->cssClass = $cssClass;
-        $this->bodyCssClass = $bodyCssClass;
-        $this->boxCssClass = $boxCssClass;
-        $this->textCssClass = $textCssClass;
-        $this->headingCssClass = $headingCssClass;
-        $this->metaCssClass = $metaCssClass;
 
-        if (is_a($options, 'DropdownModule')) {
-            $this->options = $options;
-        }
-    }
-
-    public function prepare(){}
-
-    function addImage($imageSource = '', $imageUrl = '', $imageCssClass = '', $imageAlt = '') {
-        $this->hasImage = true;
-        $this->image = array(
-            'imageSource' => $imageSource,
-            'imageUrl' => $imageUrl,
-            'imageCssClass' => $imageCssClass,
-            'imageAlt' => $imageAlt
-        );
         return $this;
     }
 
-    public function addMetaItem($metaLabel = '', $metaUrl = '', $metaLinkText = '', $metaIcon = '', $metaBadge = '', $metaItemCssClass = '') {
+    public function addCssClass($var, $class) {
+        switch($var) {
+            case 'main':
+                $this->cssClass = $class;
+                break;
+            case 'body':
+                $this->bodyCssClass = $class;
+                break;
+            case 'text':
+                $this->textCssClass = $class;
+                break;
+            case 'heading':
+                $this->headingCssClass = $class;
+                break;
+            case 'meta':
+                $this->metaCssClass = $class;
+                break;
+            case 'box':
+                $this->boxCssClass = $class;
+                break;
+            case 'buttons':
+                $this->buttonsCssClass = $class;
+                break;
+            case 'image':
+                $this->imageCssClass = $class;
+                break;
+        }
+        return $this;
+    }
+
+    public function prepare(){
+        $this->hasMeta = !empty($this->meta);
+        $this->hasImage = !empty($this->imageSource);
+        $this->hasAttachments = !empty($this->attachments);
+        $this->hasButtons = !empty($this->buttons);
+        $this->hasMediaList = !empty($this->mediaList);
+
+        if (!empty($this->options)) {
+            $this->options->prepare();
+        }
+    }
+
+    function addImage($source = '', $url = '', $isAllowed = true, $cssClass = '', $alt = '') {
+        if (!$isAllowed) {
+            return $this;
+        }
+
+        $this->imageSource = $source;
+        $this->imageUrl = $url;
+        $this->imageCssClass = $cssClass;
+        $this->imageAlt = $alt;
+
+        return $this;
+    }
+
+    public function addMetaItem($metaLabel = '', $metaUrl = '', $metaLinkText = '', $isAllowed = true, $metaIcon = '', $metaBadge = '', $metaItemCssClass = '') {
+        if (!$isAllowed) {
+            return $this;
+        }
         $metaHasLink = !empty($metalUrl) && ($metaLinkText && $metaLabel);
         $metaIsLink = !($metaHasLink) && !empty($metaUrl);
         $this->meta[] = array(
@@ -94,12 +128,10 @@ class MediaItemModule extends MustacheModule {
             'metaIcon' => $metaIcon,
             'metaBadge' => $metaBadge
         );
-        $this->hasMeta = true;
         return $this;
-
     }
 
-    public function addBoxItemButton($text, $url, $icon = '', $badge = '', $class = 'btn-default', $isAllowed = true) {
+    public function addButton($text, $url, $icon = '', $badge = '', $class = 'btn-default', $isAllowed = true) {
         if (!$isAllowed) {
             return $this;
         }
@@ -110,8 +142,7 @@ class MediaItemModule extends MustacheModule {
             'buttonBadge' => $badge,
             'buttonCssClass' => $class
         );
-        $this->boxItems['buttons'][] = $button;
-        $this->hasBoxItems = true;
+        $this->buttons[] = $button;
         return $this;
     }
 
@@ -119,7 +150,13 @@ class MediaItemModule extends MustacheModule {
         if (is_a($options, 'DropdownModule')) {
             $this->options = $options;
         }
-        $this->options->prepare();
+        return $this;
+    }
+
+    public function addMediaList($mediaList) {
+        if (is_a($mediaList, 'MediaListModule')) {
+            $this->mediaList = $mediaList;
+        }
         return $this;
     }
 }

@@ -1,5 +1,5 @@
 <{{tag}} id="{{id}}" class="media media-item {{cssClass}}">
-{{#image}}
+{{#hasImage}}
     <div class="media-box {{boxCssClass}}">
       {{#imageUrl}}
       <a href="{{imageUrl}}">
@@ -8,17 +8,18 @@
       {{#imageUrl}}
       </a>
       {{/imageUrl}}
-      {{#hasBoxItems}}
-        {{#boxItems}}
-            <div class="media-box-body {{boxItemsCssClass}}">
-              {{#buttons}}
-                  <a class="btn {{buttonCssClass}}" href={{buttonUrl}} role="button">{{buttonText}}</a>
-              {{/buttons}}
-            </div>
-        {{/boxItems}}
-      {{/hasBoxItems}}
+
+        <div class="media-box-body {{boxItemsCssClass}}">
+          {{#hasButtons}}
+              <div class="btn-group {{buttonsCssClass}}">
+                {{#buttons}}
+                    <a class="btn {{buttonCssClass}}" href={{buttonUrl}} role="button">{{buttonText}}</a>
+                {{/buttons}}
+              </div>
+          {{/hasButtons}}
+        </div>
     </div>
-{{/image}}
+{{/hasImage}}
 <div class="media-body {{bodyCssClass}}">
   {{#options}}
     {{> dropdown}}

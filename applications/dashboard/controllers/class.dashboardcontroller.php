@@ -100,11 +100,6 @@ class DashboardController extends Gdn_Controller {
                 ->addLinkArray(array('text' => 'Link 9', 'url' => '#', 'disabled' => true, 'key' => 'group1.link9')) // Adds to Group 1
                 ->addLinkArray(array('text' => 'Link 10', 'url' => '#', 'key' => 'group1.link10')); // Adds to Group 1
 
-            $media = new MediaItemModule('media-id', 'text', 'Heading', '#', false, false, false, 'div', 'media-item-css-class');
-            $media->addImage('https://cd8ba0b44a15c10065fd-24461f391e20b7336331d5789078af53.ssl.cf1.rackcdn.com/fifa.vanillaforums.com/bannedavatar.png');
-            $media->addMetaItem('label', '#', 'link');
-            $this->AddModule($media, 'Panel');
-
             $menu = new NavModule('nav');
 //
             $menu->addGroupArray(array('text'=>T('Dashboard'), 'class' => 'Dashboard', 'key' => 'dashboard'))

@@ -11,8 +11,23 @@
 abstract class MustacheModule extends Gdn_Module {
 
     private $view = '';
+    public $helpers;
 
     function __construct($view) {
+        $this->view = $view;
+
+        $this->helpers = array(
+            'icon' => function($icon) {
+                return '<span class="icon '.$icon.'"></span>';
+            },
+            't' => function($string) {
+                return T($string);
+            }
+        );
+
+    }
+
+    public function setView($view) {
         $this->view = $view;
     }
 
@@ -25,6 +40,7 @@ abstract class MustacheModule extends Gdn_Module {
         $this->prepare();
         $m = new Mustache_Engine(array(
             'loader' => new Mustache_Loader_FilesystemLoader(PATH_APPLICATIONS.'/dashboard/views/modules'),
+            'helpers' => $this->helpers
         ));
         return $m->render($this->view, $this);
     }

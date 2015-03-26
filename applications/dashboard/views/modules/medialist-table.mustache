@@ -1,0 +1,30 @@
+{{#hasMediaListContainer}}
+    <div class="DataTableContainer">
+{{/hasMediaListContainer}}
+{{#mediaListHeading}}<h2 class="Groups H {{mediaListHeadingCssClass}}">{{mediaListHeading}}</h2>{{/mediaListHeading}}
+    <div class="DataTableWrap">
+        <table class="DataTable {{mediaListCssClass}}">
+            <thead>
+            <tr>
+              {{#mediaListTableColumns}}
+                  <td class="{{columnCssClass}}"><div class="Wrap">{{columnLabel}}</div></td>
+              {{/mediaListTableColumns}}
+            </tr>
+            </thead>
+          {{#mediaItems}}
+            {{> mediaitem-table-legacy}}
+          {{/mediaItems}}
+        </table>
+    </div>
+{{#hasEmptyMessage}}
+        <div class="ErrorMessage {{mediaListEmptyMessageCssClass}}">{{mediaListEmptyMessage}}</div>
+{{/hasEmptyMessage}}
+{{#hasMoreLink}}
+        <div class="MoreWrap">
+            <a class="more {{moreCssClass}}" href="{{moreUrl}}">{{#icon}}{{moreIcon}}{{/icon}}{{moreLink}}{{moreBadge}}</a>
+        </div>
+{{/hasMoreLink}}
+{{#hasMediaListContainer}}
+    </div>
+{{/hasMediaListContainer}}
+

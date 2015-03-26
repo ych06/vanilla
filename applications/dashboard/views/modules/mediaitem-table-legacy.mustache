@@ -1,0 +1,124 @@
+<tr id="{{id}}" class="{{mediaItemCssClass}}">
+  {{#beforeContentEvent}}{{/beforeContentEvent}}
+  {{#rows}}
+    {{#isMainCell}}
+        <td class="Name {{mainCssClass}}">
+        <div class="Wrap">
+            <span class="Options">
+                {{#hasButtons}}
+                    <div class="btn-group {{buttonsCssClass}}">
+                      {{#buttons}}
+                          <a class="btn {{buttonCssClass}}" href={{buttonUrl}} role="button">{{buttonText}}</a>
+                      {{/buttons}}
+                    </div>
+                {{/hasButtons}}
+              {{#options}}
+                {{> dropdown}}
+              {{/options}}
+              {{!#bookmark}}
+
+              {{!/bookmark}}
+            </span>
+          {{#hasImage}}
+            {{#imageUrl}}
+            <a href="{{imageUrl}}">
+            {{/imageUrl}}
+              <img class="media-object {{imageCssClass}}" src="{{imageSource}}" alt="{{imageAlt}}">
+            {{#imageUrl}}
+            </a>
+            {{/imageUrl}}
+          {{/hasImage}}
+          {{#heading}}
+              <{{headingTag}} class="media-heading {{headingCssClass}}">
+            {{#headingUrl}}
+            <a href="{{headingUrl}}">
+            {{/headingUrl}}
+            {{heading}}
+            {{#headingUrl}}
+            </a>
+            {{/headingUrl}}
+            {{#afterTitleCategoryEvent}}{{/afterTitleCategoryEvent}}
+          </{{headingTag}}>
+          {{/heading}}
+          {{#afterTitleEvent}}{{/afterTitleEvent}}
+            <div class="Description {{textCssClass}}">{{text}}</div>
+
+          {{!ChildCategories}}
+            <!--<div class="Meta Meta-{{!section}}">-->
+              {{!tags}}
+            <!--</div>-->
+          {{#hasMeta}}
+              <ul class="media-meta {{metaCssClass}}">
+                {{#meta}}
+                    <li role="presentation" class="media-meta-item {{metaItemCssClass}}">
+                      {{#metaIsLink}}
+                      <a href="{{metaUrl}}">
+                      {{/metaIsLink}}
+                      {{#metaIcon}}
+                          <span class="icon {{icon}}"></span>
+                      {{/metaIcon}}
+                      {{metaLabel}}
+                      {{#metaHasLink}}
+                          <a href="{{metaUrl}}">{{metaLinkText}}</a>
+                      {{/metaHasLink}}
+                      {{#metaBadge}}
+                          <span class="badge">{{badge}}</span>
+                      {{/metaBadge}}
+                      {{#metaIsLink}}
+                      </a>
+                      {{/metaIsLink}}
+                    </li>
+                {{/meta}}
+              </ul>
+          {{/hasMeta}}
+            </div>
+        </td>
+    {{/isMainCell}}
+    {{#isCountCell}}
+        <td class="BigCount {{countSectionCssClass}}">
+            <div class="Wrap">
+                <span class="Number">{{countNumber}}</span>
+            </div>
+        </td>
+    {{/isCountCell}}
+    {{#isUserCell}}
+        <td class="BlockColumn BlockColumn-User {{userFirstOrLast}}User">
+            <div class="Block Wrap">
+              {{#userImageUrl}}
+                  <a class="PhotoWrap PhotoWrapSmall" href="{{userUrl}}">
+                      <img class="ProfilePhoto ProfilePhotoSmall" src="{{userImageUrl}}">
+                  </a>
+              {{/userImageUrl}}
+                <a class="UserLink BlockTitle" href="{{userUrl}}">{{userName}}</a>
+                <div class="Meta">
+                    <a class="CommentDate MItem" href="{{userPostUrl}}">{{userPostTime}}</a>
+                </div>
+            </div>
+        </td>
+    {{/isUserCell}}
+    {{#isLastPostCell}}
+        <td class="BlockColumn LatestPost">
+          {{#lastPostTitle}}
+              <div class="Block Wrap">
+                {{#lastPostImageUrl}}
+                    <a class="PhotoWrap PhotoWrapSmall" href="{{lastPostUserUrl}}">
+                        <img class="ProfilePhoto ProfilePhotoSmall" src="{{lastPostImageUrl}}">
+                    </a>
+                {{/lastPostImageUrl}}
+                  <a class="BlockTitle LatestPostTitle" href="{{lastPostUrl}}">{{lastPostTitle}}</a>
+                  <div class="Meta">
+                      <a class="UserLink MItem" href="{{lastPostUserUrl}}">{{lastPostUserName}}</a>
+                      <span class="Bullet">•</span>
+                      <a class="CommentDate MItem" href="{{lastPostUrl}}">{{lastPostTime}}</a>
+                    {{#lastPostCategoryName}}
+                        <span>
+                    {{#t}}in{{/t}} <a href="{{lastPostCategoryUrl}}">{{lastPostCategoryName}}</a>
+                  </span>
+                    {{/lastPostCategoryName}}
+                  </div>
+              </div>
+          {{/lastPostTitle}}
+        </td>
+    {{/isLastPostCell}}
+  {{/rows}}
+</tr>
