@@ -1,29 +1,33 @@
 <{{tag}} id="{{id}}" class="media media-item {{cssClass}}">
-{{#hasImage}}
-    <div class="media-box {{boxCssClass}}">
-      {{#imageUrl}}
-      <a href="{{imageUrl}}">
-      {{/imageUrl}}
-        <img class="media-object {{imageCssClass}}" src="{{imageSource}}" alt="{{imageAlt}}">
-      {{#imageUrl}}
-      </a>
-      {{/imageUrl}}
-
-        <div class="media-box-body {{boxItemsCssClass}}">
-          {{#hasButtons}}
-              <div class="btn-group {{buttonsCssClass}}">
-                {{#buttons}}
-                    <a class="btn {{buttonCssClass}}" href={{buttonUrl}} role="button">{{buttonText}}</a>
-                {{/buttons}}
-              </div>
-          {{/hasButtons}}
-        </div>
+<div class="media-box {{boxCssClass}}">
+  {{#imageUrl}}
+  <a href="{{imageUrl}}">
+  {{/imageUrl}}
+    <img class="media-object {{imageCssClass}}" src="{{imageSource}}" alt="{{imageAlt}}">
+  {{#imageUrl}}
+  </a>
+  {{/imageUrl}}
+    <div class="media-box-body {{boxItemsCssClass}}">
     </div>
-{{/hasImage}}
+</div>
 <div class="media-body {{bodyCssClass}}">
   {{#options}}
-    {{> dropdown}}
+    <div class="btn-group pull-right">
+      {{> dropdown}}
+    </div>
   {{/options}}
+  {{#hasButtons}}
+      <div class="btn-group pull-right {{buttonsCssClass}}">
+        {{#buttons}}
+            <a class="btn {{buttonCssClass}}" href={{buttonUrl}} role="button">
+              {{#buttonIcon}}
+                {{#icon}}{{buttonIcon}}{{/icon}}
+              {{/buttonIcon}}
+              {{buttonText}}
+            </a>
+        {{/buttons}}
+      </div>
+  {{/hasButtons}}
   {{#heading}}
       <h4 class="media-heading {{headingCssClass}}">
         {{#headingUrl}}
@@ -49,7 +53,7 @@
               <a href="{{metaUrl}}">
               {{/metaIsLink}}
               {{#metaIcon}}
-                  <span class="icon {{icon}}"></span>
+                {{#icon}}{{meta.icon}}{{/icon}}
               {{/metaIcon}}
               {{metaLabel}}
               {{#metaHasLink}}

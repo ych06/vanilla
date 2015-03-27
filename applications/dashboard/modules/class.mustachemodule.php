@@ -18,7 +18,7 @@ abstract class MustacheModule extends Gdn_Module {
 
         $this->helpers = array(
             'icon' => function($icon) {
-                return '<span class="icon '.$icon.'"></span>';
+                return '<span class="icon icon-'.$icon.'"></span>';
             },
             't' => function($string) {
                 return T($string);

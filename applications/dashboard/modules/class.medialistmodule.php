@@ -90,12 +90,12 @@ class MediaListModule extends MustacheModule {
                 $this->mediaListCssClass = $class;
                 break;
             case 'description':
-                $this->mediaListCssClass = $class;
+                $this->mediaListDescriptionCssClassCssClass = $class;
                 break;
             case 'heading':
-                $this->mediaListCssClass = $class;
+                $this->mediaListHeadingCssClass = $class;
                 break;
-            case '$emptyMessage':
+            case 'emptyMessage':
                 $this->mediaListEmptyMessageCssClass = $class;
                 break;
         }

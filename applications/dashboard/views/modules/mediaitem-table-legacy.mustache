@@ -6,17 +6,21 @@
         <div class="Wrap">
             <span class="Options">
                 {{#hasButtons}}
-                    <div class="btn-group {{buttonsCssClass}}">
+                    <div class="btn-group pull-left {{buttonsCssClass}}">
                       {{#buttons}}
                           <a class="btn {{buttonCssClass}}" href={{buttonUrl}} role="button">{{buttonText}}</a>
                       {{/buttons}}
                     </div>
                 {{/hasButtons}}
               {{#options}}
+                <div class="pull-left">
                 {{> dropdown}}
+                </div>
               {{/options}}
               {{!#bookmark}}
-
+                <div class="pull-left">
+                  {{!bookmark}}
+                </div>
               {{!/bookmark}}
             </span>
           {{#hasImage}}

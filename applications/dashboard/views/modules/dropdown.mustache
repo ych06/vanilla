@@ -4,7 +4,7 @@
       <button id="{{triggerId}}" class="btn dropdown-toggle {{triggerCssClass}}" type="button" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
          {{triggerText}}
          {{#triggerIcon}}
-            <span class="icon {{triggerIcon}}"></span>
+           {{#icon}}{{triggerIcon}}{{/icon}}
          {{/triggerIcon}}
       </button>
     {{/isButton}}
@@ -12,7 +12,7 @@
       <a id="{{triggerId}}" class="{{triggerCssClass}}" data-target="#" href="/" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
          {{triggerText}}
          {{#triggerIcon}}
-            <span class="icon {{triggerIcon}}"></span>
+           {{#icon}}{{triggerIcon}}{{/icon}}
          {{/triggerIcon}}
       </a>
     {{/isAnchor}}

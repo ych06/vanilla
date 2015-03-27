@@ -63,7 +63,10 @@ abstract class SortableModule extends MustacheModule {
         return $this->addGroup(val('text', $group), val('icon', $group), val('badge', $group), val('sort', $group), val('key', $group), val('class', $group));
     }
 
-    public function addGroup($text = '', $icon = '', $badge = '', $sort = false, $key = '', $cssClass = '') {
+    public function addGroup($text = '', $isAllowed = true, $key = '',  $sort = false, $icon = '', $badge = '', $cssClass = '') {
+        if (!$isAllowed) {
+            return $this;
+        }
         $group = array(
             'headerText' => $text,
             'headerIcon' => $icon,
@@ -99,7 +102,7 @@ abstract class SortableModule extends MustacheModule {
         return $this;
     }
 
-    public function addLink($text, $url, $icon = '', $badge = '', $sort = false, $key = false, $disabled = false, $cssClass = '', $isAllowed = true) {
+    public function addLink($text, $url, $isAllowed = true, $key = false, $sort = false, $icon = '', $badge = '', $disabled = false, $cssClass = '') {
         if (!$isAllowed) {
             return $this;
         }

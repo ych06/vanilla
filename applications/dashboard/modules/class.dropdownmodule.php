@@ -88,7 +88,7 @@ class DropdownModule extends SortableModule {
     public $trigger = array('type' => 'button',
                             'isButton' => true,
                             'triggerCssClass' => 'btn-default',
-                            'triggerIcon' => 'caret');
+                            'triggerIcon' => 'caret-down');
 
     /**
      * @var array Allowed trigger types.
@@ -133,7 +133,7 @@ class DropdownModule extends SortableModule {
      * @param string $class CSS class on button or anchor tag.
      * @param string $icon Icon span CSS class.
      */
-    public function setTrigger($text, $type = 'button', $class = 'btn-default', $icon = 'caret') {
+    public function setTrigger($text, $type = 'button', $class = 'btn-default', $icon = 'caret-down') {
         $this->trigger['triggerText'] = $text;
         $this->trigger['type'] = in_array($type, $this->triggerTypes) ? $type : 'button';
         $this->trigger['triggerIcon'] = $icon;

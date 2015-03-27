@@ -57,6 +57,7 @@ class DashboardController extends Gdn_Controller {
             $this->AddCssFile('dropdowns.css');
             $this->AddCssFile('navs.css');
             $this->AddCssFile('media.css');
+            $this->AddCssFile('vanillicon.css');
         }
 
         $this->MasterView = 'admin';
