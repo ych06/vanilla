@@ -52,7 +52,6 @@ class Gdn_Autoloader {
     */
    protected static $Priorities;
 
-   const CONTEXT_CORE            = 'core';
    const CONTEXT_APPLICATION     = 'application';
    const CONTEXT_PLUGIN          = 'plugin';
    const CONTEXT_LOCALE          = 'locale';
@@ -291,7 +290,7 @@ class Gdn_Autoloader {
     * @param type $MapRootLocation
     * @return Gdn_Autoloader_Map
     */
-   public static function GetMap($MapType, $ContextType, $Extension = self::CONTEXT_CORE, $MapRootLocation = PATH_CACHE) {
+   public static function GetMap($MapType, $ContextType, $Extension = self::CONTEXT_PLUGIN, $MapRootLocation = PATH_CACHE) {
       $MapHash = self::MakeMapHash($MapType, $ContextType, $Extension, $MapRootLocation);
       return self::Map($MapHash);
    }
@@ -455,7 +454,7 @@ class Gdn_Autoloader {
       return $MapHash;
    }
 
-   public static function ForceIndex($MapType, $ContextType, $Extension = self::CONTEXT_CORE) {
+   public static function ForceIndex($MapType, $ContextType, $Extension = self::CONTEXT_PLUGIN) {
       $Map = self::GetMap($MapType, $ContextType, $Extension);
       $Map->Index();
    }
@@ -492,7 +491,6 @@ class Gdn_Autoloader {
    public static function Start() {
 
       self::$Prefixes = array(
-         self::CONTEXT_CORE            => 'c',
          self::CONTEXT_APPLICATION     => 'a',
          self::CONTEXT_PLUGIN          => 'p',
          self::CONTEXT_THEME           => 't'
@@ -502,7 +500,6 @@ class Gdn_Autoloader {
          self::CONTEXT_LOCALE,
          self::CONTEXT_PLUGIN,
          self::CONTEXT_APPLICATION,
-         self::CONTEXT_CORE
       );
 
       self::$Maps = array();
@@ -510,11 +507,6 @@ class Gdn_Autoloader {
 
       // Register autoloader with the SPL
       spl_autoload_register(array('Gdn_Autoloader', 'Lookup'));
-
-      // Configure library/core and library/database
-      self::RegisterMap(self::MAP_LIBRARY, self::CONTEXT_CORE, PATH_LIBRARY.'/core');
-      self::RegisterMap(self::MAP_LIBRARY, self::CONTEXT_CORE, PATH_LIBRARY.'/database');
-      self::RegisterMap(self::MAP_LIBRARY, self::CONTEXT_CORE, PATH_LIBRARY.'/vendors');
 
       // Register shutdown function to auto save changed cache files
       register_shutdown_function(array('Gdn_Autoloader', 'Shutdown'));
