@@ -25,6 +25,9 @@
 	"require": {
 	},
 	"autoload": {
+		"psr-4": {
+			"Vanilla\\": "src"
+		},
 		"classmap": [
 			"library/"
 		],
@@ -33,5 +36,9 @@
 			"library/core/functions.general.php",
 			"library/core/functions.compatibility.php"
 		]
+	},
+	"scripts": {
+		"pre-install-cmd": "Vanilla\\Setup\\ComposerHelper::preUpdate",
+		"pre-update-cmd": "Vanilla\\Setup\\ComposerHelper::preUpdate"
 	}
 }
