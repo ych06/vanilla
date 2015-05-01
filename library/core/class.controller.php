@@ -858,7 +858,7 @@ class Gdn_Controller extends Gdn_Pluggable {
       $ViewPath = ViewLocation($View, $ControllerName, $ApplicationFolder);
 
       // echo '<div>['.$LocationName.'] RETURNS ['.$ViewPath.']</div>';
-      if ($ViewPath === false && $ThrowError) {
+      if (!StringBeginsWith($ViewPath, PATH_ROOT) || ($ViewPath === false && $ThrowError)) {
          throw NotFoundException('View');
 //         trigger_error(ErrorMessage("Could not find a '$View' view for the '$ControllerName' controller in the '$ApplicationFolder' application.", $this->ClassName, 'FetchViewLocation'), E_USER_ERROR);
       }
@@ -1288,20 +1288,6 @@ class Gdn_Controller extends Gdn_Pluggable {
             }
          }
       }
-   }
-
-   /**
-    * Undocumented method.
-    *
-    * @param string $AltAppFolder
-    * @param string $AltController
-    * @param string $AltMethod
-    * @todo Method RenderAlternate() and $AltAppFolder, $AltController and $AltMethod needs descriptions.
-    */
-   public function RenderAlternate($AltAppFolder, $AltController, $AltMethod) {
-      $this->AddAsset('Content', $this->FetchView($AltMethod, $AltController, $AltAppFolder));
-      $this->RenderMaster();
-      return;
    }
 
    /**
