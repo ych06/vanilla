@@ -858,9 +858,13 @@ class Gdn_Controller extends Gdn_Pluggable {
       $ViewPath = ViewLocation($View, $ControllerName, $ApplicationFolder);
 
       // echo '<div>['.$LocationName.'] RETURNS ['.$ViewPath.']</div>';
-      if (!StringBeginsWith($ViewPath, PATH_ROOT) || ($ViewPath === false && $ThrowError)) {
+      if ($ViewPath === false && $ThrowError) {
          throw NotFoundException('View');
 //         trigger_error(ErrorMessage("Could not find a '$View' view for the '$ControllerName' controller in the '$ApplicationFolder' application.", $this->ClassName, 'FetchViewLocation'), E_USER_ERROR);
+      }
+
+      if ($ViewPath && !StringBeginsWith($ViewPath, PATH_ROOT)) {
+         throw NotFoundException('View');
       }
 
       return $ViewPath;
