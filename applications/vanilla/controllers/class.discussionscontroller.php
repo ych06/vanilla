@@ -303,6 +303,12 @@ class DiscussionsController extends VanillaController {
       $this->Menu->HighlightRoute('/discussions');
       $this->AddCssFile('vanilla.css');
 		$this->AddJsFile('discussions.js');
+      $this->AddJsFile('dropdown.js');
+
+      $this->AddCssFile('buttons.css');
+      $this->AddCssFile('dropdowns.css');
+      $this->AddCssFile('media.css');
+      $this->AddCssFile('vanillicon.css');
 
 		// Inform moderator of checked comments in this discussion
 		$CheckedDiscussions = Gdn::Session()->GetAttribute('CheckedDiscussions', array());

@@ -59,11 +59,8 @@ abstract class SortableModule extends MustacheModule {
      * - **key**: Group key.
      * - **class**: Header CSS class.
      */
-    public function addGroupArray($group) {
-        return $this->addGroup(val('text', $group), val('icon', $group), val('badge', $group), val('sort', $group), val('key', $group), val('class', $group));
-    }
 
-    public function addGroup($text = '', $isAllowed = true, $key = '',  $sort = false, $icon = '', $badge = '', $cssClass = '') {
+    public function addGroup($text = '', $isAllowed = true, $key = '',  $sort = false, $icon = '', $badge = '', $popinRel = '', $cssClass = '') {
         if (!$isAllowed) {
             return $this;
         }
@@ -97,12 +94,7 @@ abstract class SortableModule extends MustacheModule {
      * - **key**: Item key.
      * - **class**: CSS class.
      */
-    public function addLinkArray($link) {
-        $this->addLink(val('text', $link), val('url', $link), val('icon', $link), val('badge', $link), val('sort', $link), val('key', $link), val('disabled', $link), val('class', $link), val('check', $link, true));
-        return $this;
-    }
-
-    public function addLink($text, $url, $isAllowed = true, $key = false, $sort = false, $icon = '', $badge = '', $disabled = false, $cssClass = '') {
+    public function addLink($text, $url, $isAllowed = true, $key = false, $sort = false, $icon = '', $badge = '', $popinRel = '', $disabled = false, $cssClass = '') {
         if (!$isAllowed) {
             return $this;
         }
@@ -112,6 +104,7 @@ abstract class SortableModule extends MustacheModule {
             'linkUrl' => $url,
             'linkIcon' => $icon,
             'linkBadge' => $badge,
+            'linkPopinRel' => $popinRel,
             'sort' => $sort,
             'key' => $key,
         );

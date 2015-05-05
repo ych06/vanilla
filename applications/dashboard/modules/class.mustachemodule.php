@@ -22,6 +22,12 @@ abstract class MustacheModule extends Gdn_Module {
             },
             't' => function($string) {
                 return T($string);
+            },
+            'popin' => function($rel) {
+                return '<span class="badge Popin" rel="'.$rel.'"></span>';
+            },
+            'badge' => function($badge) {
+                return '<span class="badge">'.$badge.'</span>';
             }
         );
 

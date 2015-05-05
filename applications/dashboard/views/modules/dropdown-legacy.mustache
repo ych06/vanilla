@@ -1,0 +1,27 @@
+<span class="ToggleFlyout OptionsMenu {{dropdownCssClass}}">
+    <span class="OptionsTitle" title="Options">Options</span>
+    <span class="SpFlyoutHandle"></span>
+    <ul class="Flyout MenuItems {{listCssClass}}" role="menu" aria-labelledby="{{triggerId}}">
+     {{#items}}
+       {{#isGroup}}
+           <li role="presentation" class="header {{headerCssClass}}">
+             {{#headerIcon}}
+                 <span class="icon {{headerIcon}}"></span>
+             {{/headerIcon}}
+             {{headerText}}
+             {{#headerBadge}}
+                 <span class="badge">{{headerBadge}}</span>
+             {{/headerBadge}}
+           </li>
+       {{/isGroup}}
+       {{#isLink}}
+           <li role="presentation" {{#listItemCssClass}}class="{{listItemCssClass}}"{{/listItemCssClass}}>
+               <a role="menuitem" class="dropdown-menu-link {{linkCssClass}}" tabindex="-1" href="{{linkUrl}}">{{> link-text}}</a>
+           </li>
+       {{/isLink}}
+       {{#isDivider}}
+           <li role="presentation" class="divider {{dividerCssClass}}"></li>
+       {{/isDivider}}
+     {{/items}}
+   </ul>
+</span>

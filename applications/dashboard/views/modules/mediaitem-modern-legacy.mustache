@@ -1,0 +1,64 @@
+<li id="{{id}}" class="Item {{cssClass}}">
+{{#hasImage}}
+    {{#imageUrl}}
+    <a href="{{imageUrl}}" class="IndexPhoto PhotoWrap">
+    {{/imageUrl}}
+      <img class="ProfilePhoto ProfilePhotoMedium {{imageCssClass}}" src="{{imageSource}}" alt="{{imageAlt}}">
+    {{#imageUrl}}
+    </a>
+    {{/imageUrl}}
+{{/hasImage}}
+  <span class="Options">
+  {{#hasButtons}}
+      <div class="Buttons {{buttonsCssClass}}">
+        {{#buttons}}
+            <a class="Button {{buttonCssClass}}" href={{buttonUrl}} role="button">{{buttonText}}</a>
+        {{/buttons}}
+      </div>
+  {{/hasButtons}}
+  {{#options}}
+    {{> dropdown-legacy}}
+  {{/options}}
+  </span>
+<div class="ItemContent {{bodyCssClass}}">
+  {{#heading}}
+    <div class="Title">
+        {{#headingUrl}}
+        <a href="{{headingUrl}}">
+        {{/headingUrl}}
+        {{heading}}
+        {{#headingUrl}}
+        </a>
+        {{/headingUrl}}
+    </div>
+  {{/heading}}
+    <div class="Excerpt {{textCssClass}}">{{text}}</div>
+  {{#hasMeta}}
+      <div class="Meta{{metaCssClass}}">
+        {{#meta}}
+            <span class="MItem {{metaItemCssClass}}">
+              {{#metaIsLink}}
+              <a href="{{metaUrl}}">
+              {{/metaIsLink}}
+              {{#metaIcon}}
+                  <span class="icon {{icon}}"></span>
+              {{/metaIcon}}
+              {{metaLabel}}
+              {{#metaHasLink}}
+                  <a href="{{metaUrl}}">{{metaLinkText}}</a>
+              {{/metaHasLink}}
+              {{#metaBadge}}
+                  <span class="badge">{{badge}}</span>
+              {{/metaBadge}}
+              {{#metaIsLink}}
+              </a>
+              {{/metaIsLink}}
+            </span>
+        {{/meta}}
+      </div>
+  {{/hasMeta}}
+  {{#hasMediaList}}
+    {{>medialist-modern}}
+  {{/hasMediaList}}
+</div>
+</li>

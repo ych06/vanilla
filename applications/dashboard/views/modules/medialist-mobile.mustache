@@ -1,0 +1,21 @@
+{{#hasMediaListContainer}}
+    <div class="media-list-container {{mediaListContainerCssClass}}">
+    {{#mediaListHeading}}<h2 class="media-list-heading {{mediaListHeadingCssClass}}">{{mediaListHeading}}</h2>{{/mediaListHeading}}
+    {{#mediaListDescription}}<div class="media-list-text {{mediaListDescriptionCssClass}}">{{mediaListDescription}}</div>{{/mediaListDescription}}
+{{/hasMediaListContainer}}
+{{#hasMediaItems}}
+    <ul id="{{mediaListId}}" class="media-list {{mediaListCssClass}}">
+      {{#hasMediaItems}}
+        {{#mediaItems}}
+          {{> mediaitem}}
+        {{/mediaItems}}
+      {{/hasMediaItems}}
+    </ul>
+{{/hasMediaItems}}
+{{#hasEmptyMessage}}
+  <div class="media-list-empty {{mediaListEmptyMessageCssClass}}">{{mediaListEmptyMessage}}</div>
+{{/hasEmptyMessage}}
+{{#hasMoreLink}}<a class="more {{moreCssClass}}" href="{{moreUrl}}">{{#icon}}{{moreIcon}}{{/icon}}{{moreLink}}{{moreBadge}}</a>{{/hasMoreLink}}
+{{#hasMediaListContainer}}
+    </div>
+{{/hasMediaListContainer}}

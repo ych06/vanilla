@@ -1,50 +1,40 @@
-<tr id="{{id}}" class="{{mediaItemCssClass}}">
-  {{#beforeContentEvent}}{{/beforeContentEvent}}
+<tr id="{{id}}" class="{{cssClass}}">
   {{#rows}}
     {{#isMainCell}}
         <td class="Name {{mainCssClass}}">
+          {{{beforeContentOutput}}}
         <div class="Wrap">
             <span class="Options">
-                {{#hasButtons}}
-                    <div class="btn-group pull-left {{buttonsCssClass}}">
-                      {{#buttons}}
-                          <a class="btn {{buttonCssClass}}" href={{buttonUrl}} role="button">{{buttonText}}</a>
-                      {{/buttons}}
-                    </div>
-                {{/hasButtons}}
               {{#options}}
-                <div class="pull-left">
-                {{> dropdown}}
-                </div>
+                {{> dropdown-legacy}}
               {{/options}}
-              {{!#bookmark}}
-                <div class="pull-left">
-                  {{!bookmark}}
-                </div>
-              {{!/bookmark}}
+              {{#hasButtons}}
+                  <div class="Buttons {{buttonsCssClass}}">
+                    {{#buttons}}
+                        <a class="Button {{buttonCssClass}}" href={{buttonUrl}} role="button">{{buttonText}}</a>
+                    {{/buttons}}
+                  </div>
+              {{/hasButtons}}
             </span>
           {{#hasImage}}
             {{#imageUrl}}
-            <a href="{{imageUrl}}">
+            <a href="{{imageUrl}}" class="Item-Icon PhotoWrap">
             {{/imageUrl}}
-              <img class="media-object {{imageCssClass}}" src="{{imageSource}}" alt="{{imageAlt}}">
+              <img class="ProfilePhoto ProfilePhotoMedium {{imageCssClass}}" src="{{imageSource}}" alt="{{imageAlt}}">
             {{#imageUrl}}
             </a>
             {{/imageUrl}}
           {{/hasImage}}
           {{#heading}}
-              <{{headingTag}} class="media-heading {{headingCssClass}}">
             {{#headingUrl}}
-            <a href="{{headingUrl}}">
+            <h2><a class="{{headingClass}}" href="{{headingUrl}}">
             {{/headingUrl}}
             {{heading}}
             {{#headingUrl}}
-            </a>
+            </a></h2>
             {{/headingUrl}}
-            {{#afterTitleCategoryEvent}}{{/afterTitleCategoryEvent}}
-          </{{headingTag}}>
           {{/heading}}
-          {{#afterTitleEvent}}{{/afterTitleEvent}}
+          {{{afterTitleOutput}}}
             <div class="Description {{textCssClass}}">{{text}}</div>
 
           {{!ChildCategories}}
@@ -52,9 +42,9 @@
               {{!tags}}
             <!--</div>-->
           {{#hasMeta}}
-              <ul class="media-meta {{metaCssClass}}">
+              <ul class="{{metaCssClass}}">
                 {{#meta}}
-                    <li role="presentation" class="media-meta-item {{metaItemCssClass}}">
+                    <li role="presentation" class="{{metaItemCssClass}}">
                       {{#metaIsLink}}
                       <a href="{{metaUrl}}">
                       {{/metaIsLink}}
@@ -95,7 +85,7 @@
               {{/userImageUrl}}
                 <a class="UserLink BlockTitle" href="{{userUrl}}">{{userName}}</a>
                 <div class="Meta">
-                    <a class="CommentDate MItem" href="{{userPostUrl}}">{{userPostTime}}</a>
+                    <a class="CommentDate MItem" href="{{userPostUrl}}">{{{userPostTime}}}</a>
                 </div>
             </div>
         </td>

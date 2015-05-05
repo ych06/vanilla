@@ -64,6 +64,18 @@ if (!function_exists('BookmarkButton')) {
    }
 }
 
+function attachBookmark($mediaItem, $discussion) {
+   if (!Gdn::Session()->IsValid()) {
+      return;
+   }
+
+   $title = T($discussion->Bookmarked == '1' ? 'Unbookmark' : 'Bookmark');
+   $url = '/vanilla/discussion/bookmark/'.$discussion->DiscussionID.'/'.Gdn::Session()->TransientKey();
+   $cssClass = 'Hijack text-hide';
+   $icon = $discussion->Bookmarked == '1' ? 'star' : 'star-empty';
+   $mediaItem->addButton($title, $url, $icon, '', $cssClass, 'btn-link' );
+}
+
 if (!function_exists('CategoryLink')):
 
 function CategoryLink($Discussion, $Prefix = ' ') {
@@ -86,6 +98,92 @@ function DiscussionHeading() {
 }
 
 endif;
+
+function buildDiscussionMediaItem($discussion, &$sender, &$session) {
+
+   $category = CategoryModel::Categories($discussion->CategoryID);
+   if (!property_exists($sender, 'CanEditDiscussions')) {
+      $sender->CanEditDiscussions = GetValue('PermsDiscussionsEdit', $category) && C('Vanilla.AdminCheckboxes.Use');
+   }
+
+   $cssClass = CssClass($discussion);
+
+   $discussionUrl = $discussion->Url;
+   if ($session->UserID) {
+      $discussionUrl .= '#latest';
+   }
+
+   $sender->EventArguments['DiscussionUrl'] = &$discussionUrl;
+   $sender->EventArguments['Discussion'] = &$discussion;
+   $sender->EventArguments['CssClass'] = &$cssClass;
+
+   $first = UserBuilder($discussion, 'First');
+   $last = UserBuilder($discussion, 'Last');
+   $sender->EventArguments['FirstUser'] = &$first;
+   $sender->EventArguments['LastUser'] = &$last;
+
+   $sender->FireEvent('BeforeDiscussionName');
+
+   $discussionName = $discussion->Name;
+   if ($discussionName == '') {
+      $discussionName = T('Blank Discussion Topic');
+   }
+
+   $sender->EventArguments['DiscussionName'] = &$discussionName;
+   $discussion->CountPages = ceil($discussion->CountComments / $sender->CountCommentsPerPage);
+   $firstPageUrl = DiscussionUrl($discussion, 1);
+   $lastPageUrl = DiscussionUrl($discussion, GetValue('CountPages', $discussion)).'#latest';
+
+   $mediaItem = new MediaItemTableModule($discussionName, $discussionUrl, '', 'Discussion_'.$discussion->DiscussionID);
+   $mediaItem->addOptions(getDiscussionOptions($discussion))
+      ->addCssClass('main', $cssClass)
+      ->addCssClass('heading', 'Title');
+
+//   echo OptionsList($discussion);
+//   echo BookmarkButton($discussion);
+
+   attachBookmark($mediaItem, $discussion);
+
+   $mediaItem->addMainCell('p', 'DiscussionName')
+      ->addUserCell($first->Name, UserUrl($first), $discussionUrl, Gdn_Format::Date($discussion->FirstDate, 'html'), $first->Photo, 'First', '')
+      ->addCountCell($discussion->CountComments, 'CountComments')
+      ->addCountCell($discussion->CountViews, 'CountViews')
+      ->addUserCell($last->Name, UserUrl($last), $discussionUrl, Gdn_Format::Date($discussion->LastDate, 'html'), $last->Photo, 'Last', '');
+
+
+   ob_start();
+   Gdn::Controller()->FireEvent('AfterDiscussionTitle');
+   $mediaItem->afterTitleOutput = ob_get_contents();
+   ob_end_clean();
+
+   ob_start();
+   WriteMiniPager($discussion);
+   echo NewComments($discussion);
+   if ($sender->Data('_ShowCategoryLink', TRUE))
+      echo CategoryLink($discussion, ' '.T('in').' ');
+
+   // Other stuff that was in the standard view that you may want to display:
+   echo '<div class="Meta Meta-Discussion">';
+   WriteTags($discussion);
+   echo '</div>';
+   $mediaItem->afterTitleOutput .= ob_get_contents();
+   ob_end_clean();
+
+   ob_start();
+   Gdn::Controller()->FireEvent('BeforeDiscussionContent');
+   $mediaItem->beforeContentOutput = ob_get_contents();
+   ob_end_clean();
+
+
+   static $firstDiscussion = TRUE;
+   if (!$firstDiscussion) {
+      $sender->FireEvent('BetweenDiscussion');
+   }
+   else {
+      $firstDiscussion = FALSE;
+   }
+   return $mediaItem;
+}
 
 if (!function_exists('WriteDiscussion')):
 function WriteDiscussion($Discussion, &$Sender, &$Session) {
@@ -443,6 +541,36 @@ function OptionsList($Discussion) {
 }
 
 endif;
+
+   function getDiscussionOptions($discussion) {
+
+      $sender = Gdn::Controller();
+      $session = Gdn::Session();
+
+      if ($session->IsValid() && $sender->ShowOptions) {
+
+         $id = $discussion->DiscussionID;
+         $newSink = (int)!$discussion->Sink;
+         $newClosed = (int)!$discussion->Closed;
+
+         $options = new DropdownModule('discussion-options-'.$id);
+         $options->setTrigger('', 'button', 'btn-link', 'cog');
+         $options->addLink(T('Dismiss'), 'vanilla/discussion/dismissannouncement?discussionid='.$id, C('Vanilla.Discussions.Dismiss', 1) && $discussion->Announce == '1' && $discussion->Dismissed != '1', 'dismiss', false, '', '', '', 'DismissDiscussion Hijack')
+            ->addLink(T('Edit'), 'vanilla/post/editdiscussion/'.$id, $discussion->FirstUserID == $session->UserID || $session->CheckPermission('Vanilla.Discussions.Edit', TRUE, 'Category', $discussion->PermissionCategoryID), 'edit', false, '', '', '', 'EditDiscussion Hijack')
+            ->addLink(T('Announce...'), '/discussion/announce?discussionid='.$id.'&Target='.urlencode($sender->SelfUrl), $session->CheckPermission('Vanilla.Discussions.Announce', TRUE, 'Category', $discussion->PermissionCategoryID), 'announce', false, '', '', '', 'Popup AnnounceDiscussion')
+            ->addLink(T($discussion->Sink == '1' ? 'Unsink' : 'Sink'), 'vanilla/discussion/sink?discussionid'.$id.'&sink='.$newSink, $session->CheckPermission('Vanilla.Discussions.Sink', TRUE, 'Category', $discussion->PermissionCategoryID), 'sink', false, '', '', '', 'SinkDiscussion Hijack')
+            ->addLink(T($discussion->Closed == '1' ? 'Reopen' : 'Close'), '/discussion/close?discussionid='.$id.'&close='.$newClosed, $session->CheckPermission('Vanilla.Discussions.Close', TRUE, 'Category', $discussion->PermissionCategoryID), 'close', false, '', '', '', 'CloseDiscussion Hijack')
+            ->addLink(T('Delete'), '/discussion/delete?discussionid='.$discussion->DiscussionID, $session->CheckPermission('Vanilla.Discussions.Delete', TRUE, 'Category', $discussion->PermissionCategoryID), 'delete', false, '', '', '', 'DeleteDiscussion Popup');
+
+         // Allow plugins to add options.
+         $sender->EventArguments['Discussion'] = $discussion;
+         $sender->EventArguments['Options'] = &$options;
+         $sender->FireEvent('DiscussionOptions');
+
+         return $options;
+
+      }
+   }
 
 
 if (!function_exists('WriteOptions')):

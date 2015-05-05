@@ -147,7 +147,7 @@ class MediaItemModule extends MustacheModule {
     }
 
     public function addOptions($options) {
-        if (is_a($options, 'DropdownModule')) {
+        if (is_a($options, 'DropdownModule') && $options->hasItems()) {
             $this->options = $options;
         }
         return $this;

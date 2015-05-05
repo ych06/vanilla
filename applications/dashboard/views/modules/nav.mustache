@@ -2,26 +2,14 @@
   {{#items}}
       {{#isGroup}}
           <li role="presentation" class="header {{headerCssClass}}">
-            {{#headerIcon}}
-                <span class="icon {{headerIcon}}"></span>
-            {{/headerIcon}}
+            {{#headerIcon}}{{#icon}}{{headerIcon}}{{/icon}}{{/headerIcon}}
             {{headerText}}
-            {{#headerBadge}}
-                <span class="badge">{{headerBadge}}</span>
-            {{/headerBadge}}
+            {{#headerBadge}}{{#badge}}{{headerBadge}}{{/badge}}{{/headerBadge}}
           </li>
       {{/isGroup}}
       {{#isLink}}
           <li role="presentation" {{#listItemCssClass}}class="{{listItemCssClass}}"{{/listItemCssClass}}>
-              <a class="{{linkCssClass}}" href="{{linkUrl}}">
-                {{#linkIcon}}
-                    <span class="icon {{linkIcon}}"></span>
-                {{/linkIcon}}
-                {{linkText}}
-                {{#linkBadge}}
-                    <span class="badge">{{linkBadge}}</span>
-                {{/linkBadge}}
-              </a>
+              <a class="{{linkCssClass}}" href="{{linkUrl}}">{{> link-text}}</a>
           </li>
       {{/isLink}}
       {{#isDivider}}

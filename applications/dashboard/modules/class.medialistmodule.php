@@ -59,7 +59,7 @@ class MediaListModule extends MustacheModule {
         return $this;
     }
 
-    function addTableColumn($label, $cssClass) {
+    function addTableColumn($label, $cssClass = '') {
         $this->mediaListTableColumns[] = array(
             'columnLabel' => $label,
             'columnCssClass' => $cssClass
@@ -90,7 +90,7 @@ class MediaListModule extends MustacheModule {
                 $this->mediaListCssClass = $class;
                 break;
             case 'description':
-                $this->mediaListDescriptionCssClassCssClass = $class;
+                $this->mediaListDescriptionCssClass = $class;
                 break;
             case 'heading':
                 $this->mediaListHeadingCssClass = $class;

@@ -14,7 +14,9 @@ class MediaItemTableModule extends MediaItemModule {
     public $type = 'default';
 
     // Context for firing events
-    public $row;
+    public $afterTitleOutput;
+    public $beforeContentOutput;
+
 
     function __construct($heading = '', $headingUrl = '', $text = '', $id = 'media-item-table') {
         parent::__construct($heading, $headingUrl, $text, $id);
@@ -74,32 +76,10 @@ class MediaItemTableModule extends MediaItemModule {
         return $this;
     }
 
-    public function setContext($row) {
-        $this->row = $row;
-        return $this;
-    }
-
-    public function setType($type) {
-        $this->type = $type;
-        return $this;
-    }
-
     public function afterTitleCategoryEvent() {
         if ($this->type == 'Category') {
             Gdn::Controller()->EventArguments['Category'] = $this->row;
             Gdn::Controller()->FireEvent('AfterCategoryTitle');
-        }
-    }
-
-    public function afterTitleEvent() {
-        if ($this->type == 'Discussion') {
-            Gdn::Controller()->FireEvent('AfterDiscussionTitle');
-        }
-    }
-
-    public function beforeContentEvent() {
-        if ($this->type == 'Discussion') {
-            Gdn::Controller()->FireEvent(FireEvent('BeforeDiscussionContent'));
         }
     }
 }
