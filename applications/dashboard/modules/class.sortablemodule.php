@@ -312,6 +312,8 @@ abstract class SortableModule extends MustacheModule {
         else {
             $this->items = $this->numericItemKeys($this->items);
         }
+
+        return !empty($this->items);
     }
 
     public function numericItemKeys($items) {

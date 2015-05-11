@@ -76,6 +76,16 @@ class MediaItemTableModule extends MediaItemModule {
         return $this;
     }
 
+    function addCell($text, $cssClass = '') {
+        $cell = array(
+            'isDefaultCell' => true,
+            'defaultText' => $text,
+            'defaultCssClass' => $cssClass
+        );
+        $this->rows[] = $cell;
+        return $this;
+    }
+
     public function afterTitleCategoryEvent() {
         if ($this->type == 'Category') {
             Gdn::Controller()->EventArguments['Category'] = $this->row;

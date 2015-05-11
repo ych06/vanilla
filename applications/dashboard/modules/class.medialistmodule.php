@@ -111,5 +111,7 @@ class MediaListModule extends MustacheModule {
         foreach ($this->mediaItems as $mediaItem) {
             $mediaItem->prepare();
         }
+
+        return true;
     }
 }

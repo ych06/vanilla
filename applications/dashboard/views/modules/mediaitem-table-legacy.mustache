@@ -1,4 +1,4 @@
-<tr id="{{id}}" class="{{cssClass}}">
+<tr id="{{id}}" class="{{cssClass}} Item">
   {{#rows}}
     {{#isMainCell}}
         <td class="Name {{mainCssClass}}">
@@ -11,7 +11,7 @@
               {{#hasButtons}}
                   <div class="Buttons {{buttonsCssClass}}">
                     {{#buttons}}
-                        <a class="Button {{buttonCssClass}}" href={{buttonUrl}} role="button">{{buttonText}}</a>
+                        {{> button-legacy}}
                     {{/buttons}}
                   </div>
               {{/hasButtons}}
@@ -75,6 +75,13 @@
             </div>
         </td>
     {{/isCountCell}}
+    {{#isDefaultCell}}
+        <td class="BlockColumn {{defaultCssClass}}">
+            <div class="Wrap">
+                <span class="Text">{{defaultText}}</span>
+            </div>
+        </td>
+    {{/isDefaultCell}}
     {{#isUserCell}}
         <td class="BlockColumn BlockColumn-User {{userFirstOrLast}}User">
             <div class="Block Wrap">

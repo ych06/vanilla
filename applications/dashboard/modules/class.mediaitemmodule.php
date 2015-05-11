@@ -19,7 +19,7 @@ class MediaItemModule extends MustacheModule {
 
     public $cssClass;
     public $bodyCssClass;
-    public $boxCssClass = 'media-left'; //media-left, media-right, media-middle (for vertical alignment)
+    public $boxCssClass; //media-left, media-right, media-middle (for vertical alignment)
     public $textCssClass;
     public $buttonsCssClass;
     public $headingCssClass;
@@ -97,6 +97,8 @@ class MediaItemModule extends MustacheModule {
         if (!empty($this->options)) {
             $this->options->prepare();
         }
+
+        return true;
     }
 
     function addImage($source = '', $url = '', $isAllowed = true, $cssClass = '', $alt = '') {
@@ -131,18 +133,28 @@ class MediaItemModule extends MustacheModule {
         return $this;
     }
 
-    public function addButton($text, $url, $icon = '', $badge = '', $class = 'btn-default', $isAllowed = true) {
-        if (!$isAllowed) {
-            return $this;
+//    public function addButton($text, $url, $isAllowed = true, $icon = '', $badge = '', $disabled = false, $class = 'btn-default') {
+//        if (!$isAllowed) {
+//            return $this;
+//        }
+//        if ($disabled) {
+//            $class .= " disabled";
+//        }
+//        $button = array(
+//            'buttonText' => $text,
+//            'buttonUrl' => $url,
+//            'buttonIcon' => $icon,
+//            'buttonBadge' => $badge,
+//            'buttonCssClass' => $class
+//        );
+//        $this->buttons[] = $button;
+//        return $this;
+//    }
+
+    public function addButton($button) {
+        if (is_a($button, 'ButtonModule') && $button->isAllowed()) {
+            $this->buttons[] = $button;
         }
-        $button = array(
-            'buttonText' => $text,
-            'buttonUrl' => $url,
-            'buttonIcon' => $icon,
-            'buttonBadge' => $badge,
-            'buttonCssClass' => $class
-        );
-        $this->buttons[] = $button;
         return $this;
     }
 

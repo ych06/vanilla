@@ -43,14 +43,21 @@ abstract class MustacheModule extends Gdn_Module {
      * @return string
      */
     public function toString() {
-        $this->prepare();
-        $m = new Mustache_Engine(array(
-            'loader' => new Mustache_Loader_FilesystemLoader(PATH_APPLICATIONS.'/dashboard/views/modules'),
-            'helpers' => $this->helpers
-        ));
-        return $m->render($this->view, $this);
+        if ($this->prepare()) {
+            $m = new Mustache_Engine(array(
+                'loader' => new Mustache_Loader_FilesystemLoader(PATH_APPLICATIONS . '/dashboard/views/modules'),
+                'helpers' => $this->helpers
+            ));
+            return $m->render($this->view, $this);
+        }
     }
 
+    /**
+     * Where each module finalizes its data for output.
+     * Must return a boolean value.
+     *
+     * @return boolean Whether to render module
+     */
     abstract function prepare();
 
 }

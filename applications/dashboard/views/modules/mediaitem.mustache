@@ -19,12 +19,7 @@
   {{#hasButtons}}
       <div class="btn-group pull-right {{buttonsCssClass}}">
         {{#buttons}}
-            <a class="btn {{buttonCssClass}}" href={{buttonUrl}} role="button">
-              {{#buttonIcon}}
-                {{#icon}}{{buttonIcon}}{{/icon}}
-              {{/buttonIcon}}
-              {{buttonText}}
-            </a>
+          {{> button}}
         {{/buttons}}
       </div>
   {{/hasButtons}}
