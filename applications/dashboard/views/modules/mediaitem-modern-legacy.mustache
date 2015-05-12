@@ -34,31 +34,14 @@
   {{/heading}}
     <div class="Excerpt {{textCssClass}}">{{text}}</div>
   {{#hasMeta}}
-      <div class="Meta{{metaCssClass}}">
+      <div class="Meta {{metaCssClass}}">
         {{#meta}}
-            <span class="MItem {{metaItemCssClass}}">
-              {{#metaIsLink}}
-              <a href="{{metaUrl}}">
-              {{/metaIsLink}}
-              {{#metaIcon}}
-                  <span class="icon {{icon}}"></span>
-              {{/metaIcon}}
-              {{metaLabel}}
-              {{#metaHasLink}}
-                  <a href="{{metaUrl}}">{{metaLinkText}}</a>
-              {{/metaHasLink}}
-              {{#metaBadge}}
-                  <span class="badge">{{badge}}</span>
-              {{/metaBadge}}
-              {{#metaIsLink}}
-              </a>
-              {{/metaIsLink}}
-            </span>
+          {{> metaitem}}
         {{/meta}}
       </div>
   {{/hasMeta}}
   {{#hasMediaList}}
-    {{>medialist-modern}}
+    {{> medialist-modern}}
   {{/hasMediaList}}
 </div>
 </li>

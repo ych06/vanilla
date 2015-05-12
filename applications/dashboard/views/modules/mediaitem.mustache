@@ -43,24 +43,7 @@
   {{#hasMeta}}
       <ul class="media-meta {{metaCssClass}}">
         {{#meta}}
-            <li role="presentation" class="media-meta-item {{metaItemCssClass}}">
-              {{#metaIsLink}}
-              <a href="{{metaUrl}}">
-              {{/metaIsLink}}
-              {{#metaIcon}}
-                {{#icon}}{{meta.icon}}{{/icon}}
-              {{/metaIcon}}
-              {{metaLabel}}
-              {{#metaHasLink}}
-                  <a href="{{metaUrl}}">{{metaLinkText}}</a>
-              {{/metaHasLink}}
-              {{#metaBadge}}
-                  <span class="badge">{{badge}}</span>
-              {{/metaBadge}}
-              {{#metaIsLink}}
-              </a>
-              {{/metaIsLink}}
-            </li>
+            {{>metaitem}}
         {{/meta}}
       </ul>
   {{/hasMeta}}

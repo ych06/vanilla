@@ -16,6 +16,7 @@ class MediaItemModule extends MustacheModule {
     public $options = false; //dropdown
 
     public $tag;
+    public $metaTag = 'li';
 
     public $cssClass;
     public $bodyCssClass;
@@ -30,7 +31,7 @@ class MediaItemModule extends MustacheModule {
     public $imageUrl;
     public $imageAlt;
 
-    public $meta = array();
+    public $meta = null;
     public $attachments = null;
     public $buttons = null;
     public $mediaList = null; //mediaList (children)
@@ -88,15 +89,29 @@ class MediaItemModule extends MustacheModule {
     }
 
     public function prepare(){
-        $this->hasMeta = !empty($this->meta);
+        for ($i = 0; $i < count($this->buttons); ++$i) {
+            if (!$this->buttons[$i]->prepare()) {
+                unset($this->buttons[$i]);
+            }
+        }
+
+        for ($i = 0; $i < count($this->meta); ++$i) {
+            if (!$this->meta[$i]->prepare()) {
+                unset($this->meta[$i]);
+            }
+        }
+
+        if (!empty($this->options)) {
+            if (!$this->options->prepare()) {
+                unset($this->options);
+            }
+        }
+
         $this->hasImage = !empty($this->imageSource);
         $this->hasAttachments = !empty($this->attachments);
         $this->hasButtons = !empty($this->buttons);
         $this->hasMediaList = !empty($this->mediaList);
-
-        if (!empty($this->options)) {
-            $this->options->prepare();
-        }
+        $this->hasMeta = !empty($this->meta);
 
         return true;
     }
@@ -114,24 +129,24 @@ class MediaItemModule extends MustacheModule {
         return $this;
     }
 
-    public function addMetaItem($metaLabel = '', $metaUrl = '', $metaLinkText = '', $isAllowed = true, $metaIcon = '', $metaBadge = '', $metaItemCssClass = '') {
-        if (!$isAllowed) {
-            return $this;
-        }
-        $metaHasLink = !empty($metalUrl) && ($metaLinkText && $metaLabel);
-        $metaIsLink = !($metaHasLink) && !empty($metaUrl);
-        $this->meta[] = array(
-            'metaItemCssClass' => $metaItemCssClass,
-            'metaIsLink' => $metaHasLink,
-            'metaHasLink' => $metaIsLink,
-            'metaLabel' => $metaLabel, // UserLink()
-            'metaUrl' => $metaUrl,
-            'metaLinkText' => $metaLinkText,
-            'metaIcon' => $metaIcon,
-            'metaBadge' => $metaBadge
-        );
-        return $this;
-    }
+//    public function addMetaItem($metaLabel = '', $metaUrl = '', $metaLinkText = '', $isAllowed = true, $metaIcon = '', $metaBadge = '', $metaItemCssClass = '') {
+//        if (!$isAllowed) {
+//            return $this;
+//        }
+//        $metaHasLink = !empty($metalUrl) && ($metaLinkText && $metaLabel);
+//        $metaIsLink = !($metaHasLink) && !empty($metaUrl);
+//        $this->meta[] = array(
+//            'metaItemCssClass' => $metaItemCssClass,
+//            'metaIsLink' => $metaHasLink,
+//            'metaHasLink' => $metaIsLink,
+//            'metaLabel' => $metaLabel, // UserLink()
+//            'metaUrl' => $metaUrl,
+//            'metaLinkText' => $metaLinkText,
+//            'metaIcon' => $metaIcon,
+//            'metaBadge' => $metaBadge
+//        );
+//        return $this;
+//    }
 
 //    public function addButton($text, $url, $isAllowed = true, $icon = '', $badge = '', $disabled = false, $class = 'btn-default') {
 //        if (!$isAllowed) {
@@ -151,8 +166,15 @@ class MediaItemModule extends MustacheModule {
 //        return $this;
 //    }
 
+    public function addMetaItem($metaItem) {
+        if (is_a($metaItem, 'MetaItemModule')) {
+            $this->meta[] = $metaItem;
+        }
+        return $this;
+    }
+
     public function addButton($button) {
-        if (is_a($button, 'ButtonModule') && $button->isAllowed()) {
+        if (is_a($button, 'ButtonModule')) {
             $this->buttons[] = $button;
         }
         return $this;
@@ -170,5 +192,9 @@ class MediaItemModule extends MustacheModule {
             $this->mediaList = $mediaList;
         }
         return $this;
+    }
+
+    public function setMetaTag($tag) {
+        $this->metaTag = $tag;
     }
 }

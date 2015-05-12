@@ -1,0 +1,18 @@
+<{{metaTag}} role="presentation" class="{{metaItemCssClass}}">
+  {{#metaIsLink}}
+  <a href="{{metaUrl}}">
+  {{/metaIsLink}}
+  {{#metaIcon}}
+    {{#icon}}{{metaIcon}}{{/icon}}
+  {{/metaIcon}}
+  {{metaText}}
+  {{#metaHasLink}}
+      <a href="{{metaUrl}}">{{metaLinkText}}</a>
+  {{/metaHasLink}}
+  {{#metaBadge}}
+    {{#badge}}{{metaBadge}}{{/badge}}
+  {{/metaBadge}}
+  {{#metaIsLink}}
+  </a>
+  {{/metaIsLink}}
+</{{metaTag}}>
