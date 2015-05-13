@@ -99,10 +99,32 @@ function DiscussionHeading() {
 
 endif;
 
+function writeDiscussionsTable($discussions, $heading = '', $announcements = array(), $sender = false) {
+
+   $session = Gdn::Session();
+   $mediaList = new MediaListModule();
+   $mediaList->setView('medialist-table');
+   $mediaList->addTableColumn($heading, 'DiscussionName')
+      ->addTableColumn(T('Started By'), 'BlockColumn BlockColumn-User FirstUser')
+      ->addTableColumn(T('Replies'), 'BigCount CountReplies')
+      ->addTableColumn(T('Views'), 'BigCount CountViews')
+      ->addTableColumn(T('Most Recent Comment', 'Most Recent'), 'BlockColumn BlockColumn-User LastUser');
+
+   foreach ($announcements as $discussion) {
+      $mediaList->addMediaItem(buildDiscussionMediaItem($discussion, $sender, $session));
+   }
+
+   foreach ($discussions as $discussion) {
+      $mediaList->addMediaItem(buildDiscussionMediaItem($discussion, $sender, $session));
+   }
+
+   echo $mediaList->toString();
+}
+
 function buildDiscussionMediaItem($discussion, &$sender, &$session) {
 
    $category = CategoryModel::Categories($discussion->CategoryID);
-   if (!property_exists($sender, 'CanEditDiscussions')) {
+   if ($sender && !property_exists($sender, 'CanEditDiscussions')) {
       $sender->CanEditDiscussions = GetValue('PermsDiscussionsEdit', $category) && C('Vanilla.AdminCheckboxes.Use');
    }
 
@@ -113,24 +135,27 @@ function buildDiscussionMediaItem($discussion, &$sender, &$session) {
       $discussionUrl .= '#latest';
    }
 
-   $sender->EventArguments['DiscussionUrl'] = &$discussionUrl;
-   $sender->EventArguments['Discussion'] = &$discussion;
-   $sender->EventArguments['CssClass'] = &$cssClass;
-
    $first = UserBuilder($discussion, 'First');
    $last = UserBuilder($discussion, 'Last');
-   $sender->EventArguments['FirstUser'] = &$first;
-   $sender->EventArguments['LastUser'] = &$last;
 
-   $sender->FireEvent('BeforeDiscussionName');
+   if ($sender) {
+      $sender->EventArguments['DiscussionUrl'] = &$discussionUrl;
+      $sender->EventArguments['Discussion'] = &$discussion;
+      $sender->EventArguments['CssClass'] = &$cssClass;
+      $sender->EventArguments['FirstUser'] = &$first;
+      $sender->EventArguments['LastUser'] = &$last;
+      $sender->FireEvent('BeforeDiscussionName');
+   }
 
    $discussionName = $discussion->Name;
    if ($discussionName == '') {
       $discussionName = T('Blank Discussion Topic');
    }
 
-   $sender->EventArguments['DiscussionName'] = &$discussionName;
-   $discussion->CountPages = ceil($discussion->CountComments / $sender->CountCommentsPerPage);
+   if ($sender) {
+      $sender->EventArguments['DiscussionName'] = &$discussionName;
+      $discussion->CountPages = ceil($discussion->CountComments / $sender->CountCommentsPerPage);
+   }
    $firstPageUrl = DiscussionUrl($discussion, 1);
    $lastPageUrl = DiscussionUrl($discussion, GetValue('CountPages', $discussion)).'#latest';
 
@@ -159,7 +184,7 @@ function buildDiscussionMediaItem($discussion, &$sender, &$session) {
    ob_start();
    WriteMiniPager($discussion);
    echo NewComments($discussion);
-   if ($sender->Data('_ShowCategoryLink', TRUE))
+   if ($sender && $sender->Data('_ShowCategoryLink', TRUE))
       echo CategoryLink($discussion, ' '.T('in').' ');
 
    // Other stuff that was in the standard view that you may want to display:
@@ -176,7 +201,7 @@ function buildDiscussionMediaItem($discussion, &$sender, &$session) {
 
 
    static $firstDiscussion = TRUE;
-   if (!$firstDiscussion) {
+   if ($sender && !$firstDiscussion) {
       $sender->FireEvent('BetweenDiscussion');
    }
    else {
