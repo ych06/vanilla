@@ -10,11 +10,7 @@ Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
 
 $PluginInfo['HtmLawed'] = array(
    'Description' => 'Adapts HtmLawed to work with Vanilla.',
-   'Version' => '1.1',
-   'RequiredApplications' => NULL,
-   'RequiredTheme' => FALSE,
-   'RequiredPlugins' => FALSE,
-   'HasLocale' => FALSE,
+   'Version' => '1.1.1',
    'Author' => "Todd Burry",
    'AuthorEmail' => 'todd@vanillaforums.com',
    'AuthorUrl' => 'http://vanillaforums.com/profile/todd',
@@ -51,10 +47,10 @@ class HTMLawedPlugin extends Gdn_Plugin {
        'direct_list_nest' => 1,
        'balance' => 1
       );
-      
+
       // Turn embedded videos into simple links (legacy workaround)
       $Html = Gdn_Format::UnembedContent($Html);
-      
+
       // We check the flag within Gdn_Format to see
       // if htmLawed should place rel="nofollow" links
       // within output or not.
@@ -109,10 +105,10 @@ class HTMLawedPlugin extends Gdn_Plugin {
 }
 
 if (!function_exists('FormatRssCustom')):
-   
+
 function FormatRssHtmlCustom($Html) {
    require_once(dirname(__FILE__).'/htmLawed/htmLawed.php');
-   
+
    $Config = array(
        'anti_link_spam' => array('`.`', ''),
        'comment' => 1,
@@ -129,17 +125,17 @@ function FormatRssHtmlCustom($Html) {
       $Spec = 'object=-classid-type, -codebase; embed=type(oneof=application/x-shockwave-flash)';
 
       $Result = htmLawed($Html, $Config, $Spec);
-      
+
       return $Result;
 }
 endif;
 
 function HTMLawedHookTag($Element, $Attributes = 0) {
-   // If second argument is not received, it means a closing tag is being handled 
-   if($Attributes === 0){ 
-      return "</$Element>"; 
+   // If second argument is not received, it means a closing tag is being handled
+   if($Attributes === 0){
+      return "</$Element>";
    }
-   
+
    $Attribs = '';
    foreach ($Attributes as $Key => $Value) {
       if (strcasecmp($Key, 'style') == 0) {
@@ -149,8 +145,8 @@ function HTMLawedHookTag($Element, $Attributes = 0) {
 
       $Attribs .= " {$Key}=\"{$Value}\"";
    }
-   
-   static $empty_elements = array('area'=>1, 'br'=>1, 'col'=>1, 'embed'=>1, 'hr'=>1, 'img'=>1, 'input'=>1, 'isindex'=>1, 'param'=>1); 
-   
+
+   static $empty_elements = array('area'=>1, 'br'=>1, 'col'=>1, 'embed'=>1, 'hr'=>1, 'img'=>1, 'input'=>1, 'isindex'=>1, 'param'=>1);
+
    return "<{$Element}{$Attribs}". (isset($empty_elements[$Element]) ? ' /' : ''). '>';
 }
