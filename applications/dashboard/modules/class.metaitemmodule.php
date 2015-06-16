@@ -8,7 +8,7 @@
  * @license http://www.opensource.org/licenses/gpl-2.0.php GPL
  * @since 2.3
  */
-class MetaItemModule extends MustacheModule {
+class MetaItemModule extends ComponentModule {
 
     public $metaText;
     public $metaUrl;

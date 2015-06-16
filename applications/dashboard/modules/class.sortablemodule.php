@@ -9,7 +9,7 @@
  * @since 2.3
  */
 
-abstract class SortableModule extends MustacheModule {
+abstract class SortableModule extends ComponentModule {
 
     public $items = array();
 
@@ -28,9 +28,7 @@ abstract class SortableModule extends MustacheModule {
 
     public function __construct($view, $flatten, $useCssPrefix = false) {
         parent::__construct($view);
-
-        $this->_ApplicationFolder = 'dashboard';
-
+//        $this->_ApplicationFolder = 'dashboard';
         $this->flatten = $flatten;
         $this->useCssPrefix = $useCssPrefix;
     }
@@ -41,11 +39,22 @@ abstract class SortableModule extends MustacheModule {
      * @param string $key The key of the divider.
      * @param array $options Options for the divider.
      */
-//    public function addDivider($divider = array()) {
-//        $divider['dividerCssClass'] = 'divider '.$this->buildCssClass($this->dividerCssClassPrefix, $divider);
-//        $this->addItem('divider', $divider);
-//        return $this;
-//    }
+    public function addDivider($isAllowed = true, $key = '',  $sort = false, $cssClass = '') {
+        if (!$isAllowed) {
+            return $this;
+        }
+        $divider = array(
+            'sort' => $sort,
+            'key' => $key,
+            'dividerCssClass' => $cssClass
+        );
+
+        $this->addKey($divider);
+        $divider['dividerCssClass'] = $cssClass.' '.$this->buildCssClass($this->dividerCssClassPrefix, $divider);
+
+        $this->addItem('divider', $divider);
+        return $this;
+    }
 
     /**
      * Add a group to the items array.
@@ -72,6 +81,9 @@ abstract class SortableModule extends MustacheModule {
             'key' => $key,
             'headerCssClass' => $cssClass
         );
+
+        $this->addKey($group);
+
         if ($text) {
             $group['headerCssClass'] = $cssClass.' '.$this->buildCssClass($this->headerCssClassPrefix, $group);
         }
@@ -101,6 +113,7 @@ abstract class SortableModule extends MustacheModule {
 
         $link = array(
             'linkText' => $text,
+            'linkText' => $text,
             'linkUrl' => $url,
             'linkIcon' => $icon,
             'linkBadge' => $badge,
@@ -109,6 +122,7 @@ abstract class SortableModule extends MustacheModule {
             'key' => $key,
         );
 
+        $this->addKey($link);
         $link['linkCssClass'] = $cssClass.' '.$this->buildCssClass($this->linkCssClassPrefix, $link);
 
         $listItemCssClasses = array();
@@ -142,6 +156,13 @@ abstract class SortableModule extends MustacheModule {
         return $this;
     }
 
+    public function addKey(&$item) {
+        if (!val('key', $item)) {
+            $item['key'] = 'item'.$this->keyNumber;
+            $this->keyNumber = $this->keyNumber+1;
+        }
+    }
+
     /**
      * Add an item to the items array.
      *
@@ -150,10 +171,7 @@ abstract class SortableModule extends MustacheModule {
      * @param array $item The item to add.
      */
     protected function addItem($type, $item) {
-        if (!val('key', $item)) {
-            $item['key'] = 'item'.$this->keyNumber;
-            $this->keyNumber = $this->keyNumber+1;
-        }
+        $this->addKey($item);
         if (!is_array(val('key', $item))) {
             $item['key'] = explode('.', val('key', $item));
         }

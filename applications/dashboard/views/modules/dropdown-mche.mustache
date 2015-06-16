@@ -4,7 +4,7 @@
       <button id="{{triggerId}}" class="btn dropdown-toggle {{triggerCssClass}}" type="button" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
          {{triggerText}}
          {{#triggerIcon}}
-           {{#icon}}{{triggerIcon}}{{/icon}}
+             <span class="icon icon-{{triggerIcon}}"></span>
          {{/triggerIcon}}
       </button>
     {{/isButton}}
@@ -12,7 +12,7 @@
       <a id="{{triggerId}}" class="{{triggerCssClass}}" data-target="#" href="/" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
          {{triggerText}}
          {{#triggerIcon}}
-           {{#icon}}{{triggerIcon}}{{/icon}}
+             <span class="icon icon-{{triggerIcon}}"></span>
          {{/triggerIcon}}
       </a>
     {{/isAnchor}}
@@ -20,9 +20,9 @@
    <ul class="dropdown-menu {{listCssClass}}" role="menu" aria-labelledby="{{triggerId}}">
       {{#items}}
          {{#isGroup}}
-             <li role="presentation" class="header {{headerCssClass}}">
+             <li role="presentation" class="dropdown-header {{headerCssClass}}">
                {{#headerIcon}}
-                   <span class="icon {{headerIcon}}"></span>
+                   <span class="icon icon-{{headerIcon}}"></span>
                {{/headerIcon}}
                {{headerText}}
                {{#headerBadge}}
@@ -32,7 +32,7 @@
          {{/isGroup}}
          {{#isLink}}
              <li role="presentation" {{#listItemCssClass}}class="{{listItemCssClass}}"{{/listItemCssClass}}>
-               <a role="menuitem" class="dropdown-menu-link {{linkCssClass}}" tabindex="-1" href="{{linkUrl}}">{{> link-text}}</a>
+               <a role="menuitem" class="dropdown-menu-link {{linkCssClass}}" tabindex="-1" href="{{linkUrl}}">{{#linkIcon}}<span class="icon icon-{{linkIcon}}"></span>{{/linkIcon}}{{linkText}}{{#linkBadge}}<span class="badge">{{linkBadge}}</span>{{/linkBadge}}</a>
              </li>
          {{/isLink}}
          {{#isDivider}}

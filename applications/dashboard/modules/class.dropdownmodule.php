@@ -12,9 +12,6 @@
 /**
  * A flawlessly configurable module for a dropdown menu.
  *
- * The dropdown menu is built with Twitter Bootstrap classes and more specific
- * classes to allow for better targeting. It relies on the Twitter Bootstrap js file.
- *
  * The module includes a dropdown trigger and menu items. Menu items can be
  *
  * **link**    - An link item.
@@ -143,5 +140,14 @@ class DropdownModule extends SortableModule {
         $this->trigger['isButton'] = $this->trigger['type'] === 'button';
         $this->trigger['isAnchor'] = $this->trigger['type'] === 'anchor';
         return $this;
+    }
+
+    public function addBootstrapAssets($controller) {
+        $controller->AddCssFile('dropdowns.css');
+        $controller->AddCssFile('buttons.css');
+        $controller->AddCssFile('badges.css');
+        $controller->AddCssFile('type.css');
+
+        $controller->AddJsFile('dropdown.js');
     }
 }

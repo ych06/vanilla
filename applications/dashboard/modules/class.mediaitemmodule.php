@@ -8,7 +8,7 @@
  * @license http://www.opensource.org/licenses/gpl-2.0.php GPL
  * @since 2.3
  */
-class MediaItemModule extends MustacheModule {
+class MediaItemModule extends ComponentModule {
 
     public $text;
     public $heading;
