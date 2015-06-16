@@ -23,6 +23,11 @@ $sender = $this->Data('sender');
                     <a role="menuitem" class="dropdown-menu-link <?php echo val('linkCssClass', $item); ?>" tabindex="-1" href="<?php echo val('linkUrl', $item); ?>"><?php echo val('linkText', $item); ?></a>
                 </li>
             <?php }
+            if (val('type', $item) == 'divider') { ?>
+                <li role="presentation" <?php if (val('dividerCssClass', $item)) { ?> class="<?php echo val('dividerCssClass', $item); ?>"<?php } ?>>
+                    <hr />
+                </li>
+            <?php }
         } ?>
     </ul>
 </span>

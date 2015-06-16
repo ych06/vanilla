@@ -30,26 +30,24 @@
  *
  * Here is an example menu creation:
  *
- *  $dropdown = new DropDownMenuModule($this, 'my-dropdown', 'Trigger Name', '', 'dropdown-menu-right');
- *  $dropdown->setTrigger('A New Name', 'button', 'btn-default', 'caret');
- *  $dropdown->addLink(array('text' => 'Link 1', 'url' => '#')); // Automatically creates key: item1
- *  $dropdown->addDivider(''); // Automatically creates key: item2
- *  $dropdown->addLink(array('text' => 'Link 2', 'url' => '#', 'key' => 'link2', 'class' => 'bg-danger')); // Creates item with key: link2
- *  $dropdown->addLinks(array(
- *     array('text' => 'Link 3', 'url' => '#'), // Automatically creates key: item4
- *     array('text' => 'Link 4', 'url' => '#')
- *  ));
- *  $dropdown->addGroup(array('key' => 'group1')); // Creates group with no header
- *  $dropdown->addGroup(array('text' => 'Group 2', 'key' => 'group2')); // Creates group with header: 'Group 2'
- *  $dropdown->addLink(array('text' => 'Link 5', 'url' => '#', 'sort'=>array('before', 'link2'), 'badge' => 4)); // Inserts before Link 2
- *  $dropdown->addLinks(array(
- *     array('text' => 'Link 6', 'url' => '#'),
- *     array('text' => 'Link 7', 'url' => '#')
- *  ));
- *  $dropdown->addLink(array('text' => 'Link 8', 'url' => '#', 'disabled'=>true, 'key' => 'group2.link8', 'icon' => 'icon-flame')); // Adds to Group 2
- *  $dropdown->addLink(array('text' => 'Link 9', 'url' => '#', 'disabled'=>true, 'key' => 'group1.link9')); // Adds to Group 1
- *  $dropdown->addLink(array('text' => 'Link 10', 'url' => '#', 'key' => 'group1.link10')); // Adds to Group 1
- *  echo $dropdown;
+ *  $dropdown = new DropdownModule('my-dropdown', 'Trigger Name');
+ *  $dropdown->addBootstrapAssets($this);
+ *  $dropdown->setView('dropdown-legacy');
+ *  $dropdown->setTrigger('A New Name', 'button', 'btn-default', 'caret-down')
+ *  ->addLink('Link 1', '#') // automatically creates key: item1
+ *  ->addDivider() // automatically creates key: item2
+ *  ->addLink('Link 2', '#', true, 'link2', false, '', '', false, 'bg-danger') // creates item with key: link2
+ *  ->addLink('Link 3', '#') // automatically creates key: item3
+ *  ->addLink('Link 4', '#') // automatically creates key: item4
+ *  ->addGroup('', true, 'group1') // creates group with no header
+ *  ->addGroup('Group 3', true, 'group3') // creates group with header: 'Group 3', empty so will not display
+ *  ->addGroup('Group 2', true, 'group2') // creates group with header: 'Group 2'
+ *  ->addLink('Link 5', '#', true, false, array('before', 'link2'), '', '4') // automatically creates key: item5. Inserts before Link 2
+ *  ->addLink('Link 6', '#') // automatically creates key: item6
+ *  ->addLink('Link 7', '#') // automatically creates key: item7
+ *  ->addLink('Link 8', '#', true, 'group2.link8', false, 'flame', '', true) // adds to Group 2
+ *  ->addLink('Link 9', '#', true, 'group1.link9') // adds to Group 1
+ *  ->addLink('Link 10', '#', true, 'group1.link10'); // adds to Group 1
  *
  * Which results in a menu:
  *
