@@ -70,7 +70,7 @@ class Gdn_Request {
      *
      * The asset root represents the folder that static assets are served from.
      *
-     * @param $AssetRoot Optional An asset root to set
+     * @param string? $AssetRoot An asset root to set.
      * @return string Returns the current asset root.
      */
     public function assetRoot($AssetRoot = null) {
@@ -619,23 +619,13 @@ class Gdn_Request {
          * Resolve WebRoot
          */
 
-        // Attempt to get the webroot from the server
-        $WebRoot = false;
-        if (!$WebRoot) {
-            $WebRoot = explode('/', val('PHP_SELF', $_SERVER, ''));
-
-            // Look for index.php to figure out where the web root is.
-            $Key = array_search('index.php', $WebRoot);
-            if ($Key !== false) {
-                $WebRoot = implode('/', array_slice($WebRoot, 0, $Key));
-            } else {
-                // Could not determine webroot.
-                $WebRoot = '';
-            }
-
+        // Attempt to get the web root from the server.
+        $webRoot = val('SCRIPT_NAME', $_SERVER, '');
+        if (($pos = strrpos($webRoot, '/index.php')) !== false) {
+            $webRoot = substr($webRoot, 0, $pos);
         }
 
-        $ParsedWebRoot = trim($WebRoot, '/');
+        $ParsedWebRoot = trim($webRoot, '/');
         $this->webRoot($ParsedWebRoot);
         $this->assetRoot($ParsedWebRoot);
 
@@ -1091,7 +1081,7 @@ class Gdn_Request {
     /**
      * Gets/Sets the relative path to the application's dispatcher.
      *
-     * @param $WebRoot Optional Webroot to set
+     * @param string? $WebRoot Optional web root to set.
      * @return string
      */
     public function webRoot($WebRoot = null) {
