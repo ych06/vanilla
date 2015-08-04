@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 $Session = Gdn::Session();
 ?>
 <div class="MessageForm EditCommentForm">

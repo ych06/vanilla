@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 $Count = array(1, 2, 3, 4, 5, 10, 15, 20, 25, 30);
 $Time = array(30, 60, 90, 120, 240);
 $Lock = array(30, 60, 90, 120, 240);
@@ -51,38 +52,39 @@ echo $this->Form->Errors();
          </td>
       </tr>
 
-      <?php if ($ConversationsEnabled): ?>
+        <?php if ($ConversationsEnabled) : ?>
 
          <tr>
             <td>
-               <?php echo $this->Form->DropDown('Conversations.Conversation.SpamCount', $SpamCount); ?>
-               <?php echo T('private conversation(s)'); ?>
+                <?php echo $this->Form->DropDown('Conversations.Conversation.SpamCount', $SpamCount); ?>
+                <?php echo T('private conversation(s)'); ?>
             </td>
             <td class="Alt">
-               <?php echo $this->Form->DropDown('Conversations.Conversation.SpamTime', $SpamTime); ?>
-               <?php echo T('seconds'); ?>
+                <?php echo $this->Form->DropDown('Conversations.Conversation.SpamTime', $SpamTime); ?>
+                <?php echo T('seconds'); ?>
             </td>
             <td>
-               <?php echo $this->Form->DropDown('Conversations.Conversation.SpamLock', $SpamLock); ?>
-               <?php echo T('minute(s)'); ?>
+                <?php echo $this->Form->DropDown('Conversations.Conversation.SpamLock', $SpamLock); ?>
+                <?php echo T('minute(s)'); ?>
             </td>
          </tr>
          <tr>
             <td>
-               <?php echo $this->Form->DropDown('Conversations.ConversationMessage.SpamCount', $SpamCount); ?>
-               <?php echo T('reply to private conversation(s)'); ?>
+                <?php echo $this->Form->DropDown('Conversations.ConversationMessage.SpamCount', $SpamCount); ?>
+                <?php echo T('reply to private conversation(s)'); ?>
             </td>
             <td class="Alt">
-               <?php echo $this->Form->DropDown('Conversations.ConversationMessage.SpamTime', $SpamTime); ?>
-               <?php echo T('seconds'); ?>
+                <?php echo $this->Form->DropDown('Conversations.ConversationMessage.SpamTime', $SpamTime); ?>
+                <?php echo T('seconds'); ?>
             </td>
             <td>
-               <?php echo $this->Form->DropDown('Conversations.ConversationMessage.SpamLock', $SpamLock); ?>
-               <?php echo T('minute(s)'); ?>
+                <?php echo $this->Form->DropDown('Conversations.ConversationMessage.SpamLock', $SpamLock); ?>
+                <?php echo T('minute(s)'); ?>
             </td>
          </tr>
 
-      <?php endif; ?>
+        <?php 
+endif; ?>
 
    </tbody>
 </table>

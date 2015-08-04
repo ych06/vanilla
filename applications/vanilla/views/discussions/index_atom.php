@@ -1,8 +1,9 @@
-<?php if (!defined('APPLICATION')) exit(); ?>
+<?php if (!defined('APPLICATION')) { exit(); 
+} ?>
    <description><?php echo Gdn_Format::Text($this->Head->Title()); ?></description>
    <language><?php echo Gdn::Config('Garden.Locale', 'en-US'); ?></language>
-   <link href="<?php echo htmlspecialchars(Url($this->SelfUrl, TRUE)); ?>" rel="self" type="application/rss+xml" />
-   <link href="<?php echo htmlspecialchars(Url('/', TRUE)); ?>" rel="alternate" type="text/html" />
+   <link href="<?php echo htmlspecialchars(Url($this->SelfUrl, true)); ?>" rel="self" type="application/rss+xml" />
+   <link href="<?php echo htmlspecialchars(Url('/', true)); ?>" rel="alternate" type="text/html" />
 <?php
 foreach ($this->DiscussionData->Result() as $Discussion) {
 ?>
@@ -12,7 +13,7 @@ foreach ($this->DiscussionData->Result() as $Discussion) {
       <id><?php echo $Discussion->DiscussionID . '@' . Url('/discussions'); ?></id>
       <author>
         <name><?php echo Gdn_Format::Text($Discussion->FirstName); ?></name>
-        <uri><?php echo htmlspecialchars(Url('/profile/' . $Discussion->InsertUserID .'/'. $Discussion->FirstName, TRUE)); ?></uri>
+        <uri><?php echo htmlspecialchars(Url('/profile/' . $Discussion->InsertUserID .'/'. $Discussion->FirstName, true)); ?></uri>
       </author>
       <updated><?php echo date('c', Gdn_Format::ToTimeStamp($Discussion->DateLastComment)); ?></updated>
       <summary><![CDATA[<?php echo Gdn_Format::RssHtml($Discussion->Body, $Discussion->Format); ?>]]></summary>

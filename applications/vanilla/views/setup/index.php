@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 echo '<h2>Vanilla Setup</h2>';
 echo $this->Form->Open();
 echo $this->Form->Errors();

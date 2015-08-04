@@ -1,3 +1,4 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 
 WriteComment($Comment, $this, $Session, $CurrentOffset);
