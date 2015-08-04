@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 
 // User.
 Gdn::FactoryInstall(Gdn::AliasUserModel, 'UserModel');

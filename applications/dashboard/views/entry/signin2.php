@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 
 $Methods = $this->Data('Methods', array());
 $SelectedMethod = $this->Data('SelectedMethod', array());
@@ -20,18 +21,18 @@ echo '<div class="Entry'.$CssClass.'">';
    echo '</div>';
 
    // Render the buttons to select other methods of signing in.
-   if (count($Methods) > 0) {
-      echo '<div class="Methods">'
-         .Wrap(T('Or you can...'), 'div');
+if (count($Methods) > 0) {
+    echo '<div class="Methods">'
+      .Wrap(T('Or you can...'), 'div');
 
-      foreach ($Methods as $Key => $Method) {
-         $CssClass = 'Method Method_'.$Key;
-         echo '<div class="'.$CssClass.'">',
-            $Method['SignInHtml'],
-            '</div>';
-      }
+    foreach ($Methods as $Key => $Method) {
+        $CssClass = 'Method Method_'.$Key;
+        echo '<div class="'.$CssClass.'">',
+         $Method['SignInHtml'],
+         '</div>';
+    }
 
-      echo '</div>';
-   }
+    echo '</div>';
+}
 
 echo '</div>';

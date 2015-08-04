@@ -1,17 +1,20 @@
-<?php if (!defined('APPLICATION')) exit(); ?>
+<?php if (!defined('APPLICATION')) { exit(); 
+} ?>
 <h1><?php echo T('Social Integration'); ?></h1>
 
 <div class="PageInfo">
    <h2><?php echo T("What's This?");?></h2>
    <p>
-   <?php 
-   echo T('Here is a list of all your social addons.', 
-      "Here's a list of all your social addons. You can enable, disable, and configure them from this page.");
-   ?>
+    <?php 
+    echo T(
+        'Here is a list of all your social addons.', 
+        "Here's a list of all your social addons. You can enable, disable, and configure them from this page."
+    );
+    ?>
    </p>
 </div>
 
-<?php include('connection_functions.php'); ?>
+<?php require 'connection_functions.php'; ?>
 
 <style>
    .DataList-Connections {
@@ -102,8 +105,8 @@
 
 <ul class="DataList DataList-Connections"><?php
    
-   foreach ($this->Data('Connections') as $Key => $Row) {
-      WriteConnection($Row);
-   }
+foreach ($this->Data('Connections') as $Key => $Row) {
+    WriteConnection($Row);
+}
    
 ?></ul>

@@ -1,10 +1,12 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 /**
  * Get all tutorials, or a specific one.
  */
-function GetTutorials($TutorialCode = '') {
-   // Define all Tutorials
-   $Tutorials = array(
+function GetTutorials($TutorialCode = '') 
+{
+    // Define all Tutorials
+    $Tutorials = array(
       array(
          'Code' => 'introduction',
          'Name' => 'Introduction to Vanilla',
@@ -59,45 +61,45 @@ function GetTutorials($TutorialCode = '') {
          'Description' => 'Learn to control how new users get into your community.',
          'VideoID' => '31493119'
       )
-   );
+    );
 
-   // Default Thumbnails
-   $Thumbnail = Asset('applications/dashboard/design/images/help-tn-200.jpg');
-   $LargeThumbnail = Asset('applications/dashboard/design/images/help-tn-640.jpg');
-   for ($i = 0; $i < count($Tutorials); $i++) {
-      $Tutorials[$i]['Thumbnail'] = $Thumbnail;
-      $Tutorials[$i]['LargeThumbnail'] = $LargeThumbnail;
-   }
+    // Default Thumbnails
+    $Thumbnail = Asset('applications/dashboard/design/images/help-tn-200.jpg');
+    $LargeThumbnail = Asset('applications/dashboard/design/images/help-tn-640.jpg');
+    for ($i = 0; $i < count($Tutorials); $i++) {
+        $Tutorials[$i]['Thumbnail'] = $Thumbnail;
+        $Tutorials[$i]['LargeThumbnail'] = $LargeThumbnail;
+    }
 
-   if ($TutorialCode != '') {
-      $Keys = ConsolidateArrayValuesByKey($Tutorials, 'Code');
-      $Index = array_search($TutorialCode, $Keys);
-      if ($Index === FALSE)
-         return FALSE; // Not found!
-
-      // Found it, so define it's thumbnail location
-      $Tutorial = GetValue($Index, $Tutorials);
-      $VideoID = GetValue('VideoID', $Tutorial);
-      try {
-         $Vimeo = unserialize(file_get_contents("http://vimeo.com/api/v2/video/".$Tutorial['VideoID'].".php"));
-
-         $Tutorial['Thumbnail'] = str_replace('http://', '//', valr('0.thumbnail_medium', $Vimeo));
-         $Tutorial['LargeThumbnail'] = str_replace('http://', '//', valr('0.thumbnail_large', $Vimeo));
-      } catch (Exception $Ex) {
-         // Do nothing
-      }
-      return $Tutorial;
-   } else {
-      // Loop through each tutorial populating the thumbnail image location
-      try {
-         foreach ($Tutorials as $Key => $Tutorial) {
+    if ($TutorialCode != '') {
+        $Keys = ConsolidateArrayValuesByKey($Tutorials, 'Code');
+        $Index = array_search($TutorialCode, $Keys);
+        if ($Index === false) {
+            return false; // Not found!
+        }
+        // Found it, so define it's thumbnail location
+        $Tutorial = GetValue($Index, $Tutorials);
+        $VideoID = GetValue('VideoID', $Tutorial);
+        try {
             $Vimeo = unserialize(file_get_contents("http://vimeo.com/api/v2/video/".$Tutorial['VideoID'].".php"));
+
             $Tutorial['Thumbnail'] = str_replace('http://', '//', valr('0.thumbnail_medium', $Vimeo));
             $Tutorial['LargeThumbnail'] = str_replace('http://', '//', valr('0.thumbnail_large', $Vimeo));
-         }
-      } catch (Exception $Ex) {
-         // Do nothing
-      }
-      return $Tutorials;
-   }
+        } catch (Exception $Ex) {
+            // Do nothing
+        }
+        return $Tutorial;
+    } else {
+        // Loop through each tutorial populating the thumbnail image location
+        try {
+            foreach ($Tutorials as $Key => $Tutorial) {
+                $Vimeo = unserialize(file_get_contents("http://vimeo.com/api/v2/video/".$Tutorial['VideoID'].".php"));
+                $Tutorial['Thumbnail'] = str_replace('http://', '//', valr('0.thumbnail_medium', $Vimeo));
+                $Tutorial['LargeThumbnail'] = str_replace('http://', '//', valr('0.thumbnail_large', $Vimeo));
+            }
+        } catch (Exception $Ex) {
+            // Do nothing
+        }
+        return $Tutorials;
+    }
 }

@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 
 echo '<h1 class="H">'.T('Edit My Thumbnail').'</h1>';
 echo $this->Form->Errors();
@@ -17,11 +18,11 @@ echo $this->Form->Open(array('class' => 'Thumbnail'));
    <tbody>
       <tr>
          <td>
-            <?php echo Img(Gdn_Upload::Url(ChangeBasename($this->User->Photo,'p%s')), array('id' => 'cropbox')); ?>
+            <?php echo Img(Gdn_Upload::Url(ChangeBasename($this->User->Photo, 'p%s')), array('id' => 'cropbox')); ?>
          </td>
          <td>
             <div style="<?php echo 'width:'.$this->ThumbSize.'px;height:'.$this->ThumbSize.'px;'; ?>overflow:hidden;">
-               <?php echo Img(Gdn_Upload::Url(ChangeBasename($this->User->Photo, 'p%s')), array('id' => 'preview')); ?>
+                <?php echo Img(Gdn_Upload::Url(ChangeBasename($this->User->Photo, 'p%s')), array('id' => 'preview')); ?>
             </div>
          </td>
       </tr>

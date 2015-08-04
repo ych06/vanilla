@@ -70,7 +70,7 @@
             ?>
          </li>
       </ul>
-      <?php echo $this->Form->Button('Save', array('class' => 'Button SliceSubmit')); ?>
+        <?php echo $this->Form->Button('Save', array('class' => 'Button SliceSubmit')); ?>
    </div>
    <div class="ConfigurationHelp">
       <strong><?php echo T("About Vanilla Statistics"); ?></strong>

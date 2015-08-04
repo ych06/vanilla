@@ -1,9 +1,12 @@
-<?php if (!defined('APPLICATION')) exit(); ?>
+<?php if (!defined('APPLICATION')) { exit(); 
+} ?>
 <h1><?php
-   if (is_object($this->User))
-      echo T('Edit User');
-   else
-      echo T('Add User');
+if (is_object($this->User)) {
+    echo T('Edit User'); 
+}
+else {
+    echo T('Add User'); 
+}
 ?></h1>
 <?php
 echo $this->Form->Open(array('class' => 'User'));
@@ -11,41 +14,41 @@ echo $this->Form->Errors();
 ?>
 <ul>
    <li>
-      <?php
+        <?php
          echo $this->Form->Label('Username', 'Name');
          echo $this->Form->TextBox('Name');
-      ?>
+        ?>
    </li>
    <li>
-      <?php
+        <?php
          echo $this->Form->Label('Password', 'Password');
          echo $this->Form->Input('Password', 'password', array('class' => 'InputBox js-password '));
          echo ' '.$this->Form->Checkbox('NoPassword', 'No password', array('class' => 'Inline CheckBoxLabel js-nopassword'));
-      ?>
+        ?>
       <div class="InputButtons js-password-related">
-         <?php
+            <?php
             echo Anchor(T('Generate Password'), '#', 'GeneratePassword Button SmallButton');
             echo Anchor(T('Reveal Password'), '#', 'RevealPassword Button SmallButton');
-         ?>
+            ?>
       </div>
    </li>
    <li>
-      <?php
+        <?php
          echo $this->Form->Label('Email', 'Email');
          echo $this->Form->TextBox('Email');
-      ?>
+        ?>
    </li>
    <li>
-      <?php
+        <?php
          echo $this->Form->CheckBox('ShowEmail', T('Email visible to other users'));
-      ?>
+        ?>
    </li>
-   <?php
-   $this->FireEvent('CustomUserFields')
-   ?>
+    <?php
+    $this->FireEvent('CustomUserFields')
+    ?>
    <li>
       <strong><?php echo T('Check all roles that apply to this user:'); ?></strong>
-      <?php echo $this->Form->CheckBoxList("RoleID", array_flip($this->RoleData), array_flip($this->UserRoleData)); ?>
+        <?php echo $this->Form->CheckBoxList("RoleID", array_flip($this->RoleData), array_flip($this->UserRoleData)); ?>
    </li>
 </ul>
 <?php echo $this->Form->Close('Save');

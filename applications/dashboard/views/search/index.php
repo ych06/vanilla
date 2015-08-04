@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit(); ?>
+<?php if (!defined('APPLICATION')) { exit(); 
+} ?>
 <div class="SearchForm">
 <?php
 $Form = $this->Form;
@@ -14,4 +15,4 @@ echo  $Form->Open(array('action' => Url('/search'), 'method' => 'get')),
 </div>
 <?php
 $ViewLocation = $this->FetchViewLocation('results');
-   include($ViewLocation);
+   require $ViewLocation;

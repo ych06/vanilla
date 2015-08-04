@@ -1,16 +1,19 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 require_once $this->FetchViewLocation('helper_functions');
-function TutLink($TutorialCode, $WriteTitle = TRUE, $ThumbnailSize = 'medium') {
-   $Tutorial = GetTutorials($TutorialCode);
-   if (!$Tutorial)
-      return '';
+function TutLink($TutorialCode, $WriteTitle = true, $ThumbnailSize = 'medium') 
+{
+    $Tutorial = GetTutorials($TutorialCode);
+    if (!$Tutorial) {
+        return ''; 
+    }
    
-   $Thumbnail = $ThumbnailSize == 'medium' ? $Tutorial['Thumbnail'] : $Tutorial['LargeThumbnail'];
-   return Anchor(
-      '<img src="'.$Thumbnail.'" alt="'.$Tutorial['Name'].'" title="'.$Tutorial['Name'].'" />'
-      .($WriteTitle ? Wrap($Tutorial['Name']) : ''),
-      'settings/tutorials/'.$Tutorial['Code']
-   );
+    $Thumbnail = $ThumbnailSize == 'medium' ? $Tutorial['Thumbnail'] : $Tutorial['LargeThumbnail'];
+    return Anchor(
+        '<img src="'.$Thumbnail.'" alt="'.$Tutorial['Name'].'" title="'.$Tutorial['Name'].'" />'
+        .($WriteTitle ? Wrap($Tutorial['Name']) : ''),
+        'settings/tutorials/'.$Tutorial['Code']
+    );
 }
 ?>
 <style type="text/css">
@@ -169,18 +172,18 @@ echo $this->Form->Errors();
       <p><strong><?php echo T('Kick-start your community and increase user engagement.'); ?></strong></p>
       <p><?php echo T("Check out these tutorials to get started using Vanilla", "Vanilla is the simplest, most powerful community platform in the world. It's super-duper easy to use. Start with this introductory video and continue with the steps below. Enjoy!"); ?></p>
       <p><?php echo Anchor(T("Check out the full list of video tutorials here."), 'settings/tutorials'); ?></p>
-      <div class="Video"><?php echo TutLink('introduction', FALSE, 'large'); ?></div>
+      <div class="Video"><?php echo TutLink('introduction', false, 'large'); ?></div>
    </div>
    <div class="Step">
       <div class="NumberPoint">1</div>
       <h2><?php echo T('The Basics'); ?></h2>
       <p><?php echo T('Learn how to use the basic functionality of your forum.'); ?></p>
       <div class="Videos">
-         <?php
-         echo TutLink('using-the-forum');
-         echo TutLink('private-conversations');
-         echo TutLink('user-profiles');
-         ?>
+            <?php
+            echo TutLink('using-the-forum');
+            echo TutLink('private-conversations');
+            echo TutLink('user-profiles');
+            ?>
       </div>
    </div>
    <div class="Step">
@@ -188,7 +191,7 @@ echo $this->Form->Errors();
       <h2><?php echo T("Appearance"); ?></h2>
       <p><?php echo T("Learn how to completely change your forum's look and feel: upload your logo, set your homepage, choose a theme and customize it."); ?></p>
       <div class="Videos">
-         <?php echo TutLink('appearance'); ?>
+            <?php echo TutLink('appearance'); ?>
       </div>
    </div>
    <div class="Step">
@@ -196,29 +199,32 @@ echo $this->Form->Errors();
       <h2><?php echo T('Organize'); ?></h2>
       <p><?php echo T('Create & organize discussion categories and manage your users.'); ?></p>
       <div class="Videos">
-         <?php
-         echo TutLink('user-registration');
-         echo TutLink('users');
-         echo TutLink('roles-and-permissions');
-         echo TutLink('category-management-and-advanced-settings');
-         ?>
+            <?php
+            echo TutLink('user-registration');
+            echo TutLink('users');
+            echo TutLink('roles-and-permissions');
+            echo TutLink('category-management-and-advanced-settings');
+            ?>
       </div>
    </div>
    <div class="Step">
       <div class="NumberPoint">4</div>
       <h2><?php echo T('Encourage your friends to join your new community!'); ?></h2>
       <div class="TextBoxWrapper">
-         <?php
-         $Attribs = array('Multiline' => TRUE, 'class' => 'Message');
-         if (!$this->Form->AuthenticatedPostBack())
-            $Attribs['value'] = T('InvitationMessage',"Hi Pal!
+            <?php
+            $Attribs = array('Multiline' => true, 'class' => 'Message');
+            if (!$this->Form->AuthenticatedPostBack()) {
+                $Attribs['value'] = T(
+                    'InvitationMessage', "Hi Pal!
 
 Check out the new community forum I've just set up. It's a great place for us to chat with each other online.
 
-Follow the link below to log in.");
-         echo $this->Form->TextBox('InvitationMessage', $Attribs);
-         echo $this->Form->TextBox('Recipients', array('class' => 'RecipientBox'));
-         ?>
+Follow the link below to log in."
+                ); 
+            }
+            echo $this->Form->TextBox('InvitationMessage', $Attribs);
+            echo $this->Form->TextBox('Recipients', array('class' => 'RecipientBox'));
+            ?>
       </div>
       <script type="text/javascript">
       jQuery(document).ready(function($) {
@@ -235,7 +241,7 @@ Follow the link below to log in.");
          });
       });
       </script>
-      <?php echo $this->Form->Button(T('Send Invitations!')); ?>
+        <?php echo $this->Form->Button(T('Send Invitations!')); ?>
    </div>
 </div>
 <?php echo $this->Form->Close(); ?>

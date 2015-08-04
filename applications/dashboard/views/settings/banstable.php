@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 PagerModule::Write(array('Sender' => $this, 'Limit' => 20, 'CurrentRecords' => count($this->Data('Bans'))));
 ?>
 <table id="Log" class="AltColumns">
@@ -14,35 +15,35 @@ PagerModule::Write(array('Sender' => $this, 'Limit' => 20, 'CurrentRecords' => c
       </tr>
    </thead>
    <tbody>
-      <?php
-      foreach ($this->Data('Bans') as $Row):
-      ?>
-      <tr id="<?php echo "BanID_{$Row['BanID']}"; ?>">
+        <?php
+        foreach ($this->Data('Bans') as $Row):
+        ?>
+        <tr id="<?php echo "BanID_{$Row['BanID']}"; ?>">
          <td><?php echo htmlspecialchars($Row['BanValue']); ?></td>
          <td><?php echo T($Row['BanType']); ?></td>
          <td class="CenterCell">
             <?php
                echo Anchor($Row['CountUsers'], '/dashboard/user?Filter='.urlencode($this->_BanFilter($Row)));
             ?>
-         </td>
-         <td class="CenterCell">
+           </td>
+           <td class="CenterCell">
             <?php
                echo $Row['CountBlockedRegistrations'];
             ?>
-         </td>
-         <td class="UsernameCell"><?php echo htmlspecialchars($Row['InsertName']); ?></td>
-         <td><?php echo htmlspecialchars($Row['Notes']); ?></td>
-         <td>
+           </td>
+           <td class="UsernameCell"><?php echo htmlspecialchars($Row['InsertName']); ?></td>
+           <td><?php echo htmlspecialchars($Row['Notes']); ?></td>
+           <td>
             <?php
             echo Anchor(T('Edit'), '/dashboard/settings/bans/edit?id='.$Row['BanID'], array('class' => 'SmallButton Edit'));
             echo ' ';
             echo Anchor(T('Delete'), '/dashboard/settings/bans/delete?id='.$Row['BanID'], array('class' => 'SmallButton Delete'));
             ?>
-         </td>
-      </tr>
-      <?php
-      endforeach;
-      ?>
+           </td>
+        </tr>
+        <?php
+        endforeach;
+        ?>
    </tbody>
 </table>
 <?php

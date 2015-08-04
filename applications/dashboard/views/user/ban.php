@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) return; ?>
+<?php if (!defined('APPLICATION')) { return; 
+} ?>
 <script language="javascript">
    jQuery(document).ready(function($) {
       $('#Form_ReasonText').focus(function() {
@@ -15,9 +16,9 @@ echo $this->Form->Errors();
 ?>
 
 <div class="DismissMessage WarningMessage">
-   <?php
-   echo FormatString(T('You are about to ban {User.UserID,user}.'), $this->Data);
-   ?>
+    <?php
+    echo FormatString(T('You are about to ban {User.UserID,user}.'), $this->Data);
+    ?>
 </div>
 
 <div class="P"><b><?php echo T('Why are you Banning this user?') ?></b></div>
@@ -29,12 +30,13 @@ echo '<div class="P">', $this->Form->Radio('Reason', 'Abusive Behavior', array('
 echo '<div class="P">',
    $this->Form->Radio('Reason', 'Other', array('Value' => 'Other')),
    '<div class="TextBoxWrapper">',
-   $this->Form->TextBox('ReasonText', array('MultiLine' => TRUE)),
+   $this->Form->TextBox('ReasonText', array('MultiLine' => true)),
    '</div>',
    '</div>';
 
-if ($this->Data('_MayDeleteContent'))
-   echo '<div class="P">', $this->Form->CheckBox('DeleteContent', T("Also delete this user's content.")), '</div>';
+if ($this->Data('_MayDeleteContent')) {
+    echo '<div class="P">', $this->Form->CheckBox('DeleteContent', T("Also delete this user's content.")), '</div>'; 
+}
 
 ?>
 

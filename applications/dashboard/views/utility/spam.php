@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 echo '<h1>'.$this->Data('Title', T('Awaiting Moderation')).'<h1>';
 ?>
 <div class="Info">

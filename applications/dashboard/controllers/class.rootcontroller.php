@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 
 /**
  * This is a placeholder controller that allows plugins to have methods off of the root of the site.
@@ -8,15 +9,18 @@
  *  3. When you browse to <code>/mymethod</code> your method will be called.
  *
  * @copyright 2003 Vanilla Forums, Inc
- * @license http://www.opensource.org/licenses/gpl-2.0.php GPL
- * @package Garden
- * @since 2.1
+ * @license   http://www.opensource.org/licenses/gpl-2.0.php GPL
+ * @package   Garden
+ * @since     2.1
  */
 
-class RootController extends Gdn_Controller {
-   public function FetchViewLocation($View = '', $ControllerName = FALSE, $ApplicationFolder = FALSE, $ThrowError = TRUE) {
-      if (!$ControllerName)
-         $ControllerName = '';
-      return parent::FetchViewLocation($View, $ControllerName, $ApplicationFolder, $ThrowError);
-   }
+class RootController extends Gdn_Controller
+{
+    public function FetchViewLocation($View = '', $ControllerName = false, $ApplicationFolder = false, $ThrowError = true) 
+    {
+        if (!$ControllerName) {
+            $ControllerName = ''; 
+        }
+        return parent::FetchViewLocation($View, $ControllerName, $ApplicationFolder, $ThrowError);
+    }
 }

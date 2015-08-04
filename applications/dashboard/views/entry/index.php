@@ -1,10 +1,11 @@
-<?php if (!defined('APPLICATION')) exit(); ?>
+<?php if (!defined('APPLICATION')) { exit(); 
+} ?>
 <div id="SignIn" class="AjaxForm">
-   <?php include($this->FetchViewLocation('SignIn')); ?>
+    <?php require $this->FetchViewLocation('SignIn'); ?>
 </div>
 <div id="Password" class="AjaxForm">
-   <?php include($this->FetchViewLocation('PasswordRequest')); ?>
+    <?php require $this->FetchViewLocation('PasswordRequest'); ?>
 </div>
 <div id="Register" class="AjaxForm">
-   <?php include($this->FetchViewLocation($this->_RegistrationView())); ?>
+    <?php require $this->FetchViewLocation($this->_RegistrationView()); ?>
 </div>

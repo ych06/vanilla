@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 
 /**
  * The Plugin controller offers plugins a place to have their own pages. Create
@@ -12,10 +13,11 @@
  *  }
  * 
  * @copyright 2003 Vanilla Forums, Inc
- * @license http://www.opensource.org/licenses/gpl-2.0.php GPL
- * @package Garden
- * @since 2.0
+ * @license   http://www.opensource.org/licenses/gpl-2.0.php GPL
+ * @package   Garden
+ * @since     2.0
  */
 
-class PluginController extends DashboardController {
+class PluginController extends DashboardController
+{
 }

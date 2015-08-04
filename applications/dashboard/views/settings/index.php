@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 $this->RenderAsset('Messages');
 ?>
 <div class="Column Column2">
@@ -13,24 +14,24 @@ $this->RenderAsset('Messages');
       </thead>
       -->
       <tbody>
-         <?php
-         $Alt = '';
-         foreach ($this->ActiveUserData as $User) {
-            ?>
-            <tr<?php
-               $Alt = $Alt == '' ? ' class="Alt"' : '';
-               echo $Alt;
+            <?php
+            $Alt = '';
+            foreach ($this->ActiveUserData as $User) {
+                ?>
+               <tr<?php
+                $Alt = $Alt == '' ? ' class="Alt"' : '';
+                echo $Alt;
             ?>>
                <th><?php
                   $PhotoUser = UserBuilder($User);
                   echo UserPhoto($PhotoUser);
                   echo UserAnchor($User);
-               ?></th>
-               <td class="Alt"><?php echo Gdn_Format::Date($User->DateLastActive, 'html'); ?></td>
-            </tr>
-            <?php
-         }
-         ?>
+                    ?></th>
+                  <td class="Alt"><?php echo Gdn_Format::Date($User->DateLastActive, 'html'); ?></td>
+               </tr>
+                <?php
+            }
+            ?>
       </tbody>
    </table>
 </div>

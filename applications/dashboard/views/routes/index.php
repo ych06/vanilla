@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 $Session = Gdn::Session();
 ?>
 <h1><?php echo T('Manage Routes'); ?></h1>
@@ -19,24 +20,25 @@ $Session = Gdn::Session();
    <tbody>
 <?php
 $i = 0;
-$Alt = FALSE;
+$Alt = false;
 foreach ($this->MyRoutes as $Route => $RouteData) {
-   $Alt = !$Alt;
+    $Alt = !$Alt;
    
-   $Target = $RouteData['Destination'];
-   $RouteType = T(Gdn::Router()->RouteTypes[$RouteData['Type']]);
-   $Reserved = $RouteData['Reserved'];
+    $Target = $RouteData['Destination'];
+    $RouteType = T(Gdn::Router()->RouteTypes[$RouteData['Type']]);
+    $Reserved = $RouteData['Reserved'];
 ?>
    <tr<?php echo $Alt ? ' class="Alt"' : ''; ?>>
       <td class="Info">
          <strong><?php echo $Route; ?></strong>
          <div>
-         <?php
-         echo Anchor(T('Edit'), '/dashboard/routes/edit/'.trim($RouteData['Key'], '='), 'EditRoute SmallButton');
-         if (!$Reserved)
-            echo Anchor(T('Delete'), '/routes/delete/'.trim($RouteData['Key']. '=').'/'.$Session->TransientKey(), 'DeleteRoute SmallButton');
+            <?php
+            echo Anchor(T('Edit'), '/dashboard/routes/edit/'.trim($RouteData['Key'], '='), 'EditRoute SmallButton');
+            if (!$Reserved) {
+                echo Anchor(T('Delete'), '/routes/delete/'.trim($RouteData['Key']. '=').'/'.$Session->TransientKey(), 'DeleteRoute SmallButton'); 
+            }
 
-         ?>
+            ?>
          </div>
       </td>
       <td class="Alt"><?php echo $Target; ?></td>

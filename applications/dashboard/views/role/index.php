@@ -1,13 +1,14 @@
-<?php if (!defined('APPLICATION')) exit();
-$Advanced = TRUE;
+<?php if (!defined('APPLICATION')) { exit(); 
+}
+$Advanced = true;
 ?>
 <div class="Help Aside">
-   <?php
-   echo Wrap(T('Need More Help?'), 'h2');
-   echo '<ul>';
-   echo Wrap(Anchor(T("Video tutorial on managing roles &amp; permissions"), 'settings/tutorials/roles-and-permissions'), 'li');
-   echo '</ul>';
-   ?>
+    <?php
+    echo Wrap(T('Need More Help?'), 'h2');
+    echo '<ul>';
+    echo Wrap(Anchor(T("Video tutorial on managing roles &amp; permissions"), 'settings/tutorials/roles-and-permissions'), 'li');
+    echo '</ul>';
+    ?>
 </div>
 <h1><?php echo T('Manage Roles & Permissions'); ?></h1>
 <?php
@@ -20,7 +21,8 @@ $this->DefaultRolesWarning();
 ?></div>
 <?php if ($Advanced) { ?>
 <div class="FilterMenu"><?php echo Anchor(T('Add Role'), 'dashboard/role/add', 'SmallButton'); ?></div>
-<?php } ?>
+<?php 
+} ?>
 <table border="0" cellpadding="0" cellspacing="0" class="AltColumns Sortable" id="RoleTable">
    <thead>
       <tr id="0">
@@ -30,26 +32,29 @@ $this->DefaultRolesWarning();
    </thead>
    <tbody>
 <?php
-$Alt = FALSE;
+$Alt = false;
 foreach ($this->Data('Roles') as $Role) {
-   $Alt = $Alt ? FALSE : TRUE;
-   ?>
+    $Alt = $Alt ? false : true;
+    ?>
    <tr id="<?php echo $Role['RoleID']; ?>"<?php echo $Alt ? ' class="Alt"' : ''; ?>>
       <td class="Info">
          <strong><?php echo $Role['Name']; ?></strong>
-         <?php if ($Advanced && $Role['CanModify']) { ?>
+            <?php if ($Advanced && $Role['CanModify']) { ?>
          <div>
             <?php
             echo Anchor(T('Edit'), "/role/edit/{$Role['RoleID']}", 'SmallButton');
-            if ($Role['Deletable'])
-               echo Anchor(T('Delete'), "/role/delete/{$Role['RoleID']}", 'Popup SmallButton');
+            if ($Role['Deletable']) {
+                echo Anchor(T('Delete'), "/role/delete/{$Role['RoleID']}", 'Popup SmallButton'); 
+            }
             ?>
          </div>
-         <?php } ?>
+            <?php 
+} ?>
       </td>
       <td class="Alt"><?php echo $Role['Description']; ?></td>
    </tr>
-<?php } ?>
+<?php 
+} ?>
    </tbody>
 </table>
 <?php

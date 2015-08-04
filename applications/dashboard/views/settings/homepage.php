@@ -1,20 +1,25 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 $Session = Gdn::Session();
 
 $CurrentDiscussionLayout = C('Vanilla.Discussions.Layout', '');
-if ($CurrentDiscussionLayout == '')
-   $CurrentDiscussionLayout = 'modern';
+if ($CurrentDiscussionLayout == '') {
+    $CurrentDiscussionLayout = 'modern'; 
+}
 
 $CurrentCategoriesLayout = C('Vanilla.Categories.Layout', 'modern');
-if ($CurrentCategoriesLayout == '')
-   $CurrentCategoriesLayout = 'modern';
+if ($CurrentCategoriesLayout == '') {
+    $CurrentCategoriesLayout = 'modern'; 
+}
 
-function WriteHomepageOption($Title, $Url, $CssClass, $Current, $Description = '') {
-   $SpriteClass = $CssClass;
-   if ($Current == $Url)
-      $CssClass .= ' Current';
-   $CssClass .= ' Choice';
-   echo Anchor(T($Title).Wrap(Sprite($SpriteClass), 'span', array('class' => 'Wrap')), $Url, array('class' => $CssClass, 'title' => $Description, 'rel' => $Url));
+function WriteHomepageOption($Title, $Url, $CssClass, $Current, $Description = '') 
+{
+    $SpriteClass = $CssClass;
+    if ($Current == $Url) {
+        $CssClass .= ' Current'; 
+    }
+    $CssClass .= ' Choice';
+    echo Anchor(T($Title).Wrap(Sprite($SpriteClass), 'span', array('class' => 'Wrap')), $Url, array('class' => $CssClass, 'title' => $Description, 'rel' => $Url));
 }
 ?>
 <script type="text/javascript">
@@ -41,61 +46,62 @@ jQuery(document).ready(function($) {
 });
 </script>
 <div class="Help Aside">
-   <?php
-   echo '<h2>', T('Need More Help?'), '</h2>';
-   echo '<ul>';
-   echo Wrap(Anchor(T("Configuring Vanilla's Homepage"), 'http://docs.vanillaforums.com/developers/configuration/homepage/'), 'li');
-   echo Wrap(Anchor(T("Video tutorial on managing appearance"), 'settings/tutorials/appearance'), 'li');
-   echo '</ul>';
-   ?>
+    <?php
+    echo '<h2>', T('Need More Help?'), '</h2>';
+    echo '<ul>';
+    echo Wrap(Anchor(T("Configuring Vanilla's Homepage"), 'http://docs.vanillaforums.com/developers/configuration/homepage/'), 'li');
+    echo Wrap(Anchor(T("Video tutorial on managing appearance"), 'settings/tutorials/appearance'), 'li');
+    echo '</ul>';
+    ?>
 </div>
 
 <h1><?php echo T('Homepage'); ?></h1>
 <div class="Info">
-   <?php printf(T('Use the content at this url as your homepage.', 'Choose the page people should see when they visit: <strong style="white-space: nowrap;">%s</strong>'), Url('/', TRUE)) ?>
+    <?php printf(T('Use the content at this url as your homepage.', 'Choose the page people should see when they visit: <strong style="white-space: nowrap;">%s</strong>'), Url('/', true)) ?>
 </div>
 
 <div class="Homepage">
    <div class="HomeOptions">
-      <?php
-      // Only show the vanilla pages if Vanilla is enabled
-      $CurrentTarget = $this->Data('CurrentTarget');
+        <?php
+        // Only show the vanilla pages if Vanilla is enabled
+        $CurrentTarget = $this->Data('CurrentTarget');
       
-      if (Gdn::ApplicationManager()->CheckApplication('Vanilla')) {
-         echo WriteHomepageOption('Discussions', 'discussions', 'SpDiscussions', $CurrentTarget);
-         echo WriteHomepageOption('Categories', 'categories', 'SpCategories', $CurrentTarget);
-         // echo WriteHomepageOption('Categories &amp; Discussions', 'categories/discussions', 'categoriesdiscussions', $CurrentTarget);
-      }
-      //echo WriteHomepageOption('Activity', 'activity', 'SpActivity', $CurrentTarget);
+        if (Gdn::ApplicationManager()->CheckApplication('Vanilla')) {
+            echo WriteHomepageOption('Discussions', 'discussions', 'SpDiscussions', $CurrentTarget);
+            echo WriteHomepageOption('Categories', 'categories', 'SpCategories', $CurrentTarget);
+            // echo WriteHomepageOption('Categories &amp; Discussions', 'categories/discussions', 'categoriesdiscussions', $CurrentTarget);
+        }
+        //echo WriteHomepageOption('Activity', 'activity', 'SpActivity', $CurrentTarget);
       
-      if (Gdn::PluginManager()->CheckPlugin('Reactions')) {
-         echo WriteHomepageOption('Best Of', 'bestof', 'SpBestOf', $CurrentTarget);
-      }
-      ?>
+        if (Gdn::PluginManager()->CheckPlugin('Reactions')) {
+            echo WriteHomepageOption('Best Of', 'bestof', 'SpBestOf', $CurrentTarget);
+        }
+        ?>
    </div>
-   <?php if (Gdn::ApplicationManager()->CheckApplication('Vanilla')): ?>
+    <?php if (Gdn::ApplicationManager()->CheckApplication('Vanilla')) : ?>
    <div class="LayoutOptions DiscussionsLayout">
       <p>
-         <?php echo Wrap(T('Discussions Layout'), 'strong'); ?>
+            <?php echo Wrap(T('Discussions Layout'), 'strong'); ?>
          <br /><?php echo T('Choose the preferred layout for the discussions page.'); ?>
       </p>
-      <?php
-      echo WriteHomepageOption('Modern Layout', 'modern', 'SpDiscussions', $CurrentDiscussionLayout, T('Modern non-table-based layout'));
-      echo WriteHomepageOption('Table Layout', 'table', 'SpDiscussionsTable', $CurrentDiscussionLayout, T('Classic table layout used by traditional forums'));
-      ?>
+        <?php
+        echo WriteHomepageOption('Modern Layout', 'modern', 'SpDiscussions', $CurrentDiscussionLayout, T('Modern non-table-based layout'));
+        echo WriteHomepageOption('Table Layout', 'table', 'SpDiscussionsTable', $CurrentDiscussionLayout, T('Classic table layout used by traditional forums'));
+        ?>
    </div>
    <div class="LayoutOptions CategoriesLayout">
       <p>
-         <?php echo Wrap(T('Categories Layout'), 'strong'); ?> (<?php echo Anchor(T("adjust layout"), '/vanilla/settings/managecategories', array('class' => 'AdjustCategories')); ?>)
+            <?php echo Wrap(T('Categories Layout'), 'strong'); ?> (<?php echo Anchor(T("adjust layout"), '/vanilla/settings/managecategories', array('class' => 'AdjustCategories')); ?>)
          <br /><?php echo T('Choose the preferred layout for the categories page.'); ?>
       </p>
-      <?php
-      echo WriteHomepageOption('Modern Layout', 'modern', 'SpCategories', $CurrentCategoriesLayout, T('Modern non-table-based layout'));
-      echo WriteHomepageOption('Table Layout', 'table', 'SpCategoriesTable', $CurrentCategoriesLayout, T('Classic table layout used by traditional forums'));
-      echo WriteHomepageOption('Mixed Layout', 'mixed', 'SpCategoriesMixed', $CurrentCategoriesLayout, T('All categories listed with a selection of 5 recent discussions under each'));
-      ?>
+        <?php
+        echo WriteHomepageOption('Modern Layout', 'modern', 'SpCategories', $CurrentCategoriesLayout, T('Modern non-table-based layout'));
+        echo WriteHomepageOption('Table Layout', 'table', 'SpCategoriesTable', $CurrentCategoriesLayout, T('Classic table layout used by traditional forums'));
+        echo WriteHomepageOption('Mixed Layout', 'mixed', 'SpCategoriesMixed', $CurrentCategoriesLayout, T('All categories listed with a selection of 5 recent discussions under each'));
+        ?>
    </div>
-   <?php endif; ?>
+    <?php 
+endif; ?>
 </div>
 
 <?php

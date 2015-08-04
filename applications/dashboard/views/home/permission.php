@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit(); ?>
+<?php if (!defined('APPLICATION')) { exit(); 
+} ?>
 
 <div class="SplashInfo">
    <h1><?php echo T('PermissionErrorTitle', 'Permission Problem'); ?></h1>

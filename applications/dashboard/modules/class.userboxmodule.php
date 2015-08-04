@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 /*
 Copyright 2008, 2009 Vanilla Forums Inc.
 This file is part of Garden.
@@ -8,14 +9,17 @@ You should have received a copy of the GNU General Public License along with Gar
 Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
 */
 
-class UserBoxModule extends Gdn_Module {
+class UserBoxModule extends Gdn_Module
+{
    
-   public function __construct() {
-      parent::__construct();
-      $this->_ApplicationFolder = 'dashboard';
-   }
+    public function __construct() 
+    {
+        parent::__construct();
+        $this->_ApplicationFolder = 'dashboard';
+    }
    
-   public function AssetTarget() {
-      return 'Panel';
-   }
+    public function AssetTarget() 
+    {
+        return 'Panel';
+    }
 }

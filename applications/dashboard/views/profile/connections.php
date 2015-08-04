@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit(); ?>
+<?php if (!defined('APPLICATION')) { exit(); 
+} ?>
 
 <style>
    .Conneciton-Header * {
@@ -49,16 +50,16 @@
 <div class="Hero">
    <h3><?php echo T("What's This?"); ?></h3>
    <p>
-      <?php
-      echo Gdn_Format::Markdown(T('Connect your profile to social networks.', "Connect your profile to social networks to be notified of activity here and share your activity with your friends and followers."));
-      ?>
+        <?php
+        echo Gdn_Format::Markdown(T('Connect your profile to social networks.', "Connect your profile to social networks to be notified of activity here and share your activity with your friends and followers."));
+        ?>
    </p>
 </div>
 
 <ul class="DataList DataList-Connections">
-   <?php
-   foreach ($this->Data('Connections') as $Key => $Row) {
-      WriteConnection($Row);
-   }
-   ?>
+    <?php
+    foreach ($this->Data('Connections') as $Key => $Row) {
+        WriteConnection($Row);
+    }
+    ?>
 </ul>

@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 ?>
 <div class="Title">
    <h1><?php echo T("Vanilla is installed!"); ?></h1>

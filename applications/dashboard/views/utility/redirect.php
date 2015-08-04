@@ -1,7 +1,8 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 
-if (strcasecmp($this->Data('Method'), 'POST') == 0):
-   $ID = 'Form_'.time();
+if (strcasecmp($this->Data('Method'), 'POST') == 0) :
+    $ID = 'Form_'.time();
 ?>
    <form id="<?php echo $ID; ?>" action="<?php echo $this->Data('Url'); ?>" method="POST">
    </form>
@@ -12,4 +13,5 @@ if (strcasecmp($this->Data('Method'), 'POST') == 0):
    <script>
       window.location.replace("<?php echo $this->Data('Url'); ?>");
    </script>
-<?php endif; ?>
+<?php 
+endif; ?>

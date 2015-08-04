@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 $RedirectUrl = $this->RedirectUrl;
 
 echo '<h1>', T('Redirecting...'), '</h1>',

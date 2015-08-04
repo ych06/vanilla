@@ -6,10 +6,11 @@ echo '<?xml version="1.0" encoding="utf-8"?>'; ?>
 <head>
    <title>Something has gone wrong.</title>
    <meta name="robots" content="noindex" />
-   <?php
-   if ($CssPath !== FALSE)
-      echo '<link rel="stylesheet" type="text/css" href="',Asset($CssPath),'" />';
-   ?>
+    <?php
+    if ($CssPath !== false) {
+        echo '<link rel="stylesheet" type="text/css" href="',Asset($CssPath),'" />'; 
+    }
+    ?>
 </head>
 <body>
    <div id="Content">

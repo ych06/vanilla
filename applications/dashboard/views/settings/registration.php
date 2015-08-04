@@ -1,11 +1,12 @@
-<?php if (!defined('APPLICATION')) exit(); ?>
+<?php if (!defined('APPLICATION')) { exit(); 
+} ?>
 <div class="Help Aside">
-   <?php
-   echo Wrap(T('Need More Help?'), 'h2');
-   echo '<ul>';
-   echo Wrap(Anchor(T("Video tutorial on user registration"), 'settings/tutorials/user-registration'), 'li');
-   echo '</ul>';
-   ?>
+    <?php
+    echo Wrap(T('Need More Help?'), 'h2');
+    echo '<ul>';
+    echo Wrap(Anchor(T("Video tutorial on user registration"), 'settings/tutorials/user-registration'), 'li');
+    echo '</ul>';
+    ?>
 </div>
 <h1><?php echo T('User Registration Settings'); ?></h1>
 <?php
@@ -26,43 +27,45 @@ echo Gdn::Slice('/dashboard/role/defaultroleswarning');
             </tr>
          </thead>
          <tbody>
-         <?php
+            <?php
             $Count = count($this->RegistrationMethods);
             $i = 0;
-            $Alt = FALSE;
+            $Alt = false;
             foreach ($this->RegistrationMethods as $Method => $Description) {
-               $Alt = $Alt ? FALSE : TRUE;
-               $CssClass = $Alt ? 'Alt' : '';
-               ++$i;
-               if ($Count == $i)
-                  $CssClass .= ' Last';
+                $Alt = $Alt ? false : true;
+                $CssClass = $Alt ? 'Alt' : '';
+                ++$i;
+                if ($Count == $i) {
+                    $CssClass .= ' Last'; 
+                }
                
-               $CssClass = trim($CssClass);
-               ?>
+                $CssClass = trim($CssClass);
+                ?>
                <tr<?php echo $CssClass != '' ? ' class="'.$CssClass.'"' : ''; ?>>
                   <th><?php
                      $MethodName = $Method;
-                     if ($MethodName == 'Captcha')
-                        $MethodName = 'Basic';
+                    if ($MethodName == 'Captcha') {
+                        $MethodName = 'Basic'; 
+                    }
                         
                      echo $this->Form->Radio('Garden.Registration.Method', $MethodName, array('value' => $Method));
-                  ?></th>
+                    ?></th>
                   <td class="Alt"><?php echo T($Description); ?></td>
                </tr>
-               <?php
+                <?php
             }
-         ?>
+            ?>
          </tbody>
       </table>
    </li>
-   <?php
-   /*
-   <li id="NewUserRoles">
+    <?php
+    /*
+    <li id="NewUserRoles">
       <div class="Info"><?php echo T('Check all roles that should be applied to new/approved users:'); ?></div>
       <?php echo $this->Form->CheckBoxList('Garden.Registration.DefaultRoles', $this->RoleData, $this->ExistingRoleData, array('TextField' => 'Name', 'ValueField' => 'RoleID')); ?>
-   </li>
-   */
-   ?>
+    </li>
+    */
+    ?>
    <li id="CaptchaSettings">
       <div class="Info"><?php echo T('Captcha Explanation', 'The basic registration form requires that new users copy text from a "Captcha" image to help prevent spam.', '<strong>The basic registration form requires</strong> that new users copy text from a "Captcha" image to keep spammers out of the site. You need an account at <a href="http://recaptcha.net/">recaptcha.net</a>. Signing up is FREE and easy. Once you have signed up, come back here and enter the following settings:'); ?></div>
       <table class="Label AltColumns">
@@ -85,21 +88,25 @@ echo Gdn::Slice('/dashboard/role/defaultroleswarning');
        </table>
    </li>
    <li id="InvitationExpiration">
-      <?php
+        <?php
          echo $this->Form->Label('Invitations will expire', 'Garden.Registration.InviteExpiration');
          echo $this->Form->DropDown('Garden.Registration.InviteExpiration', $this->InviteExpirationOptions, array('value' => $this->InviteExpiration));
-      ?>
+        ?>
    </li>
    <li id="InvitationSettings">
       <div class="Info">
-      <?php
-         echo sprintf(T('Invitations can be sent from users\' profile pages.',
-            'When you use registration by invitation users will have a link called <a href="%s" class="Popup">My Invitations</a> on their profile pages.'),
-            Url('/dashboard/profile/invitations')),
+        <?php
+         echo sprintf(
+             T(
+                 'Invitations can be sent from users\' profile pages.',
+                 'When you use registration by invitation users will have a link called <a href="%s" class="Popup">My Invitations</a> on their profile pages.'
+             ),
+             Url('/dashboard/profile/invitations')
+         ),
             '<br /><br />';
          
          echo T('Choose who can send out invitations to new members:');
-      ?>
+        ?>
       </div>
       <table class="Label AltColumns">
          <thead>
@@ -109,51 +116,52 @@ echo Gdn::Slice('/dashboard/role/defaultroleswarning');
             </tr>
          </thead>
          <tbody>
-         <?php
+            <?php
             $i = 0;
             $Count = $this->RoleData->NumRows();
-            $Alt = FALSE;
+            $Alt = false;
             foreach ($this->RoleData->Result() as $Role) {
-               $Alt = $Alt ? FALSE : TRUE;
-               $CssClass = $Alt ? 'Alt' : '';
-               ++$i;
-               if ($Count == $i)
-                  $CssClass .= ' Last';
+                $Alt = $Alt ? false : true;
+                $CssClass = $Alt ? 'Alt' : '';
+                ++$i;
+                if ($Count == $i) {
+                    $CssClass .= ' Last'; 
+                }
                
-               $CssClass = trim($CssClass);
-               $CurrentValue = ArrayValue($Role['RoleID'], $this->ExistingRoleInvitations, FALSE);
-               ?>
+                $CssClass = trim($CssClass);
+                $CurrentValue = ArrayValue($Role['RoleID'], $this->ExistingRoleInvitations, false);
+                ?>
                <tr<?php echo $CssClass != '' ? ' class="'.$CssClass.'"' : ''; ?>>               
                   <th><?php echo $Role['Name']; ?></th>
                   <td class="Alt">
-                     <?php
-                     echo $this->Form->DropDown('InvitationCount[]', $this->InvitationOptions, array('value' => $CurrentValue));
-                     echo $this->Form->Hidden('InvitationRoleID[]', array('value' => $Role['RoleID']));
-                     ?>
+                        <?php
+                        echo $this->Form->DropDown('InvitationCount[]', $this->InvitationOptions, array('value' => $CurrentValue));
+                        echo $this->Form->Hidden('InvitationRoleID[]', array('value' => $Role['RoleID']));
+                        ?>
                   </td>
                </tr>
-               <?php
+                <?php
             }
-         ?>
+            ?>
          </tbody>
       </table>
    </li>
    <li>
       <div class="Info">
-      <?php
-      if (UserModel::NoEmail()) {
-         echo '<div class="Warning">',
+        <?php
+        if (UserModel::NoEmail()) {
+            echo '<div class="Warning">',
             T('Email addresses are disabled.', 'Email addresses are disabled. You can only add an email address if you are an administrator.'),
             '</div>';
-      }
+        }
       
-      echo $this->Form->CheckBox('Garden.Registration.ConfirmEmail', '@'.T('Confirm email addresses', 'Require users to confirm their email addresses (recommended)'));
+        echo $this->Form->CheckBox('Garden.Registration.ConfirmEmail', '@'.T('Confirm email addresses', 'Require users to confirm their email addresses (recommended)'));
 
-      echo $this->Form->Label('Email Confirmation Role', 'Garden.Registration.ConfirmEmailRole'),
-         $this->Form->DropDown('Garden.Registration.ConfirmEmailRole', $this->Data('_Roles'), array('IncludeNull' => TRUE));
+        echo $this->Form->Label('Email Confirmation Role', 'Garden.Registration.ConfirmEmailRole'),
+         $this->Form->DropDown('Garden.Registration.ConfirmEmailRole', $this->Data('_Roles'), array('IncludeNull' => true));
 
-      echo ' ', T('Users will be assigned to this role until they\'ve confirmed their email addresses.');
-      ?>
+        echo ' ', T('Users will be assigned to this role until they\'ve confirmed their email addresses.');
+        ?>
       </div>
    </li>
 </ul>

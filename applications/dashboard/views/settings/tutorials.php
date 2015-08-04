@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 require_once $this->FetchViewLocation('helper_functions');
 $Tutorials = GetTutorials();
 
@@ -6,8 +7,9 @@ $Tutorials = GetTutorials();
 $CurrentTutorialCode = $this->Data('CurrentTutorial');
 $Keys = ConsolidateArrayValuesByKey($Tutorials, 'Code');
 $Index = array_search($CurrentTutorialCode, $Keys);
-if (!$Index)
-   $Index = 0;
+if (!$Index) {
+    $Index = 0; 
+}
 
 $CurrentTutorial = GetValue($Index, $Tutorials);
 $CurrentTutorialCode = GetValue('Code', $CurrentTutorial, '');
@@ -65,23 +67,23 @@ div.Tutorials {
       <iframe wmode="transparent" src="//player.vimeo.com/video/<?php echo $CurrentTutorial['VideoID']; ?>?title=0&byline=0&portrait=0&color=D0D9E0" width="700" height="394?wmode=transparent" frameborder="0"></iframe>
    </div>
    <div class="VideoInfo">
-      <?php
-      echo Wrap($CurrentTutorial['Name'], 'strong');
-      echo Wrap($CurrentTutorial['Description'], 'em');
-      // echo '<input type="text" value="'.Url('/settings/tutorials/'.$Tutorial['Code'], TRUE).'" />';
-      ?>
+        <?php
+        echo Wrap($CurrentTutorial['Name'], 'strong');
+        echo Wrap($CurrentTutorial['Description'], 'em');
+        // echo '<input type="text" value="'.Url('/settings/tutorials/'.$Tutorial['Code'], TRUE).'" />';
+        ?>
    </div>
    <div class="Videos">
       <h2><?php echo T('Other Tutorials'); ?></h2>
-      <?php
-      foreach ($Tutorials as $Tutorial) {
-         echo Anchor(
-            '<img src="'.$Tutorial['Thumbnail'].'" alt="'.$Tutorial['Name'].'" />'
-            .Wrap($Tutorial['Name'], 'span'),
-            'settings/tutorials/'.$Tutorial['Code'],
-            ($CurrentTutorialCode == $Tutorial['Code'] ? 'Current' : '')
-         );
-      }
-      ?>
+        <?php
+        foreach ($Tutorials as $Tutorial) {
+            echo Anchor(
+                '<img src="'.$Tutorial['Thumbnail'].'" alt="'.$Tutorial['Name'].'" />'
+                .Wrap($Tutorial['Name'], 'span'),
+                'settings/tutorials/'.$Tutorial['Code'],
+                ($CurrentTutorialCode == $Tutorial['Code'] ? 'Current' : '')
+            );
+        }
+        ?>
    </div>
 </div>

@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit(); ?>
+<?php if (!defined('APPLICATION')) { exit(); 
+} ?>
 <h2>Privacy Policy</h2>
 
 <div class="Legal">

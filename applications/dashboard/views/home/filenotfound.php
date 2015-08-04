@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit(); ?>
+<?php if (!defined('APPLICATION')) { exit(); 
+} ?>
 
 <div class="Center SplashInfo">
    <h1><?php echo $this->Data('Message', T('Page Not Found')); ?></h1>
