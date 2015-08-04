@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 
 /**
  * Plugin interface
@@ -7,17 +8,18 @@
  * method, this is used more to identify plugins than to enforce structure upon
  * them.
  *
- * @author Mark O'Sullivan <markm@vanillaforums.com>
- * @author Todd Burry <todd@vanillaforums.com> 
- * @author Tim Gunter <tim@vanillaforums.com>
+ * @author    Mark O'Sullivan <markm@vanillaforums.com>
+ * @author    Todd Burry <todd@vanillaforums.com> 
+ * @author    Tim Gunter <tim@vanillaforums.com>
  * @copyright 2003 Vanilla Forums, Inc
- * @license http://www.opensource.org/licenses/gpl-2.0.php GPL
- * @package Garden
- * @since 2.0
+ * @license   http://www.opensource.org/licenses/gpl-2.0.php GPL
+ * @package   Garden
+ * @since     2.0
  */
-interface Gdn_IPlugin {
+interface Gdn_IPlugin
+{
 
-   /**
+    /**
     * This method can be used to ensure that any setup components of a plugin have been set up before the
     * plugin is "enabled".
     *
@@ -30,14 +32,14 @@ interface Gdn_IPlugin {
     *
     * @return boolean
     */
-   public function Setup();
+    public function Setup();
    
-   /**
+    /**
     * These methods are invoked if present, but are not required and will be silently ignored
     * if they do not exist.
     */
    
-   // public function OnLoad()    - Called as the plugin is instantiated (each page load)
-   // public function OnDisable() - Called as the plugin is disabled
-   // public function CleanUp()   - Called as the plugin is removed
+    // public function OnLoad()    - Called as the plugin is instantiated (each page load)
+    // public function OnDisable() - Called as the plugin is disabled
+    // public function CleanUp()   - Called as the plugin is removed
 }
