@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 /*
 Copyright 2008, 2009 Vanilla Forums Inc.
 This file is part of Garden.
@@ -11,21 +12,26 @@ Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
 /**
  * Renders a list of people in the specified conversation.
  */
-class InThisConversationModule extends Gdn_Module {
+class InThisConversationModule extends Gdn_Module
+{
    
-   public function SetData($Data) {
-      $this->Data = $Data;
-   }
+    public function SetData($Data) 
+    {
+        $this->Data = $Data;
+    }
 
-   public function AssetTarget() {
-      return 'Panel';
-   }
+    public function AssetTarget() 
+    {
+        return 'Panel';
+    }
 
-   public function ToString() {
-      if (is_object($this->Data) && $this->Data->NumRows() > 0)
-         return parent::ToString();
+    public function ToString() 
+    {
+        if (is_object($this->Data) && $this->Data->NumRows() > 0) {
+            return parent::ToString(); 
+        }
 
-      return '';
-   }
+        return '';
+    }
 
 }

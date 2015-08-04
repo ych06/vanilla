@@ -1,30 +1,34 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 $Session = Gdn::Session();
 
-$Alt = FALSE;
+$Alt = false;
 $CurrentOffset = $this->Offset;
 $Messages = $this->Data('Messages', array());
 foreach ($Messages as $Message) {
-   $CurrentOffset++;
-   $Alt = $Alt == TRUE ? FALSE : TRUE;
-   $Class = 'Item';
-   $Class .= $Alt ? ' Alt' : '';
-   if ($this->Conversation->DateLastViewed < $Message->DateInserted)
-      $Class .= ' New';
+    $CurrentOffset++;
+    $Alt = $Alt == true ? false : true;
+    $Class = 'Item';
+    $Class .= $Alt ? ' Alt' : '';
+    if ($this->Conversation->DateLastViewed < $Message->DateInserted) {
+        $Class .= ' New'; 
+    }
    
-   if ($Message->InsertUserID == $Session->UserID)
-      $Class .= ' Mine';
+    if ($Message->InsertUserID == $Session->UserID) {
+        $Class .= ' Mine'; 
+    }
       
-   if ($Message->InsertPhoto != '')
-      $Class .= ' HasPhoto';
+    if ($Message->InsertPhoto != '') {
+        $Class .= ' HasPhoto'; 
+    }
       
-   $Format = empty($Message->Format) ? 'Display' : $Message->Format;
-   $Author = UserBuilder($Message, 'Insert');
+    $Format = empty($Message->Format) ? 'Display' : $Message->Format;
+    $Author = UserBuilder($Message, 'Insert');
 
-   $this->EventArguments['Message'] = &$Message;
-   $this->EventArguments['Class'] = &$Class;
-   $this->FireEvent('BeforeConversationMessageItem');
-   $Class = trim($Class);
+    $this->EventArguments['Message'] = &$Message;
+    $this->EventArguments['Class'] = &$Class;
+    $this->FireEvent('BeforeConversationMessageItem');
+    $Class = trim($Class);
 ?>
 <li id="Message_<?php echo $Message->MessageID; ?>"<?php echo $Class == '' ? '' : ' class="'.$Class.'"'; ?>>
    <div id="Item_<?php echo $CurrentOffset ?>" class="ConversationMessage">
@@ -36,18 +40,19 @@ foreach ($Messages as $Message) {
             ?>
          </span>
          <span class="MItem DateCreated"><?php echo Gdn_Format::Date($Message->DateInserted, 'html'); ?></span>
-         <?php
-         $this->FireEvent('AfterConversationMessageDate');
-         ?>
+            <?php
+            $this->FireEvent('AfterConversationMessageDate');
+            ?>
       </div>
       <div class="Message">
-         <?php
-         $this->FireEvent('BeforeConversationMessageBody');
-         echo Gdn_Format::To($Message->Body, $Format);
-         $this->EventArguments['Message'] = &$Message;
-         $this->FireEvent('AfterConversationMessageBody');
-         ?>
+            <?php
+            $this->FireEvent('BeforeConversationMessageBody');
+            echo Gdn_Format::To($Message->Body, $Format);
+            $this->EventArguments['Message'] = &$Message;
+            $this->FireEvent('AfterConversationMessageBody');
+            ?>
       </div>
    </div>
 </li>
-<?php }
+<?php 
+}

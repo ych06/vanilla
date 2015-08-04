@@ -1,14 +1,17 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 /**
  * Conversations stub content for a new site.
  *
  * Called by ConversationsHooks::Setup() to insert stub content upon enabling app.
+ *
  * @package Conversations
  */
 
 // Only do this once, ever.
-if (!$Drop)
-   return;
+if (!$Drop) {
+    return; 
+}
    
 $SQL = Gdn::Database()->SQL();
 
@@ -20,27 +23,33 @@ $Now = Gdn_Format::ToDateTime();
 $Contributors = Gdn_Format::Serialize(array($SystemUserID, $TargetUserID));
 
 // Insert stub conversation
-$ConversationID = $SQL->Insert('Conversation', array(
-   'InsertUserID' => $SystemUserID,
-   'DateInserted' => $Now,
-   'Contributors' => $Contributors,
-   'CountMessages' => 1
-));
-$MessageID = $SQL->Insert('ConversationMessage', array(
-   'ConversationID' => $ConversationID,
-   'Body' => T('StubConversationBody', $ConversationBody),
-   'Format' => 'Html',
-   'InsertUserID' => $SystemUserID,
-   'DateInserted' => $Now
-));
+$ConversationID = $SQL->Insert(
+    'Conversation', array(
+    'InsertUserID' => $SystemUserID,
+    'DateInserted' => $Now,
+    'Contributors' => $Contributors,
+    'CountMessages' => 1
+    )
+);
+$MessageID = $SQL->Insert(
+    'ConversationMessage', array(
+    'ConversationID' => $ConversationID,
+    'Body' => T('StubConversationBody', $ConversationBody),
+    'Format' => 'Html',
+    'InsertUserID' => $SystemUserID,
+    'DateInserted' => $Now
+    )
+);
 $SQL->Update('Conversation')
-   ->Set('LastMessageID', $MessageID)
-   ->Where('ConversationID', $ConversationID)
-   ->Put();
-$SQL->Insert('UserConversation', array(
-   'ConversationID' => $ConversationID,
-   'UserID' => $TargetUserID,
-   'CountReadMessages' => 0,
-   'LastMessageID' => $MessageID,
-   'DateConversationUpdated' => $Now
-));
+    ->Set('LastMessageID', $MessageID)
+    ->Where('ConversationID', $ConversationID)
+    ->Put();
+$SQL->Insert(
+    'UserConversation', array(
+    'ConversationID' => $ConversationID,
+    'UserID' => $TargetUserID,
+    'CountReadMessages' => 0,
+    'LastMessageID' => $MessageID,
+    'DateConversationUpdated' => $Now
+    )
+);

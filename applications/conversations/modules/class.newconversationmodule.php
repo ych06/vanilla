@@ -1,4 +1,5 @@
-<?php if (!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) { exit(); 
+}
 /*
 Copyright 2008, 2009 Vanilla Forums Inc.
 This file is part of Garden.
@@ -11,10 +12,12 @@ Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
 /**
  * Renders the "New Conversation" button.
  */
-class NewConversationModule extends Gdn_Module {
+class NewConversationModule extends Gdn_Module
+{
 
-   public function AssetTarget() {
-      return 'Panel';
-   }
+    public function AssetTarget() 
+    {
+        return 'Panel';
+    }
 
 }
